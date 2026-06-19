@@ -1,0 +1,541 @@
+[
+  {
+    "schedule_pattern": "5/2 вых ПН-ВТ",
+    "weekday": "MON",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ПН-ВТ",
+    "weekday": "TUE",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ПН-ВТ",
+    "weekday": "WED",
+    "minutes_default": 20,
+    "minutes_exception": 30,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПН-ВТ",
+    "weekday": "THU",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПН-ВТ",
+    "weekday": "FRI",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПН-ВТ",
+    "weekday": "SAT",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПН-ВТ",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВТ-СР",
+    "weekday": "MON",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВТ-СР",
+    "weekday": "TUE",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ВТ-СР",
+    "weekday": "WED",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ВТ-СР",
+    "weekday": "THU",
+    "minutes_default": 30,
+    "minutes_exception": 40,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВТ-СР",
+    "weekday": "FRI",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВТ-СР",
+    "weekday": "SAT",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВТ-СР",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СР-ЧТ",
+    "weekday": "MON",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СР-ЧТ",
+    "weekday": "TUE",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СР-ЧТ",
+    "weekday": "WED",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых СР-ЧТ",
+    "weekday": "THU",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых СР-ЧТ",
+    "weekday": "FRI",
+    "minutes_default": 30,
+    "minutes_exception": 40,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СР-ЧТ",
+    "weekday": "SAT",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СР-ЧТ",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ЧТ-ПТ",
+    "weekday": "MON",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ЧТ-ПТ",
+    "weekday": "TUE",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ЧТ-ПТ",
+    "weekday": "WED",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ЧТ-ПТ",
+    "weekday": "THU",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ЧТ-ПТ",
+    "weekday": "FRI",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ЧТ-ПТ",
+    "weekday": "SAT",
+    "minutes_default": 30,
+    "minutes_exception": 40,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ЧТ-ПТ",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПТ-СБ",
+    "weekday": "MON",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПТ-СБ",
+    "weekday": "TUE",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПТ-СБ",
+    "weekday": "WED",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПТ-СБ",
+    "weekday": "THU",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ПТ-СБ",
+    "weekday": "FRI",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ПТ-СБ",
+    "weekday": "SAT",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ПТ-СБ",
+    "weekday": "SUN",
+    "minutes_default": 20,
+    "minutes_exception": 30,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СБ-ВС",
+    "weekday": "MON",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СБ-ВС",
+    "weekday": "TUE",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СБ-ВС",
+    "weekday": "WED",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СБ-ВС",
+    "weekday": "THU",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СБ-ВС",
+    "weekday": "FRI",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых СБ-ВС",
+    "weekday": "SAT",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых СБ-ВС",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ВС-ПН",
+    "weekday": "MON",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "5/2 вых ВС-ПН",
+    "weekday": "TUE",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВС-ПН",
+    "weekday": "WED",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВС-ПН",
+    "weekday": "THU",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВС-ПН",
+    "weekday": "FRI",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВС-ПН",
+    "weekday": "SAT",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "5/2 вых ВС-ПН",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 1",
+    "weekday": "MON",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 1",
+    "weekday": "TUE",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 1",
+    "weekday": "WED",
+    "minutes_default": 20,
+    "minutes_exception": 30,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 1",
+    "weekday": "THU",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 1",
+    "weekday": "FRI",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 1",
+    "weekday": "SAT",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 1",
+    "weekday": "SUN",
+    "minutes_default": 20,
+    "minutes_exception": 30,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 2",
+    "weekday": "MON",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 2",
+    "weekday": "TUE",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 2",
+    "weekday": "WED",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 2",
+    "weekday": "THU",
+    "minutes_default": 30,
+    "minutes_exception": 40,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 2",
+    "weekday": "FRI",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 2",
+    "weekday": "SAT",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 2",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 3",
+    "weekday": "MON",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 3",
+    "weekday": "TUE",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 3",
+    "weekday": "WED",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 3",
+    "weekday": "THU",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 3",
+    "weekday": "FRI",
+    "minutes_default": 30,
+    "minutes_exception": 40,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 3",
+    "weekday": "SAT",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 3",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 4",
+    "weekday": "MON",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 4",
+    "weekday": "TUE",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 4",
+    "weekday": "WED",
+    "minutes_default": 10,
+    "minutes_exception": 20,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 4",
+    "weekday": "THU",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 4",
+    "weekday": "FRI",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": true
+  },
+  {
+    "schedule_pattern": "2/2 тип 4",
+    "weekday": "SAT",
+    "minutes_default": 30,
+    "minutes_exception": 40,
+    "is_weekend": false
+  },
+  {
+    "schedule_pattern": "2/2 тип 4",
+    "weekday": "SUN",
+    "minutes_default": 0,
+    "minutes_exception": 0,
+    "is_weekend": false
+  }
+]

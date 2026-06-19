@@ -1,0 +1,134 @@
+{
+  "name": "ErrorHandler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-1200, -120],
+      "id": "eh100000-0000-0000-0000-000000000001",
+      "name": "When Executed by Another Workflow",
+      "notes": "Ручной вызов из Main/Balance (ADR-005).\nОжидаемые поля:\n- success: false\n- error_type: Business Error | System Error\n- error_message: текст\n- workflow_id, workflow_name (опционально)\n- error_code (опционально, BE1/SE1…)"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [-1200, 120],
+      "id": "eh100000-0000-0000-0000-000000000002",
+      "name": "Error Trigger",
+      "notes": "Авто-триггер при необработанной ошибке в Main/Balance.\nВ Settings родительского воркфлоу: Error Workflow = этот воркфлоу."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nlet error_type = item.error_type;\nlet error_message = item.error_message;\nlet workflow_id = item.workflow_id;\nlet workflow_name = item.workflow_name;\nlet error_code = item.error_code;\n\nif (item.execution?.error) {\n  error_type = error_type || 'System Error';\n  error_message =\n    item.execution.error.message ||\n    item.execution.error.description ||\n    String(item.execution.error);\n  workflow_id = item.workflow?.id || workflow_id;\n  workflow_name = item.workflow?.name || workflow_name;\n  error_code = error_code || 'SE?';\n}\n\nif (!error_type) {\n  error_type = 'System Error';\n}\n\nif (!error_message) {\n  error_message = 'Unknown error (no message provided)';\n}\n\nif (!error_code) {\n  error_code = error_type === 'Business Error' ? 'BE?' : 'SE?';\n}\n\nreturn [\n  {\n    json: {\n      success: false,\n      error_type,\n      error_message,\n      error_code,\n      workflow_id: workflow_id || $workflow.id,\n      workflow_name: workflow_name || 'BreaksRecovery',\n      timestamp: new Date().toISOString(),\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-960, 0],
+      "id": "eh100000-0000-0000-0000-000000000004",
+      "name": "Normalize Error"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "GetConfig",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [-720, 0],
+      "id": "eh100000-0000-0000-0000-000000000005",
+      "name": "Execute GetConfig",
+      "notes": "Повторное чтение конфига — проблема могла быть выше (ADR-005)."
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = $('Normalize Error').first().json;\nconst config = $input.first().json;\n\nfunction maskPii(text) {\n  let s = String(text ?? '');\n  s = s.replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/g, '***@***');\n  s = s.replace(/(login|агент|agent)[\\s:]+[\\w.-]+/gi, '$1: ***');\n  return s;\n}\n\nconst isBusiness = err.error_type === 'Business Error';\nconst channel = isBusiness\n  ? config.MMCBotAlertChannel\n  : config.MMCBotProdNotificationsChannel;\n\nconst robotName = config.robotName || 'BreaksRecovery';\nconst wf = err.workflow_name || 'BreaksRecovery';\nconst ts = err.timestamp;\nconst statusLabel = isBusiness ? 'Business Error' : 'Error';\nconst safeMessage = maskPii(err.error_message);\n\nconst notify_message = [\n  `Название робота: ${robotName}`,\n  `Процесс: ${wf}`,\n  `Время запуска: ${ts}`,\n  `Статус: ${statusLabel}`,\n  `Тип: ${err.error_code}`,\n  `Описание: ${safeMessage}`,\n].join('; ');\n\nreturn [\n  {\n    json: {\n      ...err,\n      error_message_safe: safeMessage,\n      robotName,\n      environment: config.environment,\n      DBSchemaName: config.DBSchemaName,\n      DBTableNameRecoveryTransactions: config.DBTableNameRecoveryTransactions,\n      MattermostAPIURL: config.MattermostAPIURL,\n      notify_channel: channel,\n      notify_message,\n      processing_status: 'failed',\n      needs_email_fallback: !isBusiness,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-480, 0],
+      "id": "eh100000-0000-0000-0000-000000000006",
+      "name": "Enrich With Config"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE {{ $json.DBSchemaName }}.{{ $json.DBTableNameRecoveryTransactions }} SET processing_status = 'failed', processing_end_time = NOW(), processing_comment = $1, error_code = $2 WHERE processing_status = 'in_progress' OR (processing_end_time IS NULL AND processing_status NOT IN ('success', 'failed', 'skipped_BE2', 'skipped_BE3')); SELECT 1 AS error_status_updated;",
+        "options": {
+          "queryReplacement": "={{ $json.error_message_safe }},{{ $json.error_code }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [-240, 0],
+      "id": "eh100000-0000-0000-0000-000000000007",
+      "name": "Set ERROR Status",
+      "notes": "Credential: RPA DB ONLY.\nОбновляет in_progress / незавершённые транзакции.\nСбой -> SE1 (не блокирует нотификацию — Continue On Fail при необходимости).",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Enrich With Config').first().json.MattermostAPIURL }}/api/v4/posts",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"channel_id\": \"{{ $('Enrich With Config').first().json.notify_channel }}\",\n  \"message\": \"{{ $('Enrich With Config').first().json.notify_message.replace(/\"/g, '\\\\\"') }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [0, 0],
+      "id": "eh100000-0000-0000-0000-000000000008",
+      "name": "Send MM Notification",
+      "notes": "Credential: Mattermost Bot Token (A-06).\nBE -> MMCBotAlertChannel (RPA_BN_BreaksRecovery).\nSE -> MMCBotProdNotificationsChannel.\nПока без токена: Continue On Fail.",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = $('Enrich With Config').first().json;\n\nreturn [\n  {\n    json: {\n      success: false,\n      error_type: err.error_type,\n      error_message: err.error_message,\n      error_code: err.error_code,\n      workflow_name: err.workflow_name,\n      handler_completed: true,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0],
+      "id": "eh100000-0000-0000-0000-000000000009",
+      "name": "Return Error Result"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [[{ "node": "Normalize Error", "type": "main", "index": 0 }]]
+    },
+    "Error Trigger": {
+      "main": [[{ "node": "Normalize Error", "type": "main", "index": 0 }]]
+    },
+    "Normalize Error": {
+      "main": [[{ "node": "Execute GetConfig", "type": "main", "index": 0 }]]
+    },
+    "Execute GetConfig": {
+      "main": [[{ "node": "Enrich With Config", "type": "main", "index": 0 }]]
+    },
+    "Enrich With Config": {
+      "main": [[{ "node": "Set ERROR Status", "type": "main", "index": 0 }]]
+    },
+    "Set ERROR Status": {
+      "main": [[{ "node": "Send MM Notification", "type": "main", "index": 0 }]]
+    },
+    "Send MM Notification": {
+      "main": [[{ "node": "Return Error Result", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

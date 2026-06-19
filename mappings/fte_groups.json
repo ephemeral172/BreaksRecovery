@@ -1,0 +1,1129 @@
+[
+  {
+    "direction": "AU",
+    "channel": "Голос",
+    "group_name": "AU Голос (все)",
+    "skill_name": "AU Голос - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Голос",
+    "group_name": "AU Голос (все)",
+    "skill_name": "AU Голос - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Голос",
+    "group_name": "AU Голос (все)",
+    "skill_name": "AU Голос - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Голос",
+    "group_name": "AU Голос (все)",
+    "skill_name": "AU Голос - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Голос",
+    "group_name": "AU Голос (все)",
+    "skill_name": "Голос TRX",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Голос",
+    "group_name": "AU Голос (все)",
+    "skill_name": "AU Голос - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Голос",
+    "group_name": "AU Голос (все)",
+    "skill_name": "AU Голос - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "Письмо TRX",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "Чаты TRX",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "AU",
+    "channel": "Письмо+Чаты",
+    "group_name": "AU Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Голос",
+    "group_name": "SE Голос - Items 2nd",
+    "skill_name": "SE Голос - Items 2nd",
+    "note": "отдельно"
+  },
+  {
+    "direction": "SE",
+    "channel": "Голос",
+    "group_name": "SE Голос - Money 2nd",
+    "skill_name": "SE Голос - Money 2nd",
+    "note": "отдельно"
+  },
+  {
+    "direction": "SE",
+    "channel": "Голос",
+    "group_name": "SE Голос - Tech 1st+2nd",
+    "skill_name": "SE Голос - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Голос",
+    "group_name": "SE Голос - Tech 1st+2nd",
+    "skill_name": "SE Голос - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Items",
+    "skill_name": "SE Письмо - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Items",
+    "skill_name": "SE Письмо - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Items",
+    "skill_name": "SE Чаты - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Items",
+    "skill_name": "SE Чаты - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Money",
+    "skill_name": "SE Письмо - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Money",
+    "skill_name": "SE Письмо - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Money",
+    "skill_name": "SE Чаты - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Money",
+    "skill_name": "SE Чаты - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Tech",
+    "skill_name": "SE Письмо - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Tech",
+    "skill_name": "SE Письмо - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Tech",
+    "skill_name": "SE Чаты - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "SE",
+    "channel": "Письмо+Чаты",
+    "group_name": "SE Письмо+Чаты - Tech",
+    "skill_name": "SE Чаты - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Голос",
+    "group_name": "JO Голос (все)",
+    "skill_name": "JO Голос - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Голос",
+    "group_name": "JO Голос (все)",
+    "skill_name": "JO Голос - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Голос",
+    "group_name": "JO Голос (все)",
+    "skill_name": "JO Голос - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Голос",
+    "group_name": "JO Голос (все)",
+    "skill_name": "JO Голос - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Голос",
+    "group_name": "JO Голос (все)",
+    "skill_name": "JO Голос - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Голос",
+    "group_name": "JO Голос (все)",
+    "skill_name": "JO Голос - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "JO",
+    "channel": "Письмо+Чаты",
+    "group_name": "JO Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "GIG",
+    "channel": "Голос",
+    "group_name": "GIG Голос",
+    "skill_name": "Голос GIG",
+    "note": "отдельно"
+  },
+  {
+    "direction": "GIG",
+    "channel": "Письмо+Чаты",
+    "group_name": "GIG Письмо+Чаты",
+    "skill_name": "Письмо GIG",
+    "note": null
+  },
+  {
+    "direction": "GIG",
+    "channel": "Письмо+Чаты",
+    "group_name": "GIG Письмо+Чаты",
+    "skill_name": "Чаты GIG",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Голос",
+    "group_name": "RE Голос - Items 2nd",
+    "skill_name": "RE Голос - Items 2nd",
+    "note": "отдельно"
+  },
+  {
+    "direction": "RE",
+    "channel": "Голос",
+    "group_name": "RE Голос - Money 2nd",
+    "skill_name": "RE Голос - Money 2nd",
+    "note": "отдельно"
+  },
+  {
+    "direction": "RE",
+    "channel": "Голос",
+    "group_name": "RE Голос - Tech 1st+2nd",
+    "skill_name": "RE Голос - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Голос",
+    "group_name": "RE Голос - Tech 1st+2nd",
+    "skill_name": "RE Голос - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Items",
+    "skill_name": "RE Письмо - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Items",
+    "skill_name": "RE Письмо - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Items",
+    "skill_name": "RE Чаты - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Items",
+    "skill_name": "RE Чаты - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Money",
+    "skill_name": "RE Письмо - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Money",
+    "skill_name": "RE Письмо - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Money",
+    "skill_name": "RE Чаты - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Money",
+    "skill_name": "RE Чаты - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Tech",
+    "skill_name": "RE Письмо - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Tech",
+    "skill_name": "RE Письмо - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Tech",
+    "skill_name": "RE Чаты - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "RE",
+    "channel": "Письмо+Чаты",
+    "group_name": "RE Письмо+Чаты - Tech",
+    "skill_name": "RE Чаты - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Голос",
+    "group_name": "Goods Голос - Items",
+    "skill_name": "GOODS Голос - Items 1st",
+    "note": "Q-07: подтвердить названия навыков"
+  },
+  {
+    "direction": "Goods",
+    "channel": "Голос",
+    "group_name": "Goods Голос - Items",
+    "skill_name": "GOODS Голос - Items 2nd",
+    "note": "Q-07: подтвердить названия навыков"
+  },
+  {
+    "direction": "Goods",
+    "channel": "Голос",
+    "group_name": "Goods Голос - Money",
+    "skill_name": "GOODS Голос - Money 1st",
+    "note": "Q-07: подтвердить названия навыков"
+  },
+  {
+    "direction": "Goods",
+    "channel": "Голос",
+    "group_name": "Goods Голос - Money",
+    "skill_name": "GOODS Голос - Money 2nd",
+    "note": "Q-07: подтвердить названия навыков"
+  },
+  {
+    "direction": "Goods",
+    "channel": "Голос",
+    "group_name": "Goods Голос - Tech",
+    "skill_name": "GOODS Голос - Tech 1st",
+    "note": "Q-07: подтвердить названия навыков"
+  },
+  {
+    "direction": "Goods",
+    "channel": "Голос",
+    "group_name": "Goods Голос - Tech",
+    "skill_name": "GOODS Голос - Tech 2nd",
+    "note": "Q-07: подтвердить названия навыков"
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Items",
+    "skill_name": "Goods Письмо - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Items",
+    "skill_name": "Goods Письмо - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Items",
+    "skill_name": "Goods Чаты - Items 1st",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Items",
+    "skill_name": "Goods Чаты - Items 2nd",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Money",
+    "skill_name": "Goods Письмо - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Money",
+    "skill_name": "Goods Письмо - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Money",
+    "skill_name": "Goods Чаты - Money 1st",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Money",
+    "skill_name": "Goods Чаты - Money 2nd",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Tech",
+    "skill_name": "Goods Письмо - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Tech",
+    "skill_name": "Goods Письмо - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Tech",
+    "skill_name": "Goods Чаты - Tech 1st",
+    "note": null
+  },
+  {
+    "direction": "Goods",
+    "channel": "Письмо+Чаты",
+    "group_name": "Goods Письмо+Чаты - Tech",
+    "skill_name": "Goods Чаты - Tech 2nd",
+    "note": null
+  },
+  {
+    "direction": "CAP",
+    "channel": "Голос",
+    "group_name": "CAP Items Голос",
+    "skill_name": "CAP Items Голос",
+    "note": "отдельно"
+  },
+  {
+    "direction": "CAP",
+    "channel": "Голос",
+    "group_name": "CAP Money Голос",
+    "skill_name": "CAP Money Голос",
+    "note": "отдельно"
+  },
+  {
+    "direction": "CAP",
+    "channel": "Голос",
+    "group_name": "CAP Tech Голос",
+    "skill_name": "CAP Tech Голос",
+    "note": "отдельно"
+  },
+  {
+    "direction": "CAP",
+    "channel": "Письмо+Чаты",
+    "group_name": "CAP Items Письмо+Чаты",
+    "skill_name": "CAP Items",
+    "note": null
+  },
+  {
+    "direction": "CAP",
+    "channel": "Письмо+Чаты",
+    "group_name": "CAP Items Письмо+Чаты",
+    "skill_name": "CAP Items (chat)",
+    "note": null
+  },
+  {
+    "direction": "CAP",
+    "channel": "Письмо+Чаты",
+    "group_name": "CAP Money Письмо+Чаты",
+    "skill_name": "CAP Money",
+    "note": null
+  },
+  {
+    "direction": "CAP",
+    "channel": "Письмо+Чаты",
+    "group_name": "CAP Money Письмо+Чаты",
+    "skill_name": "CAP Money (chat)",
+    "note": null
+  },
+  {
+    "direction": "CAP",
+    "channel": "Письмо+Чаты",
+    "group_name": "CAP Tech Письмо+Чаты",
+    "skill_name": "CAP Tech",
+    "note": null
+  },
+  {
+    "direction": "CAP",
+    "channel": "Письмо+Чаты",
+    "group_name": "CAP Tech Письмо+Чаты",
+    "skill_name": "CAP Tech (chat)",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "AU Голос - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "JO Голос - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "Goods Голос - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "AU Голос - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "JO Голос - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "Goods Голос - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "SE Голос - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Голос",
+    "group_name": "Users Голос (все)",
+    "skill_name": "RE Голос - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "Goods Письмо - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "Goods Чаты - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "SE Письмо - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "RE Письмо - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "AU Письмо - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "JO Письмо - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "Goods Письмо - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "AU Чаты - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "JO Чаты - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "Goods Чаты - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "SE Письмо - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "RE Письмо - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "SE Чаты - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "RE Чаты - Users 1st",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "SE Чаты - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "Users",
+    "channel": "Письмо+Чаты",
+    "group_name": "Users Письмо+Чаты (все)",
+    "skill_name": "RE Чаты - Users 2nd",
+    "note": null
+  },
+  {
+    "direction": "DE",
+    "channel": "Голос",
+    "group_name": "DE Голос - Delivery 1st",
+    "skill_name": "DE Голос - Delivery 1st",
+    "note": "отдельно"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо+Чаты",
+    "group_name": "DE Письмо+Чаты - Delivery (1-я лин)",
+    "skill_name": "DE Письмо - Delivery 1st",
+    "note": "прогноз 1-й линии"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо+Чаты",
+    "group_name": "DE Письмо+Чаты - Delivery (1-я лин)",
+    "skill_name": "DE Чаты - Delivery 1st",
+    "note": "прогноз 1-й линии"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо+Чаты",
+    "group_name": "DE Письмо+Чаты - Delivery (1-я лин)",
+    "skill_name": "DE Письмо - Delivery 2nd",
+    "note": "прогноз 1-й линии"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо+Чаты",
+    "group_name": "DE Письмо+Чаты - Delivery (1-я лин)",
+    "skill_name": "DE Чаты - Delivery 2nd",
+    "note": "прогноз 1-й линии"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо+Чаты",
+    "group_name": "DE Письмо+Чаты - Delivery (2-я лин)",
+    "skill_name": "DE Письмо - Delivery 2nd",
+    "note": "прогноз 2-й линии"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо+Чаты",
+    "group_name": "DE Письмо+Чаты - Delivery (2-я лин)",
+    "skill_name": "DE Чаты - Delivery 2nd",
+    "note": "прогноз 2-й линии"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо",
+    "group_name": "DE Письмо - Billing",
+    "skill_name": "DE Письмо - Billing",
+    "note": "отдельно"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо",
+    "group_name": "DE Письмо - Claim",
+    "skill_name": "DE Письмо - Claim",
+    "note": "отдельно"
+  },
+  {
+    "direction": "DE",
+    "channel": "Письмо",
+    "group_name": "DE Письмо - ABD",
+    "skill_name": "DE Письмо - ABD (спец.агенты)",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Travel",
+    "channel": "Голос",
+    "group_name": "Travel 1st line (voice)",
+    "skill_name": "Travel 1st line (voice)",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Travel",
+    "channel": "Голос",
+    "group_name": "Travel ARB (voice)",
+    "skill_name": "Travel ARB (voice)",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Travel",
+    "channel": "Голос",
+    "group_name": "Travel Hotels (Voice)",
+    "skill_name": "Travel. Hotels (Voice)",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Travel",
+    "channel": "Письмо+Чаты",
+    "group_name": "Travel Письмо+Чаты - 1st",
+    "skill_name": "Travel 1st line",
+    "note": null
+  },
+  {
+    "direction": "Travel",
+    "channel": "Письмо+Чаты",
+    "group_name": "Travel Письмо+Чаты - 1st",
+    "skill_name": "Travel 1st line (chat)",
+    "note": null
+  },
+  {
+    "direction": "Travel",
+    "channel": "Письмо+Чаты",
+    "group_name": "Travel Письмо+Чаты - ARB",
+    "skill_name": "Travel.ARB",
+    "note": null
+  },
+  {
+    "direction": "Travel",
+    "channel": "Письмо+Чаты",
+    "group_name": "Travel Письмо+Чаты - ARB",
+    "skill_name": "Travel.ARB (chat)",
+    "note": null
+  },
+  {
+    "direction": "Travel",
+    "channel": "Письмо+Чаты",
+    "group_name": "Travel Письмо+Чаты - Hotels",
+    "skill_name": "Travel. Hotels",
+    "note": null
+  },
+  {
+    "direction": "Travel",
+    "channel": "Письмо+Чаты",
+    "group_name": "Travel Письмо+Чаты - Hotels",
+    "skill_name": "Travel. Hotels (chat)",
+    "note": null
+  },
+  {
+    "direction": "Infodoc",
+    "channel": "Голос",
+    "group_name": "Голос Инфодок",
+    "skill_name": "Голос Инфодок",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Infodoc",
+    "channel": "Письмо+Чаты",
+    "group_name": "Письмо+Чаты Инфодок",
+    "skill_name": "Письмо Инфодок",
+    "note": null
+  },
+  {
+    "direction": "Infodoc",
+    "channel": "Письмо+Чаты",
+    "group_name": "Письмо+Чаты Инфодок",
+    "skill_name": "Чаты Инфодок",
+    "note": null
+  },
+  {
+    "direction": "Claim",
+    "channel": "Письмо",
+    "group_name": "Претензии Письмо",
+    "skill_name": "Претензии Письмо",
+    "note": "отдельно"
+  },
+  {
+    "direction": "SM+FT",
+    "channel": "Письмо+Чаты",
+    "group_name": "SMM Supp",
+    "skill_name": "SMM Supp",
+    "note": "отдельно"
+  },
+  {
+    "direction": "SM+FT",
+    "channel": "Письмо+Чаты",
+    "group_name": "SMM Fast Track",
+    "skill_name": "SMM Fast Track",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Catalogs",
+    "channel": "Письмо+Чаты",
+    "group_name": "Автокаталог: авто",
+    "skill_name": "Автокаталог: авто",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Catalogs",
+    "channel": "Письмо+Чаты",
+    "group_name": "Автокаталог: грузовики",
+    "skill_name": "Автокаталог: грузовики",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Catalogs",
+    "channel": "Письмо+Чаты",
+    "group_name": "Каталоги (гудсовые)",
+    "skill_name": "Каталоги (гудсовые)",
+    "note": "отдельно"
+  },
+  {
+    "direction": "Autoteka",
+    "channel": "Письмо+Чаты",
+    "group_name": "Автотека+Чаты",
+    "skill_name": "Автотека",
+    "note": null
+  },
+  {
+    "direction": "Autoteka",
+    "channel": "Письмо+Чаты",
+    "group_name": "Автотека+Чаты",
+    "skill_name": "Автотека (chat)",
+    "note": null
+  },
+  {
+    "direction": "Autohub",
+    "channel": "Письмо+Чаты",
+    "group_name": "Autohub (1-я линия)",
+    "skill_name": "Autohub",
+    "note": "1-я линия"
+  },
+  {
+    "direction": "Autohub",
+    "channel": "Письмо+Чаты",
+    "group_name": "Autohub 2nd",
+    "skill_name": "Autohub 2nd",
+    "note": "2-я линия"
+  }
+]

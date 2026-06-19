@@ -1,0 +1,614 @@
+[
+  {
+    "activity_name": "ABD исходящие",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Autohub 1st",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Autohub 2nd",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Autohub Proactive",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Billing",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "CSI",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "DC_Arbitrage",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Delivery 2nd Voice",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Delivery 2nd Письмо",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Delivery ABD",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Delivery Billing",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Delivery Claim",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Fast track",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Haraba",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Haraba 2nd",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Help Line",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Hotels (Voice)",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Hotels (Wr/Chat)",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Hotels исходящие",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "InfoDoc Печать",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Mass check",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "MSD (Chat)",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "MSD Голос",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "MSD Письмо",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Safe Deal Исходящие",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "SMM Mod",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "SMM Supp",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "STR Голос",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "STR Чаты",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "STR/Автотека",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "ToV рефреш",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "TRX OFP Голос",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "TRX OFP Письмо",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Up to you",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Webim",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Автокаталог",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Бадди",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Бадди Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Больничный",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Больничный (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Больничный Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Возвраты Инфодок",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Встреча",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Встреча Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Встреча с руководителем",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Голос 1st",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Голос 2nd",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Голос PRO+",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Голос Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Голос Инфодок",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Голос Претензии",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Декрет",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "ДО",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "ДО на мероприятие",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Доп. задание",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы 1st",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы 2nd",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы Claim",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы Infodoc Wr.",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы SMM",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы Арбитраж(Покупатели)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы Арбитраж(Продавцы)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Допы Новостройки",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Инфосессия по опросу лояльности и вовлеченности",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "ИСУ",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Карьерная неделя",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Каталог",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Квест",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Командная встреча / планёрка",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Комментарии в автотеке",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Конфликтология",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Новостройки",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Обед",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Обратные звонки Claim",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Обратные звонки Delivery",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Обратные звонки Infodoc",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Обратные звонки Private",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Обратные звонки PRO",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Обучение",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Обучение (LMS)",
+    "can_place_break": "no_but_movable"
+  },
+  {
+    "activity_name": "Обучение (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Обучение (Новости)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Обучение (Новости) Реклама",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Обучение Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Обучение с тренером",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Обучение с тренером (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Опоздание",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Опрос лояльности и вовлеченности",
+    "can_place_break": "no_but_movable"
+  },
+  {
+    "activity_name": "Опрос по БЗ",
+    "can_place_break": "no_but_movable"
+  },
+  {
+    "activity_name": "Отгул без переноса часов",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отгул без переноса часов (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отгул при НП",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отгул с переносом часов",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отгул с переносом часов (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отпуск",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отпуск (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отпуск Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Отсутствует",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Переводы Private",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Перенос часов Mass check",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов бадди",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Голос 1st",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Голос 2nd",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Доп. задание",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Командная встреча / планёрка",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов обучение",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов обучение (Новости)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Обучение (Новости) Реклама",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Письмо 1st",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Письмо 2nd",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов работа с бадди",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Спец. линия",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Чаты 1st",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перенос часов Чаты 2nd",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Перерыв",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Перерыв Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Письменные очереди 2nd (Голос)",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Письмо + Чаты Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Письмо 1st",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Письмо 2nd",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Письмо Private 2nd (архив)",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Письмо Инфодок",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Письмо Претензии",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Поля голос",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Поля письмо/чаты",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Помощь эксперта Private Voice",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Практика в скилле",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Практика в скилле, Письмо 1st",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Практика в скилле, Письмо 2nd",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Практика в скилле, Чаты 1st",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Практика в скилле, Чаты 2nd",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Прогул",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Прямой эфир",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Работа с бадди",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Работа с метриками",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Разбор ошибок",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Разбор риск-обращения",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Реверификация",
+    "can_place_break": "no_but_movable"
+  },
+  {
+    "activity_name": "Спецтикеты",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Тема квартала",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Тестирование",
+    "can_place_break": "no_but_movable"
+  },
+  {
+    "activity_name": "Учебный отпуск",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Учебный отпуск (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Форс-мажор",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Форс-мажор Аутсорс",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Форс-мажор без переноса часов",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Форс-мажор без переноса часов (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Форс-мажор с переносом часов",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Форс-мажор с переносом часов (не учёт)",
+    "can_place_break": "no"
+  },
+  {
+    "activity_name": "Чаты 1st",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Чаты 2nd",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Чаты Автотека",
+    "can_place_break": "yes"
+  },
+  {
+    "activity_name": "Чаты Инфодок",
+    "can_place_break": "yes"
+  }
+]

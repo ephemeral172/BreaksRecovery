@@ -1,0 +1,36 @@
+{
+  "name": "LoadMappings",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "lm100000-0000-0000-0000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const config = $input.first().json;\nconst base = config.GitRawBaseURL;\nconst branch = config.GitBranch || 'dev/breaks-recovery';\nconst path = config.MappingsPath || 'BreaksRecovery_Main/mappings';\n\nif (!base) {\n  throw new Error(\n    'System Error: GitRawBaseURL не задан. TDR v3 §6.5: маппинги загружаются из git (stash). Укажите URL raw-файлов в GetConfig.',\n  );\n}\n\nconst files = [\n  'activity',\n  'container',\n  'news_reading',\n  'news_exception_skills',\n  'fte_groups',\n  'email_fallback',\n  'fte_thresholds',\n  'runtime',\n];\n\nconst mappings = {};\n\nfor (const file of files) {\n  const url = `${String(base).replace(/\\/$/, '')}/${branch}/${path}/${file}.json`;\n  const response = await fetch(url);\n  if (!response.ok) {\n    throw new Error(`System Error: не удалось загрузить ${file}.json (${response.status}) из ${url}`);\n  }\n  mappings[file] = await response.json();\n}\n\nreturn [\n  {\n    json: {\n      ...config,\n      mappings,\n      mappings_loaded_at: new Date().toISOString(),\n    },\n  },\n];"
+      },
+      "id": "lm100000-0000-0000-0000-000000000002",
+      "name": "Fetch Mappings From Git",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "notes": "TDR v3 §6.5: HTTP GET mappings/*.json + runtime.json из git-репозитория команды RPA."
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [{ "node": "Fetch Mappings From Git", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

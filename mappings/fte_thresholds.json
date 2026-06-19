@@ -1,0 +1,42 @@
+[
+  {
+    "group_name": "AU Голос (все)",
+    "min_fte_floor": 0.5,
+    "comment": "AU Голос; не опускать ниже 0.5 FTE на 15-мин интервал"
+  },
+  {
+    "group_name": "AU Письмо+Чаты (все)",
+    "min_fte_floor": 0.5,
+    "comment": null
+  },
+  {
+    "group_name": "JO Голос (все)",
+    "min_fte_floor": 0.5,
+    "comment": "[уточнить у aakazarina]"
+  },
+  {
+    "group_name": "JO Письмо+Чаты (все)",
+    "min_fte_floor": 0.5,
+    "comment": "[]"
+  },
+  {
+    "group_name": "SE Голос - Items 2nd",
+    "min_fte_floor": 0.25,
+    "comment": "пример из TDR v3"
+  },
+  {
+    "group_name": "SE Голос - Tech 1st+2nd",
+    "min_fte_floor": 0.5,
+    "comment": null
+  },
+  {
+    "group_name": "DE Письмо - Claim",
+    "min_fte_floor": 0.25,
+    "comment": "пример из TDR v3"
+  },
+  {
+    "group_name": "DE Письмо - Billing",
+    "min_fte_floor": 0.25,
+    "comment": null
+  }
+]

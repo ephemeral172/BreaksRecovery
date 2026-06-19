@@ -1,0 +1,54 @@
+{
+  "name": "GetConfig",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b2000000-0000-0000-0000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"robotName\": \"BreaksRecovery\",\n  \"environment\": \"non-prod\",\n  \"DBSchemaName\": \"n8n_breaks_recovery\",\n  \"DBTableNameAgents\": \"agents\",\n  \"DBTableNameRecoveryTransactions\": \"recovery_transactions\",\n  \"DBTableNameBalanceTransactions\": \"balance_transactions\",\n  \"DBTableNameBalanceMoves\": \"breaks_balance_moves\",\n  \"WFMDBSchema\": \"public\",\n  \"WFMSBaseURL\": \"https://wfms.avito.ru\",\n  \"MattermostAPIURL\": \"https://mt.avito.ru/api/v4/\",\n  \"MMCBotAlertChannel\": \"RPA_BN_BreaksRecovery\",\n  \"MMCBotProdNotificationsChannel\": \"RPA_Robot_Prod_Notifications\",\n  \"CronSchedule\": \"0 2 * * *\",\n  \"CronTimezone\": \"Europe/Moscow\",\n  \"DataRetentionMonthsTransactions\": 12,\n  \"DataRetentionMonthsPII\": 6,\n  \"GitRawBaseURL\": null,\n  \"GitBranch\": \"dev/breaks-recovery\",\n  \"MappingsPath\": \"BreaksRecovery_Main/mappings\",\n  \"BatchSizeMaxAgents\": 200,\n  \"BatchSizeMaxBytes\": 262144\n}",
+        "options": {}
+      },
+      "id": "b2000000-0000-0000-0000-000000000002",
+      "name": "Config — JSON шаблон",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300],
+      "notes": "ADR-004: дефолтный конфиг. Позже HTTP Request к Git перетрёт значения.\nИсточник: workflows/config/breaks-recovery.config.json"
+    },
+    {
+      "parameters": {
+        "jsCode": "const REQUIRED_STRING_FIELDS = [\n  'robotName',\n  'environment',\n  'DBSchemaName',\n  'DBTableNameAgents',\n  'DBTableNameRecoveryTransactions',\n  'DBTableNameBalanceTransactions',\n  'DBTableNameBalanceMoves',\n  'WFMDBSchema',\n  'WFMSBaseURL',\n  'MattermostAPIURL',\n  'MMCBotAlertChannel',\n  'MMCBotProdNotificationsChannel',\n  'CronSchedule',\n  'CronTimezone',\n  'GitBranch',\n  'MappingsPath',\n];\n\nconst REQUIRED_NUMBER_FIELDS = [\n  'DataRetentionMonthsTransactions',\n  'DataRetentionMonthsPII',\n  'BatchSizeMaxAgents',\n  'BatchSizeMaxBytes',\n];\n\nconst item = $input.first().json;\nconst missing = [];\n\nfor (const field of REQUIRED_STRING_FIELDS) {\n  const value = item[field];\n  if (value === undefined || value === null || String(value).trim() === '') {\n    missing.push(field);\n  }\n}\n\nfor (const field of REQUIRED_NUMBER_FIELDS) {\n  const value = item[field];\n  if (value === undefined || value === null || Number.isNaN(Number(value))) {\n    missing.push(field);\n  }\n}\n\nif (missing.length > 0) {\n  throw new Error(`System Error: Config validation failed. Missing fields: ${missing.join(', ')}`);\n}\n\nreturn [{ json: item }];"
+      },
+      "id": "b2000000-0000-0000-0000-000000000003",
+      "name": "Validate Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "notes": "TDR §7 / ADR-004: проверка обязательных полей. При провале — force throw → ErrorHandler."
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [{ "node": "Config — JSON шаблон", "type": "main", "index": 0 }]
+      ]
+    },
+    "Config — JSON шаблон": {
+      "main": [
+        [{ "node": "Validate Config", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

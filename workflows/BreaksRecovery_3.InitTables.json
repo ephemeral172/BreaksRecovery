@@ -1,0 +1,160 @@
+{
+  "name": "InitTables",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1000000-0000-0000-0000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE SCHEMA IF NOT EXISTS n8n_breaks_recovery;",
+        "options": {}
+      },
+      "id": "a1000000-0000-0000-0000-000000000002",
+      "name": "Создание схемы n8n_breaks_recovery",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [460, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "name": "RPA DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS n8n_breaks_recovery.agents (\n    id          SERIAL PRIMARY KEY,\n    agent_login VARCHAR(100) NOT NULL UNIQUE,\n    created_at  TIMESTAMPTZ DEFAULT NOW()\n);",
+        "options": {}
+      },
+      "id": "a1000000-0000-0000-0000-000000000012",
+      "name": "Создание таблицы agents",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [680, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "name": "RPA DB"
+        }
+      },
+      "notes": "ADR-006 / TDR v3 §6.3: ПДн (agent_login) отдельно от журналов."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS n8n_breaks_recovery.recovery_transactions (\n    id                    SERIAL PRIMARY KEY,\n    processing_start_time TIMESTAMPTZ NOT NULL,\n    processing_end_time   TIMESTAMPTZ,\n    processing_status     VARCHAR(100) NOT NULL,\n    processing_comment    TEXT,\n    agent_id              INTEGER NOT NULL REFERENCES n8n_breaks_recovery.agents(id),\n    shift_date            DATE NOT NULL,\n    is_night_shift        BOOLEAN NOT NULL DEFAULT FALSE,\n    container_name        VARCHAR(200),\n    container_type        VARCHAR(50),\n    schedule_pattern      VARCHAR(50),\n    news_minutes          INTEGER,\n    activities_restored   INTEGER DEFAULT 0,\n    upload_status         VARCHAR(50),\n    error_code            VARCHAR(20),\n    UNIQUE (agent_id, shift_date)\n);\nCREATE INDEX IF NOT EXISTS ix_rt_shift_date ON n8n_breaks_recovery.recovery_transactions (shift_date);\nCREATE INDEX IF NOT EXISTS ix_rt_status     ON n8n_breaks_recovery.recovery_transactions (processing_status);",
+        "options": {}
+      },
+      "id": "a1000000-0000-0000-0000-000000000003",
+      "name": "Создание таблицы recovery_transactions",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [900, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "name": "RPA DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS n8n_breaks_recovery.balance_transactions (\n    id                        SERIAL PRIMARY KEY,\n    processing_start_time     TIMESTAMPTZ NOT NULL,\n    processing_end_time       TIMESTAMPTZ,\n    processing_status         VARCHAR(100) NOT NULL,\n    processing_comment        TEXT,\n    group_name                VARCHAR(200) NOT NULL,\n    direction                 VARCHAR(50),\n    channel                   VARCHAR(50),\n    coverage_date             DATE NOT NULL,\n    drop_ranges_total         INTEGER DEFAULT 0,\n    drop_ranges_no_candidates INTEGER DEFAULT 0,\n    moves_count               INTEGER DEFAULT 0,\n    upload_status             VARCHAR(50),\n    error_code                VARCHAR(20),\n    UNIQUE (group_name, coverage_date)\n);\nCREATE INDEX IF NOT EXISTS ix_bt_coverage_date ON n8n_breaks_recovery.balance_transactions (coverage_date);\nCREATE INDEX IF NOT EXISTS ix_bt_status        ON n8n_breaks_recovery.balance_transactions (processing_status);",
+        "options": {}
+      },
+      "id": "a1000000-0000-0000-0000-000000000004",
+      "name": "Создание таблицы balance_transactions",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1120, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "name": "RPA DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS n8n_breaks_recovery.breaks_balance_moves (\n    id             SERIAL PRIMARY KEY,\n    transaction_id INTEGER NOT NULL REFERENCES n8n_breaks_recovery.balance_transactions(id),\n    agent_id       INTEGER NOT NULL REFERENCES n8n_breaks_recovery.agents(id),\n    activity_name  VARCHAR(200) NOT NULL,\n    coverage_date  DATE NOT NULL,\n    old_start      TIMESTAMPTZ NOT NULL,\n    old_end        TIMESTAMPTZ NOT NULL,\n    new_start      TIMESTAMPTZ NOT NULL,\n    new_end        TIMESTAMPTZ NOT NULL,\n    line_name      VARCHAR(200),\n    UNIQUE (agent_id, coverage_date, activity_name, old_start)\n);\nCREATE INDEX IF NOT EXISTS ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agent_id, coverage_date);",
+        "options": {}
+      },
+      "id": "a1000000-0000-0000-0000-000000000005",
+      "name": "Создание таблицы breaks_balance_moves",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1340, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "name": "RPA DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT table_schema, table_name\nFROM information_schema.tables\nWHERE table_schema = 'n8n_breaks_recovery'\nORDER BY table_name;",
+        "options": {}
+      },
+      "id": "a1000000-0000-0000-0000-000000000013",
+      "name": "Проверка инициализации",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [1560, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "name": "RPA DB"
+        }
+      },
+      "notes": "TDR v3 §6.3: ожидается 4 таблицы (agents + 3 журнала). Маппинги — в git, не в БД."
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [{ "node": "Создание схемы n8n_breaks_recovery", "type": "main", "index": 0 }]
+      ]
+    },
+    "Создание схемы n8n_breaks_recovery": {
+      "main": [
+        [{ "node": "Создание таблицы agents", "type": "main", "index": 0 }]
+      ]
+    },
+    "Создание таблицы agents": {
+      "main": [
+        [{ "node": "Создание таблицы recovery_transactions", "type": "main", "index": 0 }]
+      ]
+    },
+    "Создание таблицы recovery_transactions": {
+      "main": [
+        [{ "node": "Создание таблицы balance_transactions", "type": "main", "index": 0 }]
+      ]
+    },
+    "Создание таблицы balance_transactions": {
+      "main": [
+        [{ "node": "Создание таблицы breaks_balance_moves", "type": "main", "index": 0 }]
+      ]
+    },
+    "Создание таблицы breaks_balance_moves": {
+      "main": [
+        [{ "node": "Проверка инициализации", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

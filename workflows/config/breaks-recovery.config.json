@@ -1,0 +1,23 @@
+{
+  "robotName": "BreaksRecovery",
+  "environment": "non-prod",
+  "DBSchemaName": "n8n_breaks_recovery",
+  "DBTableNameAgents": "agents",
+  "DBTableNameRecoveryTransactions": "recovery_transactions",
+  "DBTableNameBalanceTransactions": "balance_transactions",
+  "DBTableNameBalanceMoves": "breaks_balance_moves",
+  "WFMDBSchema": "public",
+  "WFMSBaseURL": "https://wfms.avito.ru",
+  "MattermostAPIURL": "https://mt.avito.ru/api/v4/",
+  "MMCBotAlertChannel": "RPA_BN_BreaksRecovery",
+  "MMCBotProdNotificationsChannel": "RPA_Robot_Prod_Notifications",
+  "CronSchedule": "0 2 * * *",
+  "CronTimezone": "Europe/Moscow",
+  "DataRetentionMonthsTransactions": 12,
+  "DataRetentionMonthsPII": 6,
+  "GitRawBaseURL": null,
+  "GitBranch": "dev/breaks-recovery",
+  "MappingsPath": "BreaksRecovery_Main/mappings",
+  "BatchSizeMaxAgents": 200,
+  "BatchSizeMaxBytes": 262144
+}
