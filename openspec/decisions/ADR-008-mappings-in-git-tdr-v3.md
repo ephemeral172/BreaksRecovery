@@ -43,7 +43,7 @@ TDR v3 переносит все маппинги в git-репозиторий 
    - **Stash:** `{base}/{path}/{file}.json?at=refs/heads/{branch}` + **HTTP Basic Auth** на Code-ноде
 3. Main хранит `mappings` в контексте выполнения (`Continue Phase 2`)
 
-**Прогон dev (18.06.2026):** GitHub `ephemeral172/BreaksRecovery`, `MappingsPath: mappings`, 8 файлов загружены (в т.ч. `activity` 153, `fte_groups` 161).
+**Прогон (22.06.2026):** Stash `projects/RPA/repos/n8n`, ветка `RPA-1824`, 8 файлов загружены (в т.ч. `activity` 153, `fte_groups` 161).
 
 ## Последствия
 

@@ -252,29 +252,11 @@ CREATE INDEX ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agen
 | `fte_thresholds.json` | Мин. FTE по группам (WF-2) | шаблон |
 | `runtime.json` | Batch, retry, cron, SMTP | TDR §6.5 |
 
-Загрузка: воркфлоу `LoadMappings` (HTTP из `GitRawBaseURL`). Нода **Fetch JSON** (HTTP Request) — Basic Auth credential в UI; для GitHub public — Authentication = None. Legacy SQL: `init_cfg_data.sql` (deprecated).
+Загрузка: воркфлоу `LoadMappings` (HTTP из `GitRawBaseURL`). Нода **Fetch JSON** (HTTP Request) — **Basic Auth** credential (Stash). Шаблон: `workflows/config/breaks-recovery.config.json`. Legacy SQL: `init_cfg_data.sql` (deprecated).
 
-### Dev-контур (GitHub, прогнан 18.06.2026)
+### Git / Stash (`projects/RPA/repos/n8n`)
 
-Репозиторий: [github.com/ephemeral172/BreaksRecovery](https://github.com/ephemeral172/BreaksRecovery) (public, ветка `main`).
-
-Поля **GetConfig**:
-
-```json
-"GitRawBaseURL": "https://raw.githubusercontent.com/ephemeral172/BreaksRecovery",
-"GitBranch": "main",
-"MappingsPath": "mappings"
-```
-
-Проверка raw: `.../main/mappings/fte_groups.json` → HTTP 200.
-
-Цепочка Main Phase 1: `GetConfig` → `InitTables` (опц.) → `Restore Config Context` → **`Execute LoadMappings`** → Phase 2.
-
-Прод/Stash: те же `MappingsPath` при структуре `BreaksRecovery_Main/mappings/`, иначе сменить только URL и ветку.
-
-### Prod-контур (Stash)
-
-Поля **GetConfig**:
+Поля **GetConfig** (и `workflows/config/breaks-recovery.config.json`):
 
 ```json
 "GitRawBaseURL": "https://stash.msk.avito.ru/projects/RPA/repos/n8n/raw",
@@ -282,11 +264,15 @@ CREATE INDEX ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agen
 "MappingsPath": "BreaksRecovery_Main/mappings"
 ```
 
-**Формат URL (отличается от GitHub):** Stash/Bitbucket Server — ветка в query `?at=refs/heads/{branch}`, не в path:
+> После merge PR в `dev`/`main` — обновить только `GitBranch` в GetConfig.
+
+**Формат raw URL:** ветка в query `?at=refs/heads/{branch}`, не в path:
 
 `.../raw/BreaksRecovery_Main/mappings/activity.json?at=refs%2Fheads%2FRPA-1824`
 
-**Авторизация:** репозиторий приватный → HTTP **401** без credentials. На ноде **Fetch JSON** (LoadMappings) → **Authentication: Basic Auth** → выбрать credential **HTTP Basic Auth**:
+Цепочка Main Phase 1: `GetConfig` → `InitTables` (опц.) → `Restore Config Context` → **`Execute LoadMappings`** → Phase 2.
+
+**Авторизация:** репозиторий приватный → HTTP **401** без credentials. На ноде **Fetch JSON** (LoadMappings) → **Authentication: Basic Auth** → credential **HTTP Basic Auth**:
 
 | Поле | Значение |
 |---|---|

@@ -53,7 +53,7 @@
 | **Воркфлоу** |
 | WF-01 | `GetConfig` | ✓ прогнан (n8n_breaks_recovery) | §7 | §2.6, §4.9 |
 | WF-02 | `InitTables` | ✓ 4 табл. TDR v3 | §6.3, ADR-008 | §2.6 |
-| WF-02b | `LoadMappings` | ✓ E2E GitHub (18.06) + **Stash RPA-1824** (22.06) | §6.5 | — |
+| WF-02b | `LoadMappings` | ✓ E2E Stash `RPA-1824` (22.06) | §6.5 | — |
 | WF-04 | `BreaksRecovery_Main` Phase 1 INIT | ✓ E2E non-prod (17.06) | §7 | §4.5 |
 | WF-04b | `BreaksRecovery_Main` Phase 2 GET DATA | ✓ E2E test (18.06): 4918→4918 | §7.1, §7.3 | §4.5 шаг 3 |
 | WF-08 | Cron `0 2 * * *` UTC | ✓ | — | §2.6, §4.5 шаг 1 |
@@ -171,7 +171,7 @@
 | N-04 | Credential WFM DB | ✓ |
 | N-05 | SQL агентов D+1 | ✓ test + Main |
 | N-06 | `cfg_email_fallback` | — |
-| N-07 | HTTP→Git: LoadMappings + GitRawBaseURL | ✓ GitHub `ephemeral172/BreaksRecovery`, branch `main` |
+| N-07 | HTTP→Git: LoadMappings + GitRawBaseURL | ✓ Stash `RPA/n8n`, ветка `RPA-1824` |
 | N-13 | LoadMappings E2E (httpRequest, не fetch) | ✓ 18.06; `this.helpers.httpRequest` в Code |
 | N-14 | LoadMappings Stash: `?at=refs/heads/`, Basic Auth, Response Text | ✓ 22.06; ветка `RPA-1824`, static data + 8 items |
 | N-08 | Схема `n8n_breaks_recovery` + `agents` (ADR-006) | ✓ InitTables + cfg + DROP rpa |

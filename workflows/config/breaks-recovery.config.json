@@ -15,9 +15,9 @@
   "CronTimezone": "Europe/Moscow",
   "DataRetentionMonthsTransactions": 12,
   "DataRetentionMonthsPII": 6,
-  "GitRawBaseURL": "https://raw.githubusercontent.com/ephemeral172/BreaksRecovery",
-  "GitBranch": "main",
-  "MappingsPath": "mappings",
+  "GitRawBaseURL": "https://stash.msk.avito.ru/projects/RPA/repos/n8n/raw",
+  "GitBranch": "RPA-1824",
+  "MappingsPath": "BreaksRecovery_Main/mappings",
   "BatchSizeMaxAgents": 200,
   "BatchSizeMaxBytes": 262144
 }
