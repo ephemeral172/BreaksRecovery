@@ -2,7 +2,7 @@
 
 > **Легенда:** ✓ — сделано · ✓ *пояснение* — сделано с уточнением · ~ — частично · — — не сделано
 
-**Обновлено:** 18.06.2026
+**Обновлено:** 22.06.2026 (LoadMappings E2E Stash RPA-1824)
 
 ---
 
@@ -13,7 +13,7 @@
 | **Проект целиком** (WF-1 + WF-2) | **~42** | Фундамент готов; бизнес-логика и WF-2 — впереди |
 | **Робот 1 — восстановление** (ТЗ §4.5) | **~50** | INIT + GET DATA закрыты; шаги 4–6, 8–12, 15–18 — нет |
 | **Робот 2 — балансировка** | **~5** | Черновик воркфлоу |
-| Фаза 0 — каркас (БД, конфиг, InitTables, ADR) | **~95** | Осталось: GitRawBaseURL, email_fallback.json, Stash |
+| Фаза 0 — каркас (БД, конфиг, InitTables, ADR) | **~98** | Осталось: email_fallback.json, Stash prod |
 | Phase 2 GET DATA (test E2E) | **100** | 4918 агентов D+1, Filter 4918→4918 |
 | Phase 3 PROCESS — логика 8–11 | **~5** | Code-заглушки |
 | Phase 4 UPLOAD WFMS | **~10** | HTTP-заглушки |
@@ -53,7 +53,7 @@
 | **Воркфлоу** |
 | WF-01 | `GetConfig` | ✓ прогнан (n8n_breaks_recovery) | §7 | §2.6, §4.9 |
 | WF-02 | `InitTables` | ✓ 4 табл. TDR v3 | §6.3, ADR-008 | §2.6 |
-| WF-02b | `LoadMappings` | ✓ JSON; нужен GitRawBaseURL | §6.5 | — |
+| WF-02b | `LoadMappings` | ✓ E2E GitHub (18.06) + **Stash RPA-1824** (22.06) | §6.5 | — |
 | WF-04 | `BreaksRecovery_Main` Phase 1 INIT | ✓ E2E non-prod (17.06) | §7 | §4.5 |
 | WF-04b | `BreaksRecovery_Main` Phase 2 GET DATA | ✓ E2E test (18.06): 4918→4918 | §7.1, §7.3 | §4.5 шаг 3 |
 | WF-08 | Cron `0 2 * * *` UTC | ✓ | — | §2.6, §4.5 шаг 1 |
@@ -64,19 +64,33 @@
 | A-05 | RPA DB (`robotdata`) | ✓ | §7.3 | — |
 | A-02, A-04 | WFM DB | ✓ test | §7.1 | §2.6 |
 | A-06 | Mattermost Bot | ~ Continue On Error | §7.4 | §4.9 |
-| A-01, A-03, A-07 | prod RPA, Stash, SMTP | — | — | §4.8 SE2 |
+| A-01, A-03, A-07 | prod RPA, Stash, SMTP | ~ Stash Basic Auth ✓ (LoadMappings) | — | §4.8 SE2 |
 
 ---
 
 ## Main E2E — детализация
 
-### Phase 1 INIT (17.06.2026, non-prod)
+### Phase 1 INIT (22.06.2026, Stash RPA-1824)
 
 | Нода / шаг | Результат | TDR | ТЗ |
 |---|---|---|---|
-| Cron → Execute GetConfig | ✓ | §7 | §4.5 шаг 1–2 |
-| Execute InitTables | ✓ 10 табл. `n8n_breaks_recovery` | §6.3, ADR-006 | §2.6 |
-| Restore Config Context | ✓ | ADR-004 | — |
+| Execute GetConfig | ✓ `GitBranch: RPA-1824`, Stash raw URL | §6.5 | §4.5 шаг 1–2 |
+| Execute LoadMappings | ✓ 8 JSON из Stash; `mappings.activity` (153), … | §6.5 | — |
+
+### Phase 1 INIT (18.06.2026, TDR v3 + GitHub dev)
+
+| Нода / шаг | Результат | TDR | ТЗ |
+|---|---|---|---|
+| Cron → Execute GetConfig | ✓ `GitRawBaseURL`, `MappingsPath: mappings` | §6.5 | §4.5 шаг 1–2 |
+| Execute InitTables | ✓ 4 табл. (пропуск — БД уже OK) | §6.3, ADR-008 | §2.6 |
+| Restore Config Context | ✓ конфиг с GitHub URL | ADR-004 | — |
+| Execute LoadMappings | ✓ 8 JSON с GitHub (`activity` 153, `fte_groups` 161, …) | §6.5 | — |
+
+### Phase 1 INIT (17.06.2026, legacy)
+
+| Нода / шаг | Результат | TDR | ТЗ |
+|---|---|---|---|
+| Execute InitTables | ✓ 10 табл. `n8n_breaks_recovery` (до TDR v3) | §6.3, ADR-006 | §2.6 |
 
 ### Phase 2 GET DATA (18.06.2026, WFM test)
 
@@ -86,7 +100,7 @@
 | Continue Phase 2 | ✓ `processed_agents_count: 0` | — | — |
 | Get Support Skills | ✓ → Extract Support Skills (mappings) | §6.5 | §4.5 шаг 2* |
 | Build WF1 Query | ✓ динамический WF1-01 | §7.1 оп.1 | §4.5 шаг 3 |
-| Get Agents D+1 | ✓ **4918** агентов (фильтр cfg) | §7.1 оп.1 | §4.5 шаг 3 |
+| Get Agents D+1 | ✓ **4918** агентов (фильтр fte_groups.json) | §7.1 оп.1 | §4.5 шаг 3 |
 | Filter New Agents | ✓ **4918** (полный прогон цепочки) | §7.1 + §7.3 | §4.5 шаг 3 |
 
 \* Навыки из `mappings/fte_groups.json` (TDR v3 §6.5), не из RPA DB.
@@ -127,7 +141,7 @@
 | S0-06g | `GetConfig` | ✓ прогнан |
 | S0-07 | Cron 05:00 МСК | ✓ |
 | S0-11 | Main E2E прогон | ✓ |
-| S0-08 | Папка в Stash | — |
+| S0-08 | mappings в Stash (`RPA-1824`) | ✓ LoadMappings E2E |
 | S0-09 | mTLS non-prod | — не требуется |
 | S0-10 | mTLS prod | — |
 
@@ -157,7 +171,9 @@
 | N-04 | Credential WFM DB | ✓ |
 | N-05 | SQL агентов D+1 | ✓ test + Main |
 | N-06 | `cfg_email_fallback` | — |
-| N-07 | HTTP→Git: LoadMappings + GitRawBaseURL | ~ JSON готов; URL в GetConfig — |
+| N-07 | HTTP→Git: LoadMappings + GitRawBaseURL | ✓ GitHub `ephemeral172/BreaksRecovery`, branch `main` |
+| N-13 | LoadMappings E2E (httpRequest, не fetch) | ✓ 18.06; `this.helpers.httpRequest` в Code |
+| N-14 | LoadMappings Stash: `?at=refs/heads/`, Basic Auth, Response Text | ✓ 22.06; ветка `RPA-1824`, static data + 8 items |
 | N-08 | Схема `n8n_breaks_recovery` + `agents` (ADR-006) | ✓ InitTables + cfg + DROP rpa |
 | N-09 | WFM SQL ловушки (ADR-007) | ✓ test: not_erasable, time/timestamp, FTE join, TZ |
 | N-10 | Write Transaction + фильтр агентов (ADR-006, ADR-007 §4) | ✓ Main + SQL |

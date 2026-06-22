@@ -11,20 +11,67 @@
     },
     {
       "parameters": {
-        "jsCode": "const config = $input.first().json;\nconst base = config.GitRawBaseURL;\nconst branch = config.GitBranch || 'dev/breaks-recovery';\nconst path = config.MappingsPath || 'BreaksRecovery_Main/mappings';\n\nif (!base) {\n  throw new Error(\n    'System Error: GitRawBaseURL не задан. TDR v3 §6.5: маппинги загружаются из git (stash). Укажите URL raw-файлов в GetConfig.',\n  );\n}\n\nconst files = [\n  'activity',\n  'container',\n  'news_reading',\n  'news_exception_skills',\n  'fte_groups',\n  'email_fallback',\n  'fte_thresholds',\n  'runtime',\n];\n\nconst mappings = {};\n\nfor (const file of files) {\n  const url = `${String(base).replace(/\\/$/, '')}/${branch}/${path}/${file}.json`;\n  const response = await fetch(url);\n  if (!response.ok) {\n    throw new Error(`System Error: не удалось загрузить ${file}.json (${response.status}) из ${url}`);\n  }\n  mappings[file] = await response.json();\n}\n\nreturn [\n  {\n    json: {\n      ...config,\n      mappings,\n      mappings_loaded_at: new Date().toISOString(),\n    },\n  },\n];"
+        "jsCode": "const config = $input.first().json;\nconst base = config.GitRawBaseURL;\nconst branch = config.GitBranch || 'dev/breaks-recovery';\nconst path = config.MappingsPath || 'BreaksRecovery_Main/mappings';\n\nif (!base) {\n  throw new Error(\n    'System Error: GitRawBaseURL не задан. TDR v3 §6.5: маппинги загружаются из git. Укажите URL raw-файлов в GetConfig.',\n  );\n}\n\nconst baseUrl = String(base).replace(/\\/$/, '');\nconst isStash =\n  /stash\\.|\\/projects\\/[^/]+\\/repos\\//i.test(baseUrl) &&\n  !baseUrl.includes('raw.githubusercontent.com');\n\nconst files = [\n  'activity',\n  'container',\n  'news_reading',\n  'news_exception_skills',\n  'fte_groups',\n  'email_fallback',\n  'fte_thresholds',\n  'runtime',\n];\n\nfunction buildMappingUrl(file) {\n  if (isStash) {\n    const at = branch.startsWith('refs/') ? branch : `refs/heads/${branch}`;\n    return `${baseUrl}/${path}/${file}.json?at=${encodeURIComponent(at)}`;\n  }\n  return `${baseUrl}/${branch}/${path}/${file}.json`;\n}\n\nconst staticData = $getWorkflowStaticData('global');\nstaticData.config = config;\nstaticData.files = files;\n\nreturn files.map((file) => ({\n  json: {\n    url: buildMappingUrl(file),\n  },\n}));"
       },
       "id": "lm100000-0000-0000-0000-000000000002",
-      "name": "Fetch Mappings From Git",
+      "name": "Build Mapping URLs",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [480, 300],
-      "notes": "TDR v3 §6.5: HTTP GET mappings/*.json + runtime.json из git-репозитория команды RPA."
+      "position": [460, 300],
+      "notes": "URL + порядок файлов в workflow static data (sub-workflow: $('Node') ненадёжен)."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "lm100000-0000-0000-0000-000000000003",
+      "name": "Fetch JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "",
+          "name": "Stash HTTP Basic Auth"
+        }
+      },
+      "notes": "Stash: Basic Auth. Response Format = Text (массивы activity/fte_groups не разбиваются на items)."
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nconst config = staticData.config;\nconst files = staticData.files;\n\nif (!config || !Array.isArray(files) || files.length === 0) {\n  throw new Error(\n    'System Error: LoadMappings — нет контекста GetConfig. Запускайте из Main после Restore Config Context.',\n  );\n}\n\nconst items = $input.all();\nif (items.length !== files.length) {\n  throw new Error(\n    `System Error: LoadMappings — ожидалось ${files.length} ответов HTTP, получено ${items.length}. ` +\n      'JSON-массив разбился на items: в Fetch JSON → Options → Response → Response Format = Text.',\n  );\n}\n\nconst mappings = {};\nfor (let i = 0; i < files.length; i++) {\n  const raw = items[i].json;\n  let body = raw?.mapping_body;\n\n  if (body === undefined) {\n    const text =\n      typeof raw === 'string'\n        ? raw\n        : typeof raw?.data === 'string'\n          ? raw.data\n          : typeof raw?.body === 'string'\n            ? raw.body\n            : null;\n    if (text) {\n      body = JSON.parse(text);\n    } else if (Array.isArray(raw) || (raw && !raw.url && typeof raw === 'object')) {\n      body = raw;\n    } else {\n      throw new Error(\n        `System Error: LoadMappings — не удалось разобрать ${files[i]}.json. В Fetch JSON: Response Format = Text.`,\n      );\n    }\n  }\n\n  if (body === undefined || body === null) {\n    throw new Error(`System Error: LoadMappings — пустой ответ для ${files[i]}.json`);\n  }\n  mappings[files[i]] = body;\n}\n\ndelete staticData.config;\ndelete staticData.files;\n\nreturn [\n  {\n    json: {\n      ...config,\n      mappings,\n      mappings_loaded_at: new Date().toISOString(),\n    },\n  },\n];"
+      },
+      "id": "lm100000-0000-0000-0000-000000000004",
+      "name": "Assemble Mappings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
     }
   ],
   "connections": {
     "Start": {
       "main": [
-        [{ "node": "Fetch Mappings From Git", "type": "main", "index": 0 }]
+        [{ "node": "Build Mapping URLs", "type": "main", "index": 0 }]
+      ]
+    },
+    "Build Mapping URLs": {
+      "main": [
+        [{ "node": "Fetch JSON", "type": "main", "index": 0 }]
+      ]
+    },
+    "Fetch JSON": {
+      "main": [
+        [{ "node": "Assemble Mappings", "type": "main", "index": 0 }]
       ]
     }
   },

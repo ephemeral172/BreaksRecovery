@@ -37,9 +37,13 @@ TDR v3 переносит все маппинги в git-репозиторий 
 
 ### Загрузка в n8n
 
-1. `GetConfig` — runtime-параметры, имена таблиц, `GitRawBaseURL`, `MappingsPath`
-2. `LoadMappings` — HTTP GET всех JSON из git
+1. `GetConfig` — runtime-параметры, имена таблиц, `GitRawBaseURL`, `MappingsPath` (`GitRawBaseURL` обязателен в Validate)
+2. `LoadMappings` — HTTP GET всех JSON из git через **`this.helpers.httpRequest`** (не `fetch`)
+   - **GitHub:** `{base}/{branch}/{path}/{file}.json`
+   - **Stash:** `{base}/{path}/{file}.json?at=refs/heads/{branch}` + **HTTP Basic Auth** на Code-ноде
 3. Main хранит `mappings` в контексте выполнения (`Continue Phase 2`)
+
+**Прогон dev (18.06.2026):** GitHub `ephemeral172/BreaksRecovery`, `MappingsPath: mappings`, 8 файлов загружены (в т.ч. `activity` 153, `fte_groups` 161).
 
 ## Последствия
 
@@ -47,6 +51,7 @@ TDR v3 переносит все маппинги в git-репозиторий 
 - `InitCfgData` / `init_cfg_data.sql` — **legacy** (данные → `mappings/*.json`)
 - Миграция существующей БД: `workflows/sql/migrate_tdr_v3.sql`
 - До настройки `GitRawBaseURL` Phase 1 падает на `LoadMappings` — ожидаемо
+- В n8n Code-ноде нет глобального `fetch` — использовать `this.helpers.httpRequest({ method: 'GET', url, json: true })`
 
 ## Связанные ADR
 
