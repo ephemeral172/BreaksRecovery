@@ -17,7 +17,7 @@
       "position": [-2000, 0],
       "id": "m1000000-0000-0000-0000-000000000001",
       "name": "Cron 05:00 MSK",
-      "notes": "0 2 * * * UTC = 05:00 Europe/Moscow (ТЗ §2.6).\nНа ОПЭ: временно 0 10 * * * UTC = 13:00 МСК."
+      "notes": "0 2 * * * UTC = 05:00 Europe/Moscow (ТЗ §2.6).\nДолжен совпадать с GetConfig.CronSchedule.\nНа ОПЭ: 0 10 * * * UTC = 13:00 МСК."
     },
     {
       "parameters": {
@@ -30,7 +30,7 @@
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [-1780, 0],
+      "position": [-1720, 0],
       "id": "m1000000-0000-0000-0000-000000000002",
       "name": "Execute GetConfig",
       "notes": "Phase 1 INIT. ADR-004: JSON-конфиг + Validate (не rpa_config из БД)."
@@ -46,7 +46,7 @@
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [-1560, 0],
+      "position": [-1440, 0],
       "id": "m1000000-0000-0000-0000-000000000003",
       "name": "Execute InitTables",
       "notes": "Phase 1 INIT. TDR §6.3: idempotent CREATE SCHEMA/TABLE."
@@ -57,7 +57,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-1340, 0],
+      "position": [-1160, 0],
       "id": "m1000000-0000-0000-0000-000000000004",
       "name": "Restore Config Context",
       "notes": "После InitTables возвращаем config в $json для downstream-нод."
@@ -73,7 +73,7 @@
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [-1260, 0],
+      "position": [-880, 0],
       "id": "m1000000-0000-0000-0000-000000000025",
       "name": "Execute LoadMappings",
       "notes": "TDR v3 §6.5: загрузка mappings/*.json из git (HTTP). Требует GitRawBaseURL в GetConfig."
@@ -81,12 +81,12 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT a.agent_login\nFROM n8n_breaks_recovery.agents a\nINNER JOIN n8n_breaks_recovery.recovery_transactions t ON t.agent_id = a.id\nWHERE t.shift_date = ((NOW() AT TIME ZONE 'Europe/Moscow')::date + 1);",
+        "query": "SELECT a.agent_login\nFROM n8n_breaks_recovery.agents a\nINNER JOIN n8n_breaks_recovery.recovery_transactions t ON t.agent_id = a.id\nWHERE t.shift_date = ((NOW() AT TIME ZONE 'Europe/Moscow')::date + 1)\n  AND t.processing_status IN ('success', 'skipped_BE2', 'skipped_BE3');",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [-1240, 0],
+      "position": [-600, 0],
       "id": "m1000000-0000-0000-0000-000000000020",
       "name": "Get Processed Agents",
       "alwaysOutputData": true,
@@ -96,7 +96,7 @@
           "name": "RPA DB"
         }
       },
-      "notes": "ТЗ §4.5 шаг 3: пропуск уже обработанных на D+1. Credential: RPA DB.\nalwaysOutputData: при 0 строк передаёт пустой item дальше (иначе n8n рвёт цепочку)."
+      "notes": "ТЗ §4.5 шаг 3: пропуск финализированных на D+1 (success, skipped_BE2/BE3).\nfailed/in_progress — повторная обработка в тот же день.\nCredential: RPA DB.\nalwaysOutputData: при 0 строк передаёт пустой item дальше."
     },
     {
       "parameters": {
@@ -104,7 +104,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-1210, 0],
+      "position": [-320, 0],
       "id": "m1000000-0000-0000-0000-000000000024",
       "name": "Continue Phase 2",
       "notes": "Якорь потока после Get Processed Agents: 0 обработанных на D+1 — норма, Phase 2 идёт дальше."
@@ -115,7 +115,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-1180, 0],
+      "position": [-40, 0],
       "id": "m1000000-0000-0000-0000-000000000022",
       "name": "Extract Support Skills",
       "notes": "WF1-00: навыки из mappings/fte_groups.json + news_exception_skills.json (TDR v3 §6.5)."
@@ -126,7 +126,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-1150, 0],
+      "position": [280, 0],
       "id": "m1000000-0000-0000-0000-000000000023",
       "name": "Build WF1 Query",
       "notes": "Собирает WF1-01 с фильтром навыков из mappings/fte_groups.json."
@@ -139,7 +139,7 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [-1120, 0],
+      "position": [600, 0],
       "id": "m1000000-0000-0000-0000-000000000005",
       "name": "Get Agents D+1",
       "credentials": {
@@ -156,7 +156,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-1010, 0],
+      "position": [920, 0],
       "id": "m1000000-0000-0000-0000-000000000021",
       "name": "Filter New Agents",
       "notes": "ТЗ §4.5 шаг 3: исключить обработанных на D+1.\nprocessed_agents — снимок из Continue Phase 2 (тот же execution). Агенты — $input от Get Agents D+1."
@@ -169,7 +169,7 @@
       },
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [-900, 0],
+      "position": [920, 300],
       "id": "m1000000-0000-0000-0000-000000000006",
       "name": "Process Each Agent",
       "notes": "Phase 3 PROCESS. ТЗ §4.5 шаг 7: транзакция = 1 агент."
@@ -180,7 +180,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-900, 240],
+      "position": [1200, 300],
       "id": "m1000000-0000-0000-0000-000000000007",
       "name": "Determine Container Rules",
       "notes": "Шаг 8."
@@ -191,7 +191,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-680, 240],
+      "position": [1480, 300],
       "id": "m1000000-0000-0000-0000-000000000008",
       "name": "Calculate News Duration",
       "notes": "Шаг 9."
@@ -202,7 +202,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-460, 240],
+      "position": [1760, 300],
       "id": "m1000000-0000-0000-0000-000000000009",
       "name": "Find Missing Activities",
       "notes": "Шаг 10."
@@ -213,7 +213,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-240, 240],
+      "position": [2040, 300],
       "id": "m1000000-0000-0000-0000-000000000010",
       "name": "Calculate Slots",
       "notes": "Шаг 11."
@@ -244,7 +244,7 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [-20, 240],
+      "position": [2320, 300],
       "id": "m1000000-0000-0000-0000-000000000011",
       "name": "BE2/BE3 Check",
       "notes": "true (error_code) -> skipped; false -> Add to Batch."
@@ -255,7 +255,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-20, 480],
+      "position": [2320, 520],
       "id": "m1000000-0000-0000-0000-000000000012",
       "name": "Add to Batch",
       "notes": "Шаг 12."
@@ -263,14 +263,14 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "WITH upsert_agent AS (\n  INSERT INTO n8n_breaks_recovery.agents (agent_login)\n  VALUES ($1)\n  ON CONFLICT (agent_login) DO NOTHING\n  RETURNING id\n),\nagent_row AS (\n  SELECT id FROM upsert_agent\n  UNION ALL\n  SELECT id FROM n8n_breaks_recovery.agents WHERE agent_login = $1\n  LIMIT 1\n)\nINSERT INTO n8n_breaks_recovery.recovery_transactions (\n  processing_start_time,\n  processing_end_time,\n  processing_status,\n  processing_comment,\n  agent_id,\n  shift_date,\n  is_night_shift,\n  error_code\n)\nSELECT\n  NOW(),\n  CASE WHEN NULLIF($4, '') IS NOT NULL THEN NOW() ELSE NULL END,\n  CASE\n    WHEN NULLIF($4, '') IS NULL THEN 'in_progress'\n    WHEN $4 = 'BE2' THEN 'skipped_BE2'\n    WHEN $4 = 'BE3' THEN 'skipped_BE3'\n    ELSE 'failed'\n  END,\n  NULLIF($5, ''),\n  (SELECT id FROM agent_row),\n  $2::date,\n  $3::boolean,\n  NULLIF($4, '')\nON CONFLICT (agent_id, shift_date) DO UPDATE SET\n  processing_status = EXCLUDED.processing_status,\n  processing_end_time = EXCLUDED.processing_end_time,\n  processing_comment = COALESCE(EXCLUDED.processing_comment, breaks_recovery_transactions.processing_comment),\n  error_code = COALESCE(EXCLUDED.error_code, breaks_recovery_transactions.error_code),\n  is_night_shift = EXCLUDED.is_night_shift\nRETURNING id AS transaction_id, agent_id, processing_status;",
+        "query": "WITH upsert_agent AS (\n  INSERT INTO n8n_breaks_recovery.agents (agent_login)\n  VALUES ($1)\n  ON CONFLICT (agent_login) DO NOTHING\n  RETURNING id\n),\nagent_row AS (\n  SELECT id FROM upsert_agent\n  UNION ALL\n  SELECT id FROM n8n_breaks_recovery.agents WHERE agent_login = $1\n  LIMIT 1\n)\nINSERT INTO n8n_breaks_recovery.recovery_transactions (\n  processing_start_time,\n  processing_end_time,\n  processing_status,\n  processing_comment,\n  agent_id,\n  shift_date,\n  is_night_shift,\n  error_code\n)\nSELECT\n  NOW(),\n  CASE WHEN NULLIF($4, '') IS NOT NULL THEN NOW() ELSE NULL END,\n  CASE\n    WHEN NULLIF($4, '') IS NULL THEN 'in_progress'\n    WHEN $4 = 'BE2' THEN 'skipped_BE2'\n    WHEN $4 = 'BE3' THEN 'skipped_BE3'\n    ELSE 'failed'\n  END,\n  NULLIF($5, ''),\n  (SELECT id FROM agent_row),\n  $2::date,\n  $3::boolean,\n  NULLIF($4, '')\nON CONFLICT (agent_id, shift_date) DO UPDATE SET\n  processing_status = EXCLUDED.processing_status,\n  processing_end_time = EXCLUDED.processing_end_time,\n  processing_comment = COALESCE(EXCLUDED.processing_comment, recovery_transactions.processing_comment),\n  error_code = COALESCE(EXCLUDED.error_code, recovery_transactions.error_code),\n  is_night_shift = EXCLUDED.is_night_shift\nRETURNING id AS transaction_id, agent_id, processing_status;",
         "options": {
           "queryReplacement": "={{ $json.agent_login }},{{ $json.shift_date }},{{ $json.is_night_shift }},{{ $json.error_code || '' }},{{ $json.processing_comment || '' }}"
         }
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [220, 240],
+      "position": [2600, 300],
       "id": "m1000000-0000-0000-0000-000000000013",
       "name": "Write Transaction",
       "credentials": {
@@ -289,7 +289,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [-680, 0],
+      "position": [1240, 0],
       "id": "m1000000-0000-0000-0000-000000000014",
       "name": "Auth WFMS",
       "notes": "ЗАГЛУШКА. TDR §7.2: LDAP + cookie. Ошибка -> BE4. R-08."
@@ -302,7 +302,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [-460, 0],
+      "position": [1520, 0],
       "id": "m1000000-0000-0000-0000-000000000015",
       "name": "Upload Batch to WFMS",
       "notes": "ЗАГЛУШКА. TDR §7.2 шаг 3: multipart/upload. Ошибка -> BE4."
@@ -315,7 +315,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [-240, 0],
+      "position": [1800, 0],
       "id": "m1000000-0000-0000-0000-000000000016",
       "name": "Publish + Recalc FTE",
       "notes": "ЗАГЛУШКА. TDR §7.2 шаги 4–5. Ошибка -> BE4."
@@ -328,7 +328,7 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [-20, 0],
+      "position": [2080, 0],
       "id": "m1000000-0000-0000-0000-000000000017",
       "name": "Write Upload Status",
       "credentials": {
@@ -347,7 +347,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [200, 0],
+      "position": [2360, 0],
       "id": "m1000000-0000-0000-0000-000000000018",
       "name": "Send MM Notification",
       "notes": "ЗАГЛУШКА. ТЗ §4.9. Отправка через 1С Bot API (R-09), не прямой POST."
@@ -371,86 +371,86 @@
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [420, 0],
+      "position": [2640, 0],
       "id": "m1000000-0000-0000-0000-000000000019",
       "name": "Trigger WF-2",
       "notes": "ТЗ §4.5 / ADR-001: Execute Workflow после завершения WF-1."
     },
     {
       "parameters": {
-        "content": "## BreaksRecovery_Main\n\nReframework-каркас Робота 1 (WF-1).\n\n**Error Workflow:** ErrorHandler\n\nТЗ §4.5 · TDR §3, §7",
-        "height": 200,
-        "width": 340,
+        "content": "## BreaksRecovery_Main\n\nReframework WF-1 · **Error Workflow:** ErrorHandler\n\nТЗ §4.5 · TDR §3, §7",
+        "height": 160,
+        "width": 320,
         "color": 1
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-2060, -520],
+      "position": [-2060, -640],
       "id": "s1000000-0000-0000-0000-000000000001",
       "name": "Note — Overview"
     },
     {
       "parameters": {
-        "content": "## PHASE 1 — INIT\n\nТЗ §4.5 шаги 1–2 · TDR v3 §6.3, §6.5\n\n* Cron 05:00 МСК\n* Execute GetConfig (runtime + пути к git)\n* Execute InitTables (4 таблицы)\n* Execute LoadMappings (mappings/*.json)\n\nCredential: RPA DB (InitTables)",
-        "height": 300,
-        "width": 920,
+        "content": "## PHASE 1 — INIT\n\nТЗ §4.5 шаги 1–2 · TDR §6.3, §6.5\n\nCron → GetConfig → InitTables → LoadMappings\n\nCredential: RPA DB (InitTables)",
+        "height": 220,
+        "width": 1200,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-2080, -340],
+      "position": [-2080, -380],
       "id": "s1000000-0000-0000-0000-000000000002",
       "name": "Note — Phase 1 INIT"
     },
     {
       "parameters": {
-        "content": "## PHASE 2 — GET DATA\n\nТЗ §4.5 шаг 3 · TDR §7.1, §6.5\n\n* Get Processed Agents → Continue Phase 2 — RPA\n* Extract Support Skills — mappings/fte_groups.json\n* Build WF1 Query → Get Agents D+1 — WFM\n* Filter New Agents\n\nCredentials: **RPA** + **WFM** read-only",
-        "height": 300,
-        "width": 640,
+        "content": "## PHASE 2 — GET DATA\n\nТЗ §4.5 шаг 3 · TDR §7.1\n\nGet Processed Agents → Continue Phase 2 → Skills → WF1 Query → Get Agents D+1 → Filter\n\nCredentials: RPA + WFM read-only",
+        "height": 220,
+        "width": 1520,
         "color": 5
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-1280, -340],
+      "position": [-580, -380],
       "id": "s1000000-0000-0000-0000-000000000003",
       "name": "Note — Phase 2 GET DATA"
     },
     {
       "parameters": {
-        "content": "## PHASE 3 — PROCESS\n\nТЗ §4.5 шаги 7–13 · loop\n\n* Process Each Agent (1 агент = 1 транзакция)\n* Шаги 8–11: контейнер, новости, слоты\n* BE2/BE3 Check → Add to Batch\n* Write Transaction — RPA DB (agents + agent_id, ADR-006)\n\n~ = заглушки Code, TODO SQL WFM шаги 4–6",
-        "height": 400,
-        "width": 1320,
+        "content": "## PHASE 3 — PROCESS\n\nТЗ §4.5 шаги 7–13 · loop (1 агент = 1 транзакция)\n\nКонтейнер → новости → слоты → BE2/BE3 → Add to Batch → Write Transaction\n\n~ Code-заглушки; TODO SQL WFM шаги 4–6",
+        "height": 180,
+        "width": 1720,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-960, 120],
+      "position": [900, 680],
       "id": "s1000000-0000-0000-0000-000000000004",
       "name": "Note — Phase 3 PROCESS"
     },
     {
       "parameters": {
-        "content": "## PHASE 4 — UPLOAD WFMS\n\nТЗ §4.5 шаги 15–18 · TDR §7.2\n\n* Auth WFMS (LDAP)\n* Upload Batch — пакет всех агентов\n* Publish + Recalc FTE\n* Write Upload Status — RPA DB\n\nВетка loop **done** (выход 0). ~ заглушки HTTP",
-        "height": 300,
-        "width": 720,
+        "content": "## PHASE 4 — UPLOAD WFMS\n\nТЗ §4.5 шаги 15–18 · TDR §7.2\n\nAuth WFMS → Upload Batch → Publish + Recalc FTE → Write Upload Status\n\nВыход loop **done** (0). ~ HTTP-заглушки",
+        "height": 220,
+        "width": 880,
         "color": 3
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-760, -340],
+      "position": [1220, -380],
       "id": "s1000000-0000-0000-0000-000000000005",
       "name": "Note — Phase 4 UPLOAD"
     },
     {
       "parameters": {
-        "content": "## PHASE 5 — FINISH\n\nТЗ §4.5 шаги 18–20 · §4.9\n\n* Send MM Notification (Success/Warn)\n* Trigger WF-2 — Execute Workflow (ADR-001)\n\nCredential: Mattermost Bot (~ Continue On Fail)",
-        "height": 280,
-        "width": 420,
+        "content": "## PHASE 5 — FINISH\n\nТЗ §4.5 шаги 18–20 · §4.9\n\nSend MM Notification → Trigger WF-2 (ADR-001)\n\nMattermost Bot (~ Continue On Fail)",
+        "height": 220,
+        "width": 340,
         "color": 2
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [80, -340],
+      "position": [2340, -380],
       "id": "s1000000-0000-0000-0000-000000000006",
       "name": "Note — Phase 5 FINISH"
     }

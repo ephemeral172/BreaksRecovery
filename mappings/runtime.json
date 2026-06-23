@@ -25,11 +25,5 @@
     "tls": true,
     "retry_attempts": 2,
     "retry_interval_sec": 30
-  },
-  "scheduler": {
-    "cron_ope": "0 13 * * *",
-    "cron_prod": "30 19 * * *",
-    "timezone": "Europe/Moscow",
-    "target_day_offset": 1
   }
 }

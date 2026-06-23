@@ -47,7 +47,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const err = $('Normalize Error').first().json;\nconst config = $input.first().json;\n\nfunction maskPii(text) {\n  let s = String(text ?? '');\n  s = s.replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/g, '***@***');\n  s = s.replace(/(login|агент|agent)[\\s:]+[\\w.-]+/gi, '$1: ***');\n  return s;\n}\n\nconst isBusiness = err.error_type === 'Business Error';\nconst channel = isBusiness\n  ? config.MMCBotAlertChannel\n  : config.MMCBotProdNotificationsChannel;\n\nconst robotName = config.robotName || 'BreaksRecovery';\nconst wf = err.workflow_name || 'BreaksRecovery';\nconst ts = err.timestamp;\nconst statusLabel = isBusiness ? 'Business Error' : 'Error';\nconst safeMessage = maskPii(err.error_message);\n\nconst notify_message = [\n  `Название робота: ${robotName}`,\n  `Процесс: ${wf}`,\n  `Время запуска: ${ts}`,\n  `Статус: ${statusLabel}`,\n  `Тип: ${err.error_code}`,\n  `Описание: ${safeMessage}`,\n].join('; ');\n\nreturn [\n  {\n    json: {\n      ...err,\n      error_message_safe: safeMessage,\n      robotName,\n      environment: config.environment,\n      DBSchemaName: config.DBSchemaName,\n      DBTableNameRecoveryTransactions: config.DBTableNameRecoveryTransactions,\n      MattermostAPIURL: config.MattermostAPIURL,\n      notify_channel: channel,\n      notify_message,\n      processing_status: 'failed',\n      needs_email_fallback: !isBusiness,\n    },\n  },\n];"
+        "jsCode": "const err = $('Normalize Error').first().json;\nconst config = $input.first().json;\n\nfunction maskPii(text) {\n  let s = String(text ?? '');\n  s = s.replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/g, '***@***');\n  s = s.replace(/(login|агент|agent)[\\s:]+[\\w.-]+/gi, '$1: ***');\n  return s;\n}\n\nconst isBusiness = err.error_type === 'Business Error';\nconst channel = isBusiness\n  ? config.MMCBotAlertChannel\n  : config.MMCBotProdNotificationsChannel;\n\nconst robotName = config.robotName || 'BreaksRecovery';\nconst wf = err.workflow_name || 'BreaksRecovery';\nconst ts = err.timestamp;\nconst statusLabel = isBusiness ? 'Business Error' : 'Error';\nconst safeMessage = maskPii(err.error_message);\n\nconst notify_message = [\n  `Название робота: ${robotName}`,\n  `Процесс: ${wf}`,\n  `Время запуска: ${ts}`,\n  `Статус: ${statusLabel}`,\n  `Тип: ${err.error_code}`,\n  `Описание: ${safeMessage}`,\n].join('; ');\n\nreturn [\n  {\n    json: {\n      ...err,\n      error_message_safe: safeMessage,\n      robotName,\n      environment: config.environment,\n      DBSchemaName: config.DBSchemaName,\n      DBTableNameRecoveryTransactions: config.DBTableNameRecoveryTransactions,\n      MattermostAPIURL: config.MattermostAPIURL,\n      Mattermost1CChannelBaseURL: config.Mattermost1CChannelBaseURL,\n      notify_channel: channel,\n      notify_message,\n      processing_status: 'failed',\n      needs_email_fallback: !isBusiness,\n    },\n  },\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -74,10 +74,10 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Enrich With Config').first().json.MattermostAPIURL }}/api/v4/posts",
+        "url": "={{ $('Enrich With Config').first().json.Mattermost1CChannelBaseURL }}/{{ $('Enrich With Config').first().json.notify_channel }}",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"channel_id\": \"{{ $('Enrich With Config').first().json.notify_channel }}\",\n  \"message\": \"{{ $('Enrich With Config').first().json.notify_message.replace(/\"/g, '\\\\\"') }}\"\n}",
+        "jsonBody": "={{ JSON.stringify({ message: $('Enrich With Config').first().json.notify_message }) }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -85,7 +85,7 @@
       "position": [0, 0],
       "id": "eh100000-0000-0000-0000-000000000008",
       "name": "Send MM Notification",
-      "notes": "Credential: Mattermost Bot Token (A-06).\nBE -> MMCBotAlertChannel (RPA_BN_BreaksRecovery).\nSE -> MMCBotProdNotificationsChannel.\nПока без токена: Continue On Fail.",
+      "notes": "1C Bot API: channel name в path URL (не channel_id MM API).\nBE -> MMCBotAlertChannel, SE -> MMCBotProdNotificationsChannel.\nContinue On Fail до настройки prod.",
       "continueOnFail": true
     },
     {

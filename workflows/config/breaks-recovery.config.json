@@ -9,6 +9,7 @@
   "WFMDBSchema": "public",
   "WFMSBaseURL": "https://wfms.avito.ru",
   "MattermostAPIURL": "https://mt.avito.ru/api/v4/",
+  "Mattermost1CChannelBaseURL": "http://1c-api.avito.lan/rpa_1c/hs/mattermost/send/message/channel",
   "MMCBotAlertChannel": "RPA_BN_BreaksRecovery",
   "MMCBotProdNotificationsChannel": "RPA_Robot_Prod_Notifications",
   "CronSchedule": "0 2 * * *",

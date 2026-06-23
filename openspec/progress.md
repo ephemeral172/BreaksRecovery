@@ -2,7 +2,7 @@
 
 > **Легенда:** ✓ — сделано · ✓ *пояснение* — сделано с уточнением · ~ — частично · — — не сделано
 
-**Обновлено:** 22.06.2026 (LoadMappings E2E Stash RPA-1824)
+**Обновлено:** 16.06.2026 (Main canvas layout: Phase 3/4/5 без наложений)
 
 ---
 
@@ -46,6 +46,7 @@
 | **Документация** |
 | D-01–D-09 | OpenSpec, ADR-001…007, модель данных | ✓ | — | — |
 | D-10 | ADR-008: TDR v3 mappings в git | ✓ | §6.5 | — |
+| D-11 | ADR-009: enum processing_status | ✓ | §6.3 | §4.5 шаг 3 |
 | **БД RPA** |
 | DB-01–10 | 4 таблицы в `n8n_breaks_recovery.*` (+ `agents`) | ✓ TDR v3; legacy cfg удаляются migrate | §6.3, ADR-008 | §2.6 |
 | DB-10–14 | mappings/*.json (153/53/77/2/161) | ✓ git; legacy init_cfg_data.sql deprecated | §6.5 | §4.5 |
@@ -179,6 +180,7 @@
 | N-10 | Write Transaction + фильтр агентов (ADR-006, ADR-007 §4) | ✓ Main + SQL |
 | N-11 | Phase 2 GET DATA E2E (цепочка, не пошагово) | ✓ 4918→4918 test |
 | N-12 | Continue Phase 2 + Filter fix (n8n 0 items) | ✓ |
+| N-15 | Main canvas layout (nodes + sticky notes без наложений) | ✓ |
 
 ---
 

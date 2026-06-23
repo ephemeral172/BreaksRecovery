@@ -266,6 +266,8 @@ CREATE INDEX ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agen
 
 > После merge PR в `dev`/`main` — обновить только `GitBranch` в GetConfig.
 
+**Cron:** источник правды — `GetConfig.CronSchedule` + нода Cron в Main (должны совпадать). Блок `scheduler` убран из `runtime.json` (был дубль).
+
 **Формат raw URL:** ветка в query `?at=refs/heads/{branch}`, не в path:
 
 `.../raw/BreaksRecovery_Main/mappings/activity.json?at=refs%2Fheads%2FRPA-1824`
