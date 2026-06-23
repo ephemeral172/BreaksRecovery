@@ -2,7 +2,7 @@
 
 > **Легенда:** ✓ — сделано · ✓ *пояснение* — сделано с уточнением · ~ — частично · — — не сделано
 
-**Обновлено:** 16.06.2026 (Main canvas layout: Phase 3/4/5 без наложений)
+**Обновлено:** 16.06.2026 (синхронизация имён таблиц: `recovery_transactions`, `balance_transactions` — ADR-008)
 
 ---
 
@@ -132,8 +132,8 @@
 | S0-03 | Credential RPA DB | ✓ `bpa-primo-test-orch01` |
 | S0-04 | Credential Mattermost Bot | — |
 | S0-04b | Credential SMTP fallback | — |
-| S0-05 | `breaks_recovery_transactions` | ✓ |
-| S0-06 | `breaks_balance_transactions` | ✓ |
+| S0-05 | `recovery_transactions` | ✓ |
+| S0-06 | `balance_transactions` | ✓ |
 | S0-06b | `breaks_balance_moves` | ✓ |
 | S0-06c | 6 cfg_* таблиц | ✓ |
 | S0-06d | SQL `init_cfg_data.sql` | ✓ |

@@ -4,11 +4,13 @@
 **Статус:** Принято  
 **Источник:** Встреча RPA 17.06.2026 (Anastasiya Tretyakova)  
 
+> **Имена таблиц (ADR-008):** `recovery_transactions` (было `breaks_recovery_transactions`), `balance_transactions` (было `breaks_balance_transactions`). `breaks_balance_moves` без изменений.
+
 ## Контекст
 
 1. Конвенция команды RPA: схема робота в БД RPA Data называется по имени воркфлоу/проекта, не `rpa`.
 2. Требование ИБ: персональные данные (логины агентов) не хранить в транзакционных журналах.
-3. TDR §6.3 ещё описывает `agent_login` в `breaks_recovery_transactions` — документ отстаёт от решения на встрече.
+3. TDR §6.3 ещё описывает `agent_login` в `recovery_transactions` — документ отстаёт от решения на встрече.
 
 ## Решение
 
@@ -37,14 +39,14 @@ CREATE TABLE n8n_breaks_recovery.agents (
 
 ### Транзакционные таблицы
 
-- `breaks_recovery_transactions`: `agent_login` → **`agent_id INTEGER NOT NULL REFERENCES agents(id)`**
+- `recovery_transactions`: `agent_login` → **`agent_id INTEGER NOT NULL REFERENCES agents(id)`**
 - `breaks_balance_moves`: `agent_login` → **`agent_id INTEGER NOT NULL REFERENCES agents(id)`**
 - UNIQUE/индексы переписаны на `agent_id`.
 
 ### Порядок InitTables
 
 ```
-схема → agents → breaks_recovery_transactions → breaks_balance_transactions
+схема → agents → recovery_transactions → balance_transactions
      → breaks_balance_moves → cfg_* (6 таблиц) → проверка
 ```
 
@@ -59,7 +61,7 @@ SELECT id AS agent_id
 FROM n8n_breaks_recovery.agents
 WHERE agent_login = $1;
 
--- затем INSERT/UPDATE в breaks_recovery_transactions / breaks_balance_moves с agent_id
+-- затем INSERT/UPDATE в recovery_transactions / breaks_balance_moves с agent_id
 ```
 
 InitTables **только создаёт структуру**, заполнение `agents` — ответственность Main/Balance.

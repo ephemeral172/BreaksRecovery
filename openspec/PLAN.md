@@ -42,8 +42,8 @@
 | # | Задача | Результат |
 |---|---|---|
 | DB-00 | Создать таблицу `agents` (ПДн) | ✓ |
-| DB-01 | Создать схему + `breaks_recovery_transactions` (`agent_id` FK) | ✓ прогнан |
-| DB-02 | Создать таблицу `breaks_balance_transactions` | ✓ |
+| DB-01 | Создать схему + `recovery_transactions` (`agent_id` FK) | ✓ прогнан |
+| DB-02 | Создать таблицу `balance_transactions` | ✓ |
 | DB-03 | Создать таблицу `breaks_balance_moves` | ✓ |
 | DB-04 | Создать таблицу `cfg_activity_mapping` | ✓ |
 | DB-05 | Создать таблицу `cfg_non_standard_containers` | ✓ |
@@ -116,7 +116,7 @@
 
 | # | Задача | Результат |
 |---|---|---|
-| T1-01 | Запись транзакций в `breaks_recovery_transactions` (agents + agent_id, ADR-006) | ✓ |
+| T1-01 | Запись транзакций в `recovery_transactions` (agents + agent_id, ADR-006) | ✓ |
 | T1-02 | Уведомление в Mattermost: Success / Warn / BE (дневная сводка) | ~ Continue On Error |
 | T1-03 | Триггер WF-2 через Execute Workflow после завершения WF-1 | ✓ |
 
@@ -134,7 +134,7 @@
 | L2-02 | Алгоритм балансировки: сортировка кандидатов → поиск слота в профиците → условие «не навреди» | — |
 | L2-03 | Обновление внутренней модели покрытия после каждого принятого переноса | — |
 | U2-01 | Загрузка пакета переносов в WFMS (по 1 сотруднику + публикация + пересчёт FTE) | — |
-| T2-01 | Запись транзакций в `breaks_balance_transactions` + `breaks_balance_moves` | — |
+| T2-01 | Запись транзакций в `balance_transactions` + `breaks_balance_moves` | — |
 | T2-02 | Уведомление: дневная сводка WF-2 (переносов, просадок без кандидатов) | — |
 
 ---
