@@ -33,7 +33,7 @@ TDR v3 переносит все маппинги в git-репозиторий 
 | `fte_thresholds.json` | *(новый, WF-2)* |
 | `runtime.json` | *(новый, параметры исполнения)* |
 
-Путь в Stash: `BreaksRecovery_Main/mappings/` (репозиторий `projects/RPA/repos/n8n`).
+Путь в Stash: `BreaksRecovery/Mapping/` (репозиторий `projects/RPA/repos/configuration`, ветка `test`).
 
 ### Загрузка в n8n
 
@@ -43,7 +43,7 @@ TDR v3 переносит все маппинги в git-репозиторий 
    - **Stash:** `{base}/{path}/{file}.json?at=refs/heads/{branch}` + **HTTP Basic Auth** на Code-ноде
 3. Main хранит `mappings` в контексте выполнения (`Continue Phase 2`)
 
-**Прогон (22.06.2026):** Stash `projects/RPA/repos/n8n`, ветка `RPA-1824`, 8 файлов загружены (в т.ч. `activity` 153, `fte_groups` 161).
+**Прогон (22.06.2026):** Stash `projects/RPA/configuration`, ветка `test`, папка `BreaksRecovery/Mapping`, 8 файлов (в т.ч. `activity` 153, `fte_groups` 161).
 
 ## Последствия
 

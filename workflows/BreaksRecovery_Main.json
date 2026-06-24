@@ -14,24 +14,40 @@
       },
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [-2000, 0],
-      "id": "m1000000-0000-0000-0000-000000000001",
+      "position": [
+        16,
+        640
+      ],
+      "id": "1208c383-3d80-4d03-8b25-195e5c952572",
       "name": "Cron 05:00 MSK",
-      "notes": "0 2 * * * UTC = 05:00 Europe/Moscow (ТЗ §2.6).\nДолжен совпадать с GetConfig.CronSchedule.\nНа ОПЭ: 0 10 * * * UTC = 13:00 МСК."
+      "notes": "0 2 * * * UTC = 05:00 Europe/Moscow (ТЗ §2.6).\nCron задаётся здесь, не в GetConfig.\nНа ОПЭ: 0 10 * * * UTC = 13:00 МСК."
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "GetConfig",
-          "mode": "name"
+          "value": "lfDAKthcbXeSwPSX",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/lfDAKthcbXeSwPSX",
+          "cachedResultName": "BreaksRecovery_2.GetConfig"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
         },
         "options": {}
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [-1720, 0],
-      "id": "m1000000-0000-0000-0000-000000000002",
+      "position": [
+        304,
+        640
+      ],
+      "id": "3d721731-a23b-4459-aaa7-e12304d66f94",
       "name": "Execute GetConfig",
       "notes": "Phase 1 INIT. ADR-004: JSON-конфиг + Validate (не rpa_config из БД)."
     },
@@ -39,42 +55,57 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "InitTables",
-          "mode": "name"
+          "value": "FikmEtfjPgAcBLVr",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/FikmEtfjPgAcBLVr",
+          "cachedResultName": "BreaksRecovery_3.InitTables"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
         },
         "options": {}
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [-1440, 0],
-      "id": "m1000000-0000-0000-0000-000000000003",
+      "position": [
+        864,
+        640
+      ],
+      "id": "4ec8056f-1174-4d11-992e-00947d176e51",
       "name": "Execute InitTables",
       "notes": "Phase 1 INIT. TDR §6.3: idempotent CREATE SCHEMA/TABLE."
     },
     {
       "parameters": {
-        "jsCode": "const config = $('Execute GetConfig').first().json;\nreturn [{ json: config }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [-1160, 0],
-      "id": "m1000000-0000-0000-0000-000000000004",
-      "name": "Restore Config Context",
-      "notes": "После InitTables возвращаем config в $json для downstream-нод."
-    },
-    {
-      "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "LoadMappings",
-          "mode": "name"
+          "value": "KwxEdf6m784CyO6z",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/KwxEdf6m784CyO6z",
+          "cachedResultName": "BreaksRecovery_LoadMappings"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
         },
         "options": {}
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [-880, 0],
-      "id": "m1000000-0000-0000-0000-000000000025",
+      "position": [
+        592,
+        640
+      ],
+      "id": "460fdece-8d6a-4852-b141-b8f5abf68d25",
       "name": "Execute LoadMappings",
       "notes": "TDR v3 §6.5: загрузка mappings/*.json из git (HTTP). Требует GitRawBaseURL в GetConfig."
     },
@@ -86,13 +117,16 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [-600, 0],
-      "id": "m1000000-0000-0000-0000-000000000020",
+      "position": [
+        1152,
+        640
+      ],
+      "id": "a660d195-89f7-4b20-88ab-4d81eac9ef21",
       "name": "Get Processed Agents",
       "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "id": "eNK5wIS7Kw9Ah8Lf",
           "name": "RPA DB"
         }
       },
@@ -104,8 +138,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-320, 0],
-      "id": "m1000000-0000-0000-0000-000000000024",
+      "position": [
+        1424,
+        640
+      ],
+      "id": "ba8885f5-8fd4-486e-8116-4e952dab613d",
       "name": "Continue Phase 2",
       "notes": "Якорь потока после Get Processed Agents: 0 обработанных на D+1 — норма, Phase 2 идёт дальше."
     },
@@ -115,8 +152,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-40, 0],
-      "id": "m1000000-0000-0000-0000-000000000022",
+      "position": [
+        1712,
+        640
+      ],
+      "id": "98cdd210-6701-4bc3-a2be-bf5ca747525b",
       "name": "Extract Support Skills",
       "notes": "WF1-00: навыки из mappings/fte_groups.json + news_exception_skills.json (TDR v3 §6.5)."
     },
@@ -126,8 +166,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [280, 0],
-      "id": "m1000000-0000-0000-0000-000000000023",
+      "position": [
+        2032,
+        640
+      ],
+      "id": "b3630bb8-686d-4c38-b802-5871bd1ec71d",
       "name": "Build WF1 Query",
       "notes": "Собирает WF1-01 с фильтром навыков из mappings/fte_groups.json."
     },
@@ -139,12 +182,15 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [600, 0],
-      "id": "m1000000-0000-0000-0000-000000000005",
+      "position": [
+        2352,
+        640
+      ],
+      "id": "f2b2c876-8210-4656-b0b9-ba2e239ad34c",
       "name": "Get Agents D+1",
       "credentials": {
         "postgres": {
-          "id": "REPLACE_WITH_WFM_DB_CREDENTIAL_ID",
+          "id": "wo2M9L3CWwZ1DXUH",
           "name": "WFM DB"
         }
       },
@@ -156,8 +202,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [920, 0],
-      "id": "m1000000-0000-0000-0000-000000000021",
+      "position": [
+        2672,
+        640
+      ],
+      "id": "3bf02c0a-e50f-484a-9d2e-2c072ccb5b1b",
       "name": "Filter New Agents",
       "notes": "ТЗ §4.5 шаг 3: исключить обработанных на D+1.\nprocessed_agents — снимок из Continue Phase 2 (тот же execution). Агенты — $input от Get Agents D+1."
     },
@@ -169,8 +218,11 @@
       },
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [920, 300],
-      "id": "m1000000-0000-0000-0000-000000000006",
+      "position": [
+        2672,
+        944
+      ],
+      "id": "6848a4c1-aa43-47a8-8bfa-5195d6a2be4a",
       "name": "Process Each Agent",
       "notes": "Phase 3 PROCESS. ТЗ §4.5 шаг 7: транзакция = 1 агент."
     },
@@ -180,8 +232,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1200, 300],
-      "id": "m1000000-0000-0000-0000-000000000007",
+      "position": [
+        2944,
+        944
+      ],
+      "id": "351756f8-f306-4798-a97e-64d833d20f50",
       "name": "Determine Container Rules",
       "notes": "Шаг 8."
     },
@@ -191,8 +246,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1480, 300],
-      "id": "m1000000-0000-0000-0000-000000000008",
+      "position": [
+        3232,
+        944
+      ],
+      "id": "18c42ead-dae0-420c-9442-aa57f8bff534",
       "name": "Calculate News Duration",
       "notes": "Шаг 9."
     },
@@ -202,8 +260,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1760, 300],
-      "id": "m1000000-0000-0000-0000-000000000009",
+      "position": [
+        3504,
+        944
+      ],
+      "id": "7590ed83-c2a0-4186-b21b-70dfcbc67d1d",
       "name": "Find Missing Activities",
       "notes": "Шаг 10."
     },
@@ -213,8 +274,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2040, 300],
-      "id": "m1000000-0000-0000-0000-000000000010",
+      "position": [
+        3792,
+        944
+      ],
+      "id": "d3d33f16-5942-426c-bacb-ffe2a0052a42",
       "name": "Calculate Slots",
       "notes": "Шаг 11."
     },
@@ -244,8 +308,11 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [2320, 300],
-      "id": "m1000000-0000-0000-0000-000000000011",
+      "position": [
+        4064,
+        944
+      ],
+      "id": "c93c4f8f-266f-4d56-b5a4-0c3131a3e89a",
       "name": "BE2/BE3 Check",
       "notes": "true (error_code) -> skipped; false -> Add to Batch."
     },
@@ -255,27 +322,33 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2320, 520],
-      "id": "m1000000-0000-0000-0000-000000000012",
+      "position": [
+        4064,
+        1168
+      ],
+      "id": "de4c5f5c-c8a4-4e62-855a-0cde71045313",
       "name": "Add to Batch",
       "notes": "Шаг 12."
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "WITH upsert_agent AS (\n  INSERT INTO n8n_breaks_recovery.agents (agent_login)\n  VALUES ($1)\n  ON CONFLICT (agent_login) DO NOTHING\n  RETURNING id\n),\nagent_row AS (\n  SELECT id FROM upsert_agent\n  UNION ALL\n  SELECT id FROM n8n_breaks_recovery.agents WHERE agent_login = $1\n  LIMIT 1\n)\nINSERT INTO n8n_breaks_recovery.recovery_transactions (\n  processing_start_time,\n  processing_end_time,\n  processing_status,\n  processing_comment,\n  agent_id,\n  shift_date,\n  is_night_shift,\n  error_code\n)\nSELECT\n  NOW(),\n  CASE WHEN NULLIF($4, '') IS NOT NULL THEN NOW() ELSE NULL END,\n  CASE\n    WHEN NULLIF($4, '') IS NULL THEN 'in_progress'\n    WHEN $4 = 'BE2' THEN 'skipped_BE2'\n    WHEN $4 = 'BE3' THEN 'skipped_BE3'\n    ELSE 'failed'\n  END,\n  NULLIF($5, ''),\n  (SELECT id FROM agent_row),\n  $2::date,\n  $3::boolean,\n  NULLIF($4, '')\nON CONFLICT (agent_id, shift_date) DO UPDATE SET\n  processing_status = EXCLUDED.processing_status,\n  processing_end_time = EXCLUDED.processing_end_time,\n  processing_comment = COALESCE(EXCLUDED.processing_comment, recovery_transactions.processing_comment),\n  error_code = COALESCE(EXCLUDED.error_code, recovery_transactions.error_code),\n  is_night_shift = EXCLUDED.is_night_shift\nRETURNING id AS transaction_id, agent_id, processing_status;",
+        "query": "WITH input AS (\n  SELECT\n    $1::varchar AS agent_login,\n    $2::date AS shift_date,\n    $3::boolean AS is_night_shift,\n    NULLIF($4::text, '') AS error_code,\n    NULLIF($5::text, '') AS processing_comment\n),\nupsert_agent AS (\n  INSERT INTO n8n_breaks_recovery.agents (agent_login)\n  SELECT agent_login FROM input\n  ON CONFLICT (agent_login) DO NOTHING\n  RETURNING id\n),\nagent_row AS (\n  SELECT id FROM upsert_agent\n  UNION ALL\n  SELECT a.id\n  FROM n8n_breaks_recovery.agents a\n  INNER JOIN input i ON a.agent_login = i.agent_login\n  LIMIT 1\n)\nINSERT INTO n8n_breaks_recovery.recovery_transactions (\n  processing_start_time,\n  processing_end_time,\n  processing_status,\n  processing_comment,\n  agent_id,\n  shift_date,\n  is_night_shift,\n  error_code\n)\nSELECT\n  NOW(),\n  CASE WHEN i.error_code IS NOT NULL THEN NOW() ELSE NULL END,\n  CASE\n    WHEN i.error_code IS NULL THEN 'in_progress'\n    WHEN i.error_code = 'BE2' THEN 'skipped_BE2'\n    WHEN i.error_code = 'BE3' THEN 'skipped_BE3'\n    ELSE 'failed'\n  END,\n  i.processing_comment,\n  (SELECT id FROM agent_row),\n  i.shift_date,\n  i.is_night_shift,\n  i.error_code\nFROM input i\nON CONFLICT (agent_id, shift_date) DO UPDATE SET\n  processing_status = EXCLUDED.processing_status,\n  processing_end_time = EXCLUDED.processing_end_time,\n  processing_comment = COALESCE(EXCLUDED.processing_comment, recovery_transactions.processing_comment),\n  error_code = COALESCE(EXCLUDED.error_code, recovery_transactions.error_code),\n  is_night_shift = EXCLUDED.is_night_shift\nRETURNING id AS transaction_id, agent_id, processing_status;",
         "options": {
-          "queryReplacement": "={{ $json.agent_login }},{{ $json.shift_date }},{{ $json.is_night_shift }},{{ $json.error_code || '' }},{{ $json.processing_comment || '' }}"
+          "queryReplacement": "={{ [$json.agent_login, $json.shift_date, $json.is_night_shift, $json.error_code || '', $json.processing_comment || ''] }}"
         }
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [2600, 300],
-      "id": "m1000000-0000-0000-0000-000000000013",
+      "position": [
+        4352,
+        944
+      ],
+      "id": "faee5699-c049-4f39-bb49-4a6c172e22e0",
       "name": "Write Transaction",
       "credentials": {
         "postgres": {
-          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
+          "id": "eNK5wIS7Kw9Ah8Lf",
           "name": "RPA DB"
         }
       },
@@ -284,80 +357,31 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Restore Config Context').first().json.WFMSBaseURL }}/login",
+        "url": "={{ $('Execute LoadMappings').first().json.Mattermost1CChannelBaseURL }}/{{ $('Execute LoadMappings').first().json.MMCBotAlertChannel }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ message: 'BreaksRecovery WF-1 завершён (заглушка MM)' }) }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [1240, 0],
-      "id": "m1000000-0000-0000-0000-000000000014",
-      "name": "Auth WFMS",
-      "notes": "ЗАГЛУШКА. TDR §7.2: LDAP + cookie. Ошибка -> BE4. R-08."
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Restore Config Context').first().json.WFMSBaseURL }}/upload",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [1520, 0],
-      "id": "m1000000-0000-0000-0000-000000000015",
-      "name": "Upload Batch to WFMS",
-      "notes": "ЗАГЛУШКА. TDR §7.2 шаг 3: multipart/upload. Ошибка -> BE4."
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Restore Config Context').first().json.WFMSBaseURL }}/publish",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [1800, 0],
-      "id": "m1000000-0000-0000-0000-000000000016",
-      "name": "Publish + Recalc FTE",
-      "notes": "ЗАГЛУШКА. TDR §7.2 шаги 4–5. Ошибка -> BE4."
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT 1 AS placeholder;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.5,
-      "position": [2080, 0],
-      "id": "m1000000-0000-0000-0000-000000000017",
-      "name": "Write Upload Status",
-      "credentials": {
-        "postgres": {
-          "id": "REPLACE_WITH_RPA_DB_CREDENTIAL_ID",
-          "name": "RPA DB"
-        }
-      },
-      "notes": "Credential: RPA DB ONLY (TDR §7.3). НЕ WFM DB!\nTODO: UPDATE upload_status. Сбой -> SE1."
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Restore Config Context').first().json.MattermostAPIURL }}posts",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [2360, 0],
-      "id": "m1000000-0000-0000-0000-000000000018",
+      "position": [
+        3040,
+        640
+      ],
+      "id": "9cfd48a5-60bd-4e6e-b8f0-fec735b789dd",
       "name": "Send MM Notification",
-      "notes": "ЗАГЛУШКА. ТЗ §4.9. Отправка через 1С Bot API (R-09), не прямой POST."
+      "continueOnFail": true,
+      "notes": "ЗАГЛУШКА Phase 5. 1C Bot API (R-09). Конфиг из Execute LoadMappings."
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "BreaksRecovery_Balance",
-          "mode": "name"
+          "value": "2KtSU7WjX65f8jqJ",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/2KtSU7WjX65f8jqJ",
+          "cachedResultName": "BreaksRecovery_Balance"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -371,178 +395,348 @@
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [2640, 0],
-      "id": "m1000000-0000-0000-0000-000000000019",
+      "position": [
+        3264,
+        640
+      ],
+      "id": "aa731072-f10b-4eed-a1ef-5644aaf8cf2c",
       "name": "Trigger WF-2",
       "notes": "ТЗ §4.5 / ADR-001: Execute Workflow после завершения WF-1."
     },
     {
       "parameters": {
-        "content": "## BreaksRecovery_Main\n\nReframework WF-1 · **Error Workflow:** ErrorHandler\n\nТЗ §4.5 · TDR §3, §7",
-        "height": 160,
-        "width": 320,
-        "color": 1
+        "content": "## BreaksRecovery_Main\n\nReframework WF-1 · **Error Workflow:** BreaksRecovery_8.ErrorHandler\n\nТЗ §4.5 · TDR §3, §7",
+        "width": 320
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-2060, -640],
-      "id": "s1000000-0000-0000-0000-000000000001",
+      "position": [
+        0,
+        0
+      ],
+      "id": "5713be3d-869d-48d2-b2f1-158cb7e03de0",
       "name": "Note — Overview"
     },
     {
       "parameters": {
-        "content": "## PHASE 1 — INIT\n\nТЗ §4.5 шаги 1–2 · TDR §6.3, §6.5\n\nCron → GetConfig → InitTables → LoadMappings\n\nCredential: RPA DB (InitTables)",
+        "content": "## PHASE 1 — INIT\n\nТЗ §4.5 шаги 1–2 · TDR §6.3, §6.5\n\nCron → GetConfig → LoadMappings → InitTables\n\nCredential: RPA DB (InitTables)",
         "height": 220,
-        "width": 1200,
+        "width": 460,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-2080, -380],
-      "id": "s1000000-0000-0000-0000-000000000002",
+      "position": [
+        0,
+        272
+      ],
+      "id": "cd42f149-30ba-4ef9-ab7a-8219e32352cd",
       "name": "Note — Phase 1 INIT"
     },
     {
       "parameters": {
         "content": "## PHASE 2 — GET DATA\n\nТЗ §4.5 шаг 3 · TDR §7.1\n\nGet Processed Agents → Continue Phase 2 → Skills → WF1 Query → Get Agents D+1 → Filter\n\nCredentials: RPA + WFM read-only",
         "height": 220,
-        "width": 1520,
+        "width": 720,
         "color": 5
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-580, -380],
-      "id": "s1000000-0000-0000-0000-000000000003",
+      "position": [
+        1456,
+        272
+      ],
+      "id": "f8e861ea-01e6-4064-b58e-2e290c429cb3",
       "name": "Note — Phase 2 GET DATA"
     },
     {
       "parameters": {
         "content": "## PHASE 3 — PROCESS\n\nТЗ §4.5 шаги 7–13 · loop (1 агент = 1 транзакция)\n\nКонтейнер → новости → слоты → BE2/BE3 → Add to Batch → Write Transaction\n\n~ Code-заглушки; TODO SQL WFM шаги 4–6",
         "height": 180,
-        "width": 1720,
+        "width": 648,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [900, 680],
-      "id": "s1000000-0000-0000-0000-000000000004",
+      "position": [
+        2640,
+        1232
+      ],
+      "id": "74c95ab1-dd87-4f33-b13f-0cc5f2b0a15a",
       "name": "Note — Phase 3 PROCESS"
-    },
-    {
-      "parameters": {
-        "content": "## PHASE 4 — UPLOAD WFMS\n\nТЗ §4.5 шаги 15–18 · TDR §7.2\n\nAuth WFMS → Upload Batch → Publish + Recalc FTE → Write Upload Status\n\nВыход loop **done** (0). ~ HTTP-заглушки",
-        "height": 220,
-        "width": 880,
-        "color": 3
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [1220, -380],
-      "id": "s1000000-0000-0000-0000-000000000005",
-      "name": "Note — Phase 4 UPLOAD"
     },
     {
       "parameters": {
         "content": "## PHASE 5 — FINISH\n\nТЗ §4.5 шаги 18–20 · §4.9\n\nSend MM Notification → Trigger WF-2 (ADR-001)\n\nMattermost Bot (~ Continue On Fail)",
         "height": 220,
-        "width": 340,
+        "width": 380,
         "color": 2
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [2340, -380],
-      "id": "s1000000-0000-0000-0000-000000000006",
+      "position": [
+        2992,
+        272
+      ],
+      "id": "1db6feaf-3b7d-4201-9bbc-b1c0bd673534",
       "name": "Note — Phase 5 FINISH"
+    },
+    {
+      "parameters": {
+        "content": "## PHASE 4 — UPLOAD WFMS\n\nТЗ §4.5 шаги 15–18 · TDR §7.2\n\n**Пусто** (ревью 24.06): HTTP-заглушки удалены.\nРеализация — после WF-1 логики 8–12.",
+        "height": 220,
+        "width": 420,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        272
+      ],
+      "id": "4fc57bd5-dd98-4a7f-a922-7d9e4a863b86",
+      "name": "Note — Phase 4 UPLOAD"
     }
   ],
+  "pinData": {},
   "connections": {
     "Cron 05:00 MSK": {
-      "main": [[{ "node": "Execute GetConfig", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Execute GetConfig",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Execute GetConfig": {
-      "main": [[{ "node": "Execute InitTables", "type": "main", "index": 0 }]]
-    },
-    "Execute InitTables": {
-      "main": [[{ "node": "Restore Config Context", "type": "main", "index": 0 }]]
-    },
-    "Restore Config Context": {
-      "main": [[{ "node": "Execute LoadMappings", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Execute LoadMappings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Execute LoadMappings": {
-      "main": [[{ "node": "Get Processed Agents", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Execute InitTables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute InitTables": {
+      "main": [
+        [
+          {
+            "node": "Get Processed Agents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Get Processed Agents": {
-      "main": [[{ "node": "Continue Phase 2", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Continue Phase 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Continue Phase 2": {
-      "main": [[{ "node": "Extract Support Skills", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Extract Support Skills",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Extract Support Skills": {
-      "main": [[{ "node": "Build WF1 Query", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Build WF1 Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Build WF1 Query": {
-      "main": [[{ "node": "Get Agents D+1", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Get Agents D+1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Get Agents D+1": {
-      "main": [[{ "node": "Filter New Agents", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Filter New Agents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Filter New Agents": {
-      "main": [[{ "node": "Process Each Agent", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Process Each Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Process Each Agent": {
       "main": [
-        [{ "node": "Auth WFMS", "type": "main", "index": 0 }],
-        [{ "node": "Determine Container Rules", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Send MM Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Determine Container Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Determine Container Rules": {
-      "main": [[{ "node": "Calculate News Duration", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Calculate News Duration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Calculate News Duration": {
-      "main": [[{ "node": "Find Missing Activities", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Find Missing Activities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Find Missing Activities": {
-      "main": [[{ "node": "Calculate Slots", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Calculate Slots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Calculate Slots": {
-      "main": [[{ "node": "BE2/BE3 Check", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "BE2/BE3 Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "BE2/BE3 Check": {
       "main": [
-        [{ "node": "Write Transaction", "type": "main", "index": 0 }],
-        [{ "node": "Add to Batch", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Write Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add to Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Add to Batch": {
-      "main": [[{ "node": "Write Transaction", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Write Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Write Transaction": {
-      "main": [[{ "node": "Process Each Agent", "type": "main", "index": 0 }]]
-    },
-    "Auth WFMS": {
-      "main": [[{ "node": "Upload Batch to WFMS", "type": "main", "index": 0 }]]
-    },
-    "Upload Batch to WFMS": {
-      "main": [[{ "node": "Publish + Recalc FTE", "type": "main", "index": 0 }]]
-    },
-    "Publish + Recalc FTE": {
-      "main": [[{ "node": "Write Upload Status", "type": "main", "index": 0 }]]
-    },
-    "Write Upload Status": {
-      "main": [[{ "node": "Send MM Notification", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Process Each Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Send MM Notification": {
-      "main": [[{ "node": "Trigger WF-2", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Trigger WF-2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1",
-    "errorWorkflow": {
-      "__rl": true,
-      "value": "ErrorHandler",
-      "mode": "name"
-    }
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1,
+    "availableInMCP": false,
+    "errorWorkflow": "ge4g0yigf0Ykn65R"
   },
-  "pinData": {}
+  "versionId": "307193a8-ea01-411c-8901-dd537690cd9a",
+  "meta": {
+    "instanceId": "c405c9c7bf2ec4f35dcb9179c9810707580e82751735da064523f04a0f1dd025"
+  },
+  "id": "KoLiAgTAm72DEjMO",
+  "tags": []
 }

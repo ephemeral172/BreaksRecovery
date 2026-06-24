@@ -30,7 +30,8 @@
 | Web UI взаимодействие | WFMS `wfms.avito.ru` (Naumen WFM), авторизация LDAP |
 | Уведомления | Mattermost REST API (корпоративный мессенджер) |
 | Безопасность | mTLS-сертификаты (non-prod / prod) |
-| Репозиторий | Stash: `https://stash.msk.avito.ru/projects/RPA/repos/n8n` |
+| Репозиторий конфигов | Stash: `https://stash.msk.avito.ru/projects/RPA/repos/configuration` (ветка `test`) |
+| Репозиторий воркфлоу | Stash: `https://stash.msk.avito.ru/projects/RPA/repos/n8n` |
 | Таймзона | Europe/Moscow (UTC+3); БД хранит UTC, +3 ч при чтении |
 
 ---
@@ -239,7 +240,7 @@ CREATE INDEX ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agen
 
 ## Маппинги в git (TDR v3 §6.5)
 
-Путь: `BreaksRecovery_Main/mappings/` в репозитории `projects/RPA/repos/n8n`.
+Путь: `BreaksRecovery/Mapping/` в репозитории `projects/RPA/repos/configuration` (ветка `test`).
 
 | Файл | Назначение | Строк (≈) |
 |---|---|---|
@@ -254,25 +255,27 @@ CREATE INDEX ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agen
 
 Загрузка: воркфлоу `LoadMappings` (HTTP из `GitRawBaseURL`). Нода **Fetch JSON** (HTTP Request) — **Basic Auth** credential (Stash). Шаблон: `workflows/config/breaks-recovery.config.json`. Legacy SQL: `init_cfg_data.sql` (deprecated).
 
-### Git / Stash (`projects/RPA/repos/n8n`)
+### Git / Stash (`projects/RPA/repos/configuration`)
 
 Поля **GetConfig** (и `workflows/config/breaks-recovery.config.json`):
 
 ```json
-"GitRawBaseURL": "https://stash.msk.avito.ru/projects/RPA/repos/n8n/raw",
-"GitBranch": "RPA-1824",
-"MappingsPath": "BreaksRecovery_Main/mappings"
+"GitRawBaseURL": "https://stash.msk.avito.ru/projects/RPA/repos/configuration/raw",
+"GitBranch": "test",
+"MappingsPath": "BreaksRecovery/Mapping"
 ```
 
-> После merge PR в `dev`/`main` — обновить только `GitBranch` в GetConfig.
+> Runtime-конфиг робота: `BreaksRecovery/config.json` в том же репо (пока дублируется в GetConfig-шаблоне).
 
-**Cron:** источник правды — `GetConfig.CronSchedule` + нода Cron в Main (должны совпадать). Блок `scheduler` убран из `runtime.json` (был дубль).
+> После merge в `dev`/`main` — обновить `GitBranch` в GetConfig.
+
+**Cron:** источник правды — нода **Cron 05:00 MSK** в Main (`0 2 * * *` UTC = 05:00 МСК). `CronSchedule` убран из GetConfig (ревью 24.06).
 
 **Формат raw URL:** ветка в query `?at=refs/heads/{branch}`, не в path:
 
-`.../raw/BreaksRecovery_Main/mappings/activity.json?at=refs%2Fheads%2FRPA-1824`
+`.../raw/BreaksRecovery/Mapping/activity.json?at=refs%2Fheads%2Ftest`
 
-Цепочка Main Phase 1: `GetConfig` → `InitTables` (опц.) → `Restore Config Context` → **`Execute LoadMappings`** → Phase 2.
+Цепочка Main Phase 1: **Cron** → `BreaksRecovery_2.GetConfig` → `BreaksRecovery_LoadMappings` → `BreaksRecovery_3.InitTables` → Phase 2.
 
 **Авторизация:** репозиторий приватный → HTTP **401** без credentials. На ноде **Fetch JSON** (LoadMappings) → **Authentication: Basic Auth** → credential **HTTP Basic Auth**:
 
@@ -386,15 +389,16 @@ CREATE INDEX ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agen
 |---|---|---|
 | `BreaksRecovery_Main` | Робот 1, главный | `workflows/BreaksRecovery_Main.json` |
 | `BreaksRecovery_Balance` | Робот 2 | *(черновик, не в репо)* |
-| `GetConfig` | JSON-конфиг + Validate | `workflows/BreaksRecovery_2.GetConfig.json` |
-| `InitTables` | CREATE SCHEMA/TABLE | `workflows/BreaksRecovery_3.InitTables.json` |
-| `LoadMappings` | HTTP: mappings/*.json из git | `workflows/BreaksRecovery_LoadMappings.json` |
+| `BreaksRecovery_2.GetConfig` | JSON-конфиг + Validate | `workflows/BreaksRecovery_2.GetConfig.json` |
+| `BreaksRecovery_3.InitTables` | CREATE SCHEMA/TABLE | `workflows/BreaksRecovery_3.InitTables.json` |
+| `BreaksRecovery_LoadMappings` | HTTP: mappings/*.json из git | `workflows/BreaksRecovery_LoadMappings.json` |
 | `InitCfgData` | ~~Заливка cfg_*~~ **deprecated** (TDR v3) | — |
-| `ErrorHandler` | Reframework error workflow | `workflows/BreaksRecovery_8.ErrorHandler.json` |
+| `BreaksRecovery_8.ErrorHandler` | Reframework error workflow | `workflows/BreaksRecovery_8.ErrorHandler.json` |
 
 - **Главные** роботы: `BreaksRecovery_<Role>` (PascalCase + underscore).
-- **Sub-workflow:** короткое имя без префикса (`GetConfig`, `InitTables`, …).
-- **Execute Workflow** в JSON — `mode: name`, значение **точно как в n8n**.
+- **Sub-workflow:** префикс проекта + номер/роль (`BreaksRecovery_2.GetConfig`, …) — ревью 24.06.
+- **Execute Workflow** — `mode: list`, `cachedResultName` = имя в n8n; после импорта перепривязать в UI.
+- Папки на инстансе: `BreaksRecovery/Recovery` (робот 1), `BreaksRecovery/Balance` (робот 2, заглушка).
 - **Credentials БД:** `RPA DB` (журналы, agents), `WFM DB` (только SELECT). Маппинги — git HTTP, не БД.
 - Таблицы БД: snake_case.
 
@@ -406,7 +410,7 @@ CREATE INDEX ix_bbm_agent_date ON n8n_breaks_recovery.breaks_balance_moves (agen
 
 - Основная ветка разработки — `dev`. Из неё создаётся ветка под задачу, после — Pull Request обратно в `dev`.
 - Изменения проходят **code review** (заявка в канале Mattermost в установленном формате).
-- Конфиги робота лежат в Git (репозиторий `projects/RPA/repos/n8n`); правки конфига — через PR.
+- Конфиги и маппинги робота — репозиторий `projects/RPA/repos/configuration` (ветка `test`, PR в `dev`); воркфлоу — `projects/RPA/repos/n8n`.
 - В ветке `configuration` есть под-ветка `test`, в которую можно лить напрямую без PR.
 - Робот хранится в `dev` до полной готовности.
 - Подключение Stash можно отложить на пару дней — сначала локальная разработка и JSON-конфиг.

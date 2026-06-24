@@ -2,7 +2,7 @@
 
 > **Легенда:** ✓ — сделано · ✓ *пояснение* — сделано с уточнением · ~ — частично · — — не сделано
 
-**Обновлено:** 16.06.2026 (синхронизация имён таблиц: `recovery_transactions`, `balance_transactions` — ADR-008)
+**Обновлено:** 16.06.2026 (ревью 24.06: нейминг, from list, Phase 4 пусто, без Restore/CronSchedule)
 
 ---
 
@@ -54,7 +54,7 @@
 | **Воркфлоу** |
 | WF-01 | `GetConfig` | ✓ прогнан (n8n_breaks_recovery) | §7 | §2.6, §4.9 |
 | WF-02 | `InitTables` | ✓ 4 табл. TDR v3 | §6.3, ADR-008 | §2.6 |
-| WF-02b | `LoadMappings` | ✓ E2E Stash `RPA-1824` (22.06) | §6.5 | — |
+| WF-02b | `LoadMappings` | ✓ E2E Stash `configuration/test` | §6.5 | — |
 | WF-04 | `BreaksRecovery_Main` Phase 1 INIT | ✓ E2E non-prod (17.06) | §7 | §4.5 |
 | WF-04b | `BreaksRecovery_Main` Phase 2 GET DATA | ✓ E2E test (18.06): 4918→4918 | §7.1, §7.3 | §4.5 шаг 3 |
 | WF-08 | Cron `0 2 * * *` UTC | ✓ | — | §2.6, §4.5 шаг 1 |
@@ -71,11 +71,11 @@
 
 ## Main E2E — детализация
 
-### Phase 1 INIT (22.06.2026, Stash RPA-1824)
+### Phase 1 INIT (24.06.2026, Stash configuration/test)
 
 | Нода / шаг | Результат | TDR | ТЗ |
 |---|---|---|---|
-| Execute GetConfig | ✓ `GitBranch: RPA-1824`, Stash raw URL | §6.5 | §4.5 шаг 1–2 |
+| Execute GetConfig | ✓ `GitBranch: test`, Stash configuration raw URL | §6.5 | §4.5 шаг 1–2 |
 | Execute LoadMappings | ✓ 8 JSON из Stash; `mappings.activity` (153), … | §6.5 | — |
 
 ### Phase 1 INIT (18.06.2026, TDR v3 + GitHub dev)
@@ -84,7 +84,6 @@
 |---|---|---|---|
 | Cron → Execute GetConfig | ✓ `GitRawBaseURL`, `MappingsPath: mappings` | §6.5 | §4.5 шаг 1–2 |
 | Execute InitTables | ✓ 4 табл. (пропуск — БД уже OK) | §6.3, ADR-008 | §2.6 |
-| Restore Config Context | ✓ конфиг с GitHub URL | ADR-004 | — |
 | Execute LoadMappings | ✓ 8 JSON с GitHub (`activity` 153, `fte_groups` 161, …) | §6.5 | — |
 
 ### Phase 1 INIT (17.06.2026, legacy)
@@ -142,7 +141,7 @@
 | S0-06g | `GetConfig` | ✓ прогнан |
 | S0-07 | Cron 05:00 МСК | ✓ |
 | S0-11 | Main E2E прогон | ✓ |
-| S0-08 | mappings в Stash (`RPA-1824`) | ✓ LoadMappings E2E |
+| S0-08 | mappings в Stash (`configuration/test`) | ✓ LoadMappings E2E |
 | S0-09 | mTLS non-prod | — не требуется |
 | S0-10 | mTLS prod | — |
 
@@ -157,8 +156,21 @@
 | R-05 | Error Handler + Set Edit Fields | — |
 | R-06 | BE2/BE3 проброс ошибки | — |
 | R-07 | InitTables в каркасе | ✓ прогнан |
-| R-08 | WFMS заглушки | ✓ |
+| R-08 | WFMS заглушки | ~ удалены из Main (ревью 24.06); Phase 4 пусто до логики 8–12 |
 | R-09 | Mattermost через 1С Bot API | ~ Continue On Error |
+
+### Ревизия PR (встреча 24.06, Tretyakova)
+
+| # | Задача | Результат |
+|---|---|---|
+| T24-01 | Нейминг воркфлоу с префиксом (`BreaksRecovery_2.GetConfig`, …) | ✓ |
+| T24-02 | Execute Workflow → from list (`cachedResultName`) | ✓ JSON; перепривязка в n8n UI — |
+| T24-03 | Удалить `Restore Config Context` | ✓ Phase 1: GetConfig → LoadMappings → InitTables |
+| T24-04 | Удалить HTTP-заглушки WFMS (Auth/Upload/Publish) | ✓ |
+| T24-05 | Убрать `CronSchedule` из GetConfig | ✓ Cron только в Main |
+| T24-06 | Папки Recovery / Balance в n8n | — UI на инстансе |
+| T24-07 | Сжать layout canvas | ~ Phase 1 компактнее |
+| T24-08 | Конфиги → `RPA/configuration`, ветка `test`, `BreaksRecovery/Mapping` | ✓ |
 
 ---
 
@@ -172,9 +184,9 @@
 | N-04 | Credential WFM DB | ✓ |
 | N-05 | SQL агентов D+1 | ✓ test + Main |
 | N-06 | `cfg_email_fallback` | — |
-| N-07 | HTTP→Git: LoadMappings + GitRawBaseURL | ✓ Stash `RPA/n8n`, ветка `RPA-1824` |
+| N-07 | HTTP→Git: LoadMappings + GitRawBaseURL | ✓ Stash `RPA/configuration`, ветка `test`, `BreaksRecovery/Mapping` |
 | N-13 | LoadMappings E2E (httpRequest, не fetch) | ✓ 18.06; `this.helpers.httpRequest` в Code |
-| N-14 | LoadMappings Stash: `?at=refs/heads/`, Basic Auth, Response Text | ✓ 22.06; ветка `RPA-1824`, static data + 8 items |
+| N-14 | LoadMappings Stash: `?at=refs/heads/`, Basic Auth, Response Text | ✓ 22.06; ветка `test`, `BreaksRecovery/Mapping` |
 | N-08 | Схема `n8n_breaks_recovery` + `agents` (ADR-006) | ✓ InitTables + cfg + DROP rpa |
 | N-09 | WFM SQL ловушки (ADR-007) | ✓ test: not_erasable, time/timestamp, FTE join, TZ |
 | N-10 | Write Transaction + фильтр агентов (ADR-006, ADR-007 §4) | ✓ Main + SQL |

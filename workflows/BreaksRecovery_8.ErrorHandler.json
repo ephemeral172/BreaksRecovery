@@ -1,12 +1,15 @@
 {
-  "name": "ErrorHandler",
+  "name": "BreaksRecovery_8.ErrorHandler",
   "nodes": [
     {
       "parameters": {},
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
-      "position": [-1200, -120],
-      "id": "eh100000-0000-0000-0000-000000000001",
+      "position": [
+        0,
+        0
+      ],
+      "id": "cc910716-69e5-4cb7-855b-0302a7b76808",
       "name": "When Executed by Another Workflow",
       "notes": "Ручной вызов из Main/Balance (ADR-005).\nОжидаемые поля:\n- success: false\n- error_type: Business Error | System Error\n- error_message: текст\n- workflow_id, workflow_name (опционально)\n- error_code (опционально, BE1/SE1…)"
     },
@@ -14,8 +17,11 @@
       "parameters": {},
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
-      "position": [-1200, 120],
-      "id": "eh100000-0000-0000-0000-000000000002",
+      "position": [
+        0,
+        240
+      ],
+      "id": "5bb51755-16ea-4f65-bb9a-c42e5781d2c7",
       "name": "Error Trigger",
       "notes": "Авто-триггер при необработанной ошибке в Main/Balance.\nВ Settings родительского воркфлоу: Error Workflow = этот воркфлоу."
     },
@@ -25,23 +31,39 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-960, 0],
-      "id": "eh100000-0000-0000-0000-000000000004",
+      "position": [
+        240,
+        128
+      ],
+      "id": "ec6e56fc-4f55-4c52-9db1-bdbae99f4117",
       "name": "Normalize Error"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "GetConfig",
-          "mode": "name"
+          "value": "lfDAKthcbXeSwPSX",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/lfDAKthcbXeSwPSX",
+          "cachedResultName": "BreaksRecovery_2.GetConfig"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
         },
         "options": {}
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
-      "position": [-720, 0],
-      "id": "eh100000-0000-0000-0000-000000000005",
+      "position": [
+        480,
+        128
+      ],
+      "id": "81a42d15-5add-4915-9550-a1aac702c584",
       "name": "Execute GetConfig",
       "notes": "Повторное чтение конфига — проблема могла быть выше (ADR-005)."
     },
@@ -51,8 +73,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-480, 0],
-      "id": "eh100000-0000-0000-0000-000000000006",
+      "position": [
+        720,
+        128
+      ],
+      "id": "c042a003-5f99-44be-b330-173a3743ae66",
       "name": "Enrich With Config"
     },
     {
@@ -65,11 +90,20 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [-240, 0],
-      "id": "eh100000-0000-0000-0000-000000000007",
+      "position": [
+        960,
+        128
+      ],
+      "id": "26b31bee-8480-4469-939f-4a1baf0f3d1e",
       "name": "Set ERROR Status",
-      "notes": "Credential: RPA DB ONLY.\nОбновляет in_progress / незавершённые транзакции.\nСбой -> SE1 (не блокирует нотификацию — Continue On Fail при необходимости).",
-      "continueOnFail": true
+      "credentials": {
+        "postgres": {
+          "id": "eNK5wIS7Kw9Ah8Lf",
+          "name": "RPA DB"
+        }
+      },
+      "continueOnFail": true,
+      "notes": "Credential: RPA DB ONLY.\nОбновляет in_progress / незавершённые транзакции.\nСбой -> SE1 (не блокирует нотификацию — Continue On Fail при необходимости)."
     },
     {
       "parameters": {
@@ -82,11 +116,14 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [0, 0],
-      "id": "eh100000-0000-0000-0000-000000000008",
+      "position": [
+        1200,
+        128
+      ],
+      "id": "f1f37b26-70f6-4889-bfee-8f01b2430148",
       "name": "Send MM Notification",
-      "notes": "1C Bot API: channel name в path URL (не channel_id MM API).\nBE -> MMCBotAlertChannel, SE -> MMCBotProdNotificationsChannel.\nContinue On Fail до настройки prod.",
-      "continueOnFail": true
+      "continueOnFail": true,
+      "notes": "1C Bot API: channel name в path URL (не channel_id MM API).\nBE -> MMCBotAlertChannel, SE -> MMCBotProdNotificationsChannel.\nContinue On Fail до настройки prod."
     },
     {
       "parameters": {
@@ -94,41 +131,103 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [240, 0],
-      "id": "eh100000-0000-0000-0000-000000000009",
+      "position": [
+        1440,
+        128
+      ],
+      "id": "b04cdfad-c7c6-4abe-a06a-4ece06f87e8b",
       "name": "Return Error Result"
     }
   ],
+  "pinData": {},
   "connections": {
     "When Executed by Another Workflow": {
-      "main": [[{ "node": "Normalize Error", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Normalize Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Error Trigger": {
-      "main": [[{ "node": "Normalize Error", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Normalize Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Normalize Error": {
-      "main": [[{ "node": "Execute GetConfig", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Execute GetConfig",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Execute GetConfig": {
-      "main": [[{ "node": "Enrich With Config", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Enrich With Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Enrich With Config": {
-      "main": [[{ "node": "Set ERROR Status", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Set ERROR Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Set ERROR Status": {
-      "main": [[{ "node": "Send MM Notification", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Send MM Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Send MM Notification": {
-      "main": [[{ "node": "Return Error Result", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Return Error Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "pinData": {},
+  "versionId": "095c2683-eb84-4f4b-8961-ef0a7a075bbd",
   "meta": {
-    "templateCredsSetupCompleted": false
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c405c9c7bf2ec4f35dcb9179c9810707580e82751735da064523f04a0f1dd025"
   },
+  "id": "ge4g0yigf0Ykn65R",
   "tags": []
 }

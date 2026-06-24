@@ -12,13 +12,11 @@
   "Mattermost1CChannelBaseURL": "http://1c-api.avito.lan/rpa_1c/hs/mattermost/send/message/channel",
   "MMCBotAlertChannel": "RPA_BN_BreaksRecovery",
   "MMCBotProdNotificationsChannel": "RPA_Robot_Prod_Notifications",
-  "CronSchedule": "0 2 * * *",
-  "CronTimezone": "Europe/Moscow",
   "DataRetentionMonthsTransactions": 12,
   "DataRetentionMonthsPII": 6,
-  "GitRawBaseURL": "https://stash.msk.avito.ru/projects/RPA/repos/n8n/raw",
-  "GitBranch": "RPA-1824",
-  "MappingsPath": "BreaksRecovery_Main/mappings",
+  "GitRawBaseURL": "https://stash.msk.avito.ru/projects/RPA/repos/configuration/raw",
+  "GitBranch": "test",
+  "MappingsPath": "BreaksRecovery/Mapping",
   "BatchSizeMaxAgents": 200,
   "BatchSizeMaxBytes": 262144
 }
