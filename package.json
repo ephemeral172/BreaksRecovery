@@ -1,0 +1,8 @@
+{
+  "name": "breaks-recovery",
+  "private": true,
+  "description": "BreaksRecovery RPA — unit-тесты логики Process (RPA-1834)",
+  "scripts": {
+    "test": "node --test tests/**/*.test.js"
+  }
+}

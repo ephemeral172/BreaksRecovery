@@ -1,0 +1,13 @@
+{
+  "_comment": "Шаблон Pin Data для Process loop (E2E deficit). Заполнить после discover + gtd_02.",
+  "transaction_id": 0,
+  "agent_id": 0,
+  "agent_login": "CANDIDATE_LOGIN",
+  "shift_date": "YYYY-MM-DD",
+  "is_night_shift": false,
+  "shift_start_msk": "YYYY-MM-DDTHH:MM:SS",
+  "wfm_user_id": "00000000-0000-0000-0000-000000000000",
+  "mappings": {
+    "_comment": "Скопировать целиком из output Execute LoadMappings / GetTransactionData payload[0].mappings"
+  }
+}

@@ -1,0 +1,439 @@
+{
+  "name": "BreaksRecovery_GetTransactionData",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "gtd-start-0001-4000-8000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 400],
+      "notes": "Вход: config + mappings из Main (Execute LoadMappings)."
+    },
+    {
+      "parameters": {
+        "content": "## GetTransactionData\n\nJira GetTransactionData · ТЗ §4.5 шаги 2–3, 7 · TDR §6.4\n\n**Вход:** config + mappings\n**Выход:** массив payload (transaction_id, agent_id, …)\n**GTD-01:** исключить success / skipped_BE2 / skipped_BE3 (ADR-009)\n**BE1:** WFM fail · **SE1:** RPA fail",
+        "height": 200,
+        "width": 420,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-48, 128],
+      "id": "gtd-note-0001-4000-8000-000000000001",
+      "name": "Note — GetTransaction"
+    },
+    {
+      "parameters": {
+        "jsCode": "const config = $input.first().json;\nconst fteGroups = config.mappings?.fte_groups || [];\nconst newsSkills = config.mappings?.news_exception_skills || [];\n\nconst support_skills = [\n  ...new Set([\n    ...fteGroups.map((row) => row.skill_name),\n    ...newsSkills.map((row) => row.skill_name),\n  ]),\n].filter(Boolean);\n\nif (support_skills.length === 0) {\n  throw new Error(\n    'System Error: support skills list is empty (mappings/fte_groups.json)',\n  );\n}\n\nconst runDateStr = new Intl.DateTimeFormat('en-CA', {\n  timeZone: 'Europe/Moscow',\n}).format(new Date());\nconst runDate = new Date(`${runDateStr}T12:00:00Z`);\nrunDate.setUTCDate(runDate.getUTCDate() + 1);\nconst shift_date = runDate.toISOString().slice(0, 10);\n\nreturn [\n  {\n    json: {\n      ...config,\n      shift_date,\n      support_skills,\n      support_skills_count: support_skills.length,\n    },\n  },\n];"
+      },
+      "id": "gtd-prep-0001-4000-8000-000000000001",
+      "name": "Prepare GTD Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 400],
+      "notes": "shift_date D+1 (MSK), support_skills из mappings."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT a.agent_login\nFROM n8n_breaks_recovery.recovery_transactions rt\nJOIN n8n_breaks_recovery.agents a ON a.id = rt.agent_id\nWHERE rt.shift_date = $1::date\n  AND rt.processing_status IN ('success', 'skipped_BE2', 'skipped_BE3');",
+        "options": {
+          "queryReplacement": "={{ [$('Prepare GTD Context').first().json.shift_date] }}"
+        }
+      },
+      "id": "gtd-skip-0001-4000-8000-000000000001",
+      "name": "Get Processed Agents",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [480, 400],
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "eNK5wIS7Kw9Ah8Lf",
+          "name": "RPA DB"
+        }
+      },
+      "notes": "GTD-01 / gtd_01_get_processed_agents.sql (ADR-009). SE1 при сбое."
+    },
+    {
+      "parameters": {
+        "jsCode": "const ctx = $('Prepare GTD Context').first().json;\nconst excluded_logins = $input\n  .all()\n  .map((item) => item.json.agent_login)\n  .filter(Boolean);\n\nreturn [\n  {\n    json: {\n      ...ctx,\n      excluded_logins,\n      excluded_logins_count: excluded_logins.length,\n    },\n  },\n];"
+      },
+      "id": "gtd-bld-0001-4000-8000-000000000001",
+      "name": "Build Query Params",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 400],
+      "notes": "Массив login обработанных (success/skipped_*) → $2 для WFM SQL."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH activity_msk AS (\n  SELECT\n    usa.user_id,\n    usa.start + INTERVAL '3 hours' AS start_msk,\n    usa.\"end\" + INTERVAL '3 hours' AS end_msk\n  FROM public.user_schedule_activity usa\n  JOIN public.work_activity wa ON wa.id = usa.work_activity_id\n  WHERE usa.start BETWEEN ($1::date - INTERVAL '1 day') - INTERVAL '3 hours'\n                      AND ($1::date + INTERVAL '2 days') - INTERVAL '3 hours'\n    AND wa.absence = FALSE\n),\ncandidates AS (\n  SELECT\n    user_id,\n    MIN(start_msk) FILTER (WHERE start_msk::date = $1::date) AS day_shift_start,\n    MIN(start_msk) FILTER (\n      WHERE start_msk::date = $1::date - 1\n        AND end_msk::date = $1::date\n    ) AS night_shift_start\n  FROM activity_msk\n  GROUP BY user_id\n)\nSELECT DISTINCT\n  u.id::text AS wfm_user_id,\n  u.login AS agent_login,\n  to_char(\n    COALESCE(c.night_shift_start, c.day_shift_start),\n    'YYYY-MM-DD\"T\"HH24:MI:SS'\n  ) AS shift_start_msk,\n  (c.night_shift_start IS NOT NULL) AS is_night_shift,\n  to_char($1::date, 'YYYY-MM-DD') AS shift_date\nFROM candidates c\nJOIN public.\"user\" u ON u.id = c.user_id\nWHERE (c.day_shift_start IS NOT NULL OR c.night_shift_start IS NOT NULL)\n  AND (cardinality($2::text[]) = 0 OR u.login <> ALL ($2::text[]))\n  AND EXISTS (\n    SELECT 1\n    FROM user_skill_mapping usm\n    INNER JOIN skill sk ON sk.id = usm.skill_id\n    WHERE usm.user_id = u.id\n      AND sk.name = ANY ($3::text[])\n  )\nORDER BY u.login;",
+        "options": {
+          "queryReplacement": "={{ [\n  $('Build Query Params').first().json.shift_date,\n  $('Build Query Params').first().json.excluded_logins,\n  $('Build Query Params').first().json.support_skills,\n] }}"
+        }
+      },
+      "id": "gtd-wfm-0001-4000-8000-000000000001",
+      "name": "Get Agents D+1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [960, 400],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "wo2M9L3CWwZ1DXUH",
+          "name": "WFM DB"
+        }
+      },
+      "notes": "GTD-02 / gtd_02_agents_d_plus_1.sql. BE1 при сбое."
+    },
+    {
+      "parameters": {
+        "jsCode": "const agents = $input.all().filter((item) => item.json.agent_login);\nif (agents.length === 0) {\n  return [{ json: { _no_agents: true } }];\n}\nreturn agents.map((item) => ({ json: item.json }));"
+      },
+      "id": "gtd-rte-0001-4000-8000-000000000001",
+      "name": "Route Agents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "cond-no-agents",
+              "leftValue": "={{ $json._no_agents }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "gtd-if-0001-4000-8000-000000000001",
+      "name": "Any Agents?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1440, 400]
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "gtd-loop-0001-4000-8000-000000000001",
+      "name": "Process Each Agent",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1680, 512],
+      "notes": "Upsert agent + insert transaction на агента."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO n8n_breaks_recovery.agents (agent_login)\nVALUES ($1)\nON CONFLICT (agent_login) DO UPDATE\n  SET agent_login = EXCLUDED.agent_login\nRETURNING id AS agent_id;",
+        "options": {
+          "queryReplacement": "={{ [$json.agent_login] }}"
+        }
+      },
+      "id": "gtd-ups-0001-4000-8000-000000000001",
+      "name": "Upsert Agent",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [1920, 512],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "eNK5wIS7Kw9Ah8Lf",
+          "name": "RPA DB"
+        }
+      },
+      "notes": "GTD-03 / gtd_03_upsert_agent.sql"
+    },
+    {
+      "parameters": {
+        "jsCode": "const wfm = $('Process Each Agent').item.json;\nconst upsert = $input.first().json;\nreturn [{ json: { ...wfm, agent_id: upsert.agent_id } }];"
+      },
+      "id": "gtd-att-0001-4000-8000-000000000001",
+      "name": "Attach Agent Id",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2160, 512]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO n8n_breaks_recovery.recovery_transactions (\n  processing_start_time,\n  processing_status,\n  agent_id,\n  shift_date,\n  is_night_shift\n)\nVALUES (NOW(), 'in_progress', $1, $2::date, $3::boolean)\nON CONFLICT (agent_id, shift_date) DO UPDATE\n  SET is_night_shift = EXCLUDED.is_night_shift\nRETURNING id AS transaction_id;",
+        "options": {
+          "queryReplacement": "={{ [$json.agent_id, $json.shift_date, $json.is_night_shift] }}"
+        }
+      },
+      "id": "gtd-ins-0001-4000-8000-000000000001",
+      "name": "Insert Transaction",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [2400, 512],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "eNK5wIS7Kw9Ah8Lf",
+          "name": "RPA DB"
+        }
+      },
+      "notes": "GTD-04 / gtd_04_insert_transaction.sql. SE1 при сбое."
+    },
+    {
+      "parameters": {
+        "jsCode": "const row = $('Attach Agent Id').first().json;\nconst tx = $input.first().json;\nreturn [{ json: { ...row, transaction_id: tx.transaction_id } }];"
+      },
+      "id": "gtd-tx-0001-4000-8000-000000000001",
+      "name": "Attach Transaction Id",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2640, 512]
+    },
+    {
+      "parameters": {
+        "jsCode": "const mappings = $('Start').first().json.mappings;\nconst records = $input.all();\n\nreturn records.map((item) => ({\n  json: {\n    transaction_id: item.json.transaction_id,\n    agent_id: item.json.agent_id,\n    agent_login: item.json.agent_login,\n    shift_start_msk: item.json.shift_start_msk,\n    is_night_shift: item.json.is_night_shift,\n    shift_date: item.json.shift_date,\n    wfm_user_id: item.json.wfm_user_id,\n    mappings,\n  },\n}));"
+      },
+      "id": "gtd-asm-0001-4000-8000-000000000001",
+      "name": "Assemble Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1920, 288],
+      "notes": "GTD шаг 6: массив payload для Process."
+    },
+    {
+      "parameters": {
+        "jsCode": "return [];"
+      },
+      "id": "gtd-emp-0001-4000-8000-000000000001",
+      "name": "Empty Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1680, 288],
+      "notes": "0 агентов на D+1 — пустой выход sub-workflow."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be1-type",
+              "name": "error_type",
+              "value": "Business Error",
+              "type": "string"
+            },
+            {
+              "id": "be1-code",
+              "name": "error_code",
+              "value": "BE1",
+              "type": "string"
+            },
+            {
+              "id": "be1-msg",
+              "name": "error_message",
+              "value": "={{ $workflow.name + ' / ' + ($prevNode.name || 'Get Agents D+1') + ': WFM DB failure after 3 retries' }}",
+              "type": "string"
+            },
+            {
+              "id": "be1-success",
+              "name": "success",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "be1-status",
+              "name": "workflow_status",
+              "value": "READY_FOR_RETRY",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "gtd-be1-0001-4000-8000-000000000001",
+      "name": "Set BE1 Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [960, 640]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "se1-type",
+              "name": "error_type",
+              "value": "System Error",
+              "type": "string"
+            },
+            {
+              "id": "se1-code",
+              "name": "error_code",
+              "value": "SE1",
+              "type": "string"
+            },
+            {
+              "id": "se1-msg",
+              "name": "error_message",
+              "value": "={{ $workflow.name + ' / ' + ($prevNode.name || 'RPA DB') + ': RPA DB failure after 3 retries' }}",
+              "type": "string"
+            },
+            {
+              "id": "se1-success",
+              "name": "success",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "gtd-se1-0001-4000-8000-000000000001",
+      "name": "Set SE1 Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 640]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ge4g0yigf0Ykn65R",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ge4g0yigf0Ykn65R",
+          "cachedResultName": "BreaksRecovery_8.ErrorHandler"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "gtd-err-0001-4000-8000-000000000001",
+      "name": "Execute ErrorHandler",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1200, 640]
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.error_message || 'GetTransactionData failed' }}"
+      },
+      "id": "gtd-stp-0001-4000-8000-000000000001",
+      "name": "Stop And Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [1440, 640]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start": {
+      "main": [[{ "node": "Prepare GTD Context", "type": "main", "index": 0 }]]
+    },
+    "Prepare GTD Context": {
+      "main": [[{ "node": "Get Processed Agents", "type": "main", "index": 0 }]]
+    },
+    "Get Processed Agents": {
+      "main": [
+        [{ "node": "Build Query Params", "type": "main", "index": 0 }],
+        [{ "node": "Set SE1 Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Build Query Params": {
+      "main": [[{ "node": "Get Agents D+1", "type": "main", "index": 0 }]]
+    },
+    "Get Agents D+1": {
+      "main": [
+        [{ "node": "Route Agents", "type": "main", "index": 0 }],
+        [{ "node": "Set BE1 Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Route Agents": {
+      "main": [[{ "node": "Any Agents?", "type": "main", "index": 0 }]]
+    },
+    "Any Agents?": {
+      "main": [
+        [{ "node": "Empty Payload", "type": "main", "index": 0 }],
+        [{ "node": "Process Each Agent", "type": "main", "index": 0 }]
+      ]
+    },
+    "Process Each Agent": {
+      "main": [
+        [{ "node": "Assemble Payload", "type": "main", "index": 0 }],
+        [{ "node": "Upsert Agent", "type": "main", "index": 0 }]
+      ]
+    },
+    "Upsert Agent": {
+      "main": [
+        [{ "node": "Attach Agent Id", "type": "main", "index": 0 }],
+        [{ "node": "Set SE1 Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Attach Agent Id": {
+      "main": [[{ "node": "Insert Transaction", "type": "main", "index": 0 }]]
+    },
+    "Insert Transaction": {
+      "main": [
+        [{ "node": "Attach Transaction Id", "type": "main", "index": 0 }],
+        [{ "node": "Set SE1 Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Attach Transaction Id": {
+      "main": [[{ "node": "Process Each Agent", "type": "main", "index": 0 }]]
+    },
+    "Set BE1 Error": {
+      "main": [[{ "node": "Execute ErrorHandler", "type": "main", "index": 0 }]]
+    },
+    "Set SE1 Error": {
+      "main": [[{ "node": "Execute ErrorHandler", "type": "main", "index": 0 }]]
+    },
+    "Execute ErrorHandler": {
+      "main": [[{ "node": "Stop And Error", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "ge4g0yigf0Ykn65R"
+  },
+  "versionId": "gtd-v1-0001-4000-8000-000000000001",
+  "meta": {
+    "instanceId": "c405c9c7bf2ec4f35dcb9179c9810707580e82751735da064523f04a0f1dd025"
+  },
+  "id": "BRgTxD7n8nWf01",
+  "tags": []
+}

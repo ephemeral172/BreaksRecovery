@@ -1,5 +1,5 @@
 {
-  "name": "BreaksRecovery_Main",
+  "name": "BreaksRecovery_Main 2",
   "nodes": [
     {
       "parameters": {
@@ -16,9 +16,9 @@
       "typeVersion": 1.2,
       "position": [
         16,
-        640
+        864
       ],
-      "id": "1208c383-3d80-4d03-8b25-195e5c952572",
+      "id": "7d7247c8-7cad-453e-a470-3da22f588290",
       "name": "Cron 05:00 MSK",
       "notes": "0 2 * * * UTC = 05:00 Europe/Moscow (ТЗ §2.6).\nCron задаётся здесь, не в GetConfig.\nНа ОПЭ: 0 10 * * * UTC = 13:00 МСК."
     },
@@ -26,10 +26,10 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "lfDAKthcbXeSwPSX",
+          "value": "UM21sL0xetqFrOTo",
           "mode": "list",
-          "cachedResultUrl": "/workflow/lfDAKthcbXeSwPSX",
-          "cachedResultName": "BreaksRecovery_2.GetConfig"
+          "cachedResultUrl": "/workflow/UM21sL0xetqFrOTo",
+          "cachedResultName": "RPA — [BreaksRecovery] 2. GetConfig"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -44,10 +44,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        304,
-        640
+        240,
+        864
       ],
-      "id": "3d721731-a23b-4459-aaa7-e12304d66f94",
+      "id": "34d6eb4e-caf0-4114-a797-2eb170f0de8b",
       "name": "Execute GetConfig",
       "notes": "Phase 1 INIT. ADR-004: JSON-конфиг + Validate (не rpa_config из БД)."
     },
@@ -55,10 +55,10 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "FikmEtfjPgAcBLVr",
+          "value": "ZGyol2p4ZM2F6uTI",
           "mode": "list",
-          "cachedResultUrl": "/workflow/FikmEtfjPgAcBLVr",
-          "cachedResultName": "BreaksRecovery_3.InitTables"
+          "cachedResultUrl": "/workflow/ZGyol2p4ZM2F6uTI",
+          "cachedResultName": "RPA — [BreaksRecovery] 4. InitTables"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -73,10 +73,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        864,
-        640
+        688,
+        864
       ],
-      "id": "4ec8056f-1174-4d11-992e-00947d176e51",
+      "id": "dcb399b0-3515-4cfe-8cbb-4adc726535d6",
       "name": "Execute InitTables",
       "notes": "Phase 1 INIT. TDR §6.3: idempotent CREATE SCHEMA/TABLE."
     },
@@ -84,10 +84,10 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "KwxEdf6m784CyO6z",
+          "value": "gTHM6Ea7M1bp4G1S",
           "mode": "list",
-          "cachedResultUrl": "/workflow/KwxEdf6m784CyO6z",
-          "cachedResultName": "BreaksRecovery_LoadMappings"
+          "cachedResultUrl": "/workflow/gTHM6Ea7M1bp4G1S",
+          "cachedResultName": "RPA — [BreaksRecovery] 3. LoadMappings"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -102,113 +102,55 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        592,
-        640
+        464,
+        864
       ],
-      "id": "460fdece-8d6a-4852-b141-b8f5abf68d25",
+      "id": "c49ddf0d-d92f-479f-bdfd-def19c0d6892",
       "name": "Execute LoadMappings",
       "notes": "TDR v3 §6.5: загрузка mappings/*.json из git (HTTP). Требует GitRawBaseURL в GetConfig."
     },
     {
       "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT a.agent_login\nFROM n8n_breaks_recovery.agents a\nINNER JOIN n8n_breaks_recovery.recovery_transactions t ON t.agent_id = a.id\nWHERE t.shift_date = ((NOW() AT TIME ZONE 'Europe/Moscow')::date + 1)\n  AND t.processing_status IN ('success', 'skipped_BE2', 'skipped_BE3');",
+        "jsCode": "return [{ json: $('Execute LoadMappings').first().json }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        864
+      ],
+      "id": "5ca9c34b-fbf5-4195-af1e-cd9e5949791c",
+      "name": "GTD Input",
+      "notes": "InitTables не пробрасывает config — передаём LoadMappings в GetTransactionData."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "IFnc7m1rhDke1ZY1",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/IFnc7m1rhDke1ZY1",
+          "cachedResultName": "RPA — [BreaksRecovery] 6. GetTransactionData"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.5,
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
       "position": [
-        1152,
-        640
+        1136,
+        864
       ],
-      "id": "a660d195-89f7-4b20-88ab-4d81eac9ef21",
-      "name": "Get Processed Agents",
-      "alwaysOutputData": true,
-      "credentials": {
-        "postgres": {
-          "id": "eNK5wIS7Kw9Ah8Lf",
-          "name": "RPA DB"
-        }
-      },
-      "notes": "ТЗ §4.5 шаг 3: пропуск финализированных на D+1 (success, skipped_BE2/BE3).\nfailed/in_progress — повторная обработка в тот же день.\nCredential: RPA DB.\nalwaysOutputData: при 0 строк передаёт пустой item дальше."
-    },
-    {
-      "parameters": {
-        "jsCode": "const config = $('Execute LoadMappings').first().json;\nconst processedLogins = $('Get Processed Agents')\n  .all()\n  .map((item) => item.json.agent_login)\n  .filter(Boolean);\n\nreturn [\n  {\n    json: {\n      ...config,\n      processed_agents: processedLogins,\n      processed_agents_count: processedLogins.length,\n    },\n  },\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1424,
-        640
-      ],
-      "id": "ba8885f5-8fd4-486e-8116-4e952dab613d",
-      "name": "Continue Phase 2",
-      "notes": "Якорь потока после Get Processed Agents: 0 обработанных на D+1 — норма, Phase 2 идёт дальше."
-    },
-    {
-      "parameters": {
-        "jsCode": "const ctx = $('Continue Phase 2').first().json;\nconst fteGroups = ctx.mappings?.fte_groups || [];\nconst newsSkills = ctx.mappings?.news_exception_skills || [];\n\nconst skills = [\n  ...new Set([\n    ...fteGroups.map((row) => row.skill_name),\n    ...newsSkills.map((row) => row.skill_name),\n  ]),\n].filter(Boolean);\n\nif (skills.length === 0) {\n  throw new Error('System Error: support skills list is empty (mappings/fte_groups.json)');\n}\n\nreturn skills.map((skill_name) => ({ json: { skill_name } }));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1712,
-        640
-      ],
-      "id": "98cdd210-6701-4bc3-a2be-bf5ca747525b",
-      "name": "Extract Support Skills",
-      "notes": "WF1-00: навыки из mappings/fte_groups.json + news_exception_skills.json (TDR v3 §6.5)."
-    },
-    {
-      "parameters": {
-        "jsCode": "const skills = [\n  ...new Set(\n    $('Extract Support Skills')\n      .all()\n      .map((item) => item.json.skill_name)\n      .filter(Boolean),\n  ),\n];\n\nif (skills.length === 0) {\n  throw new Error('System Error: support skills list is empty (mappings/fte_groups.json)');\n}\n\nconst values = skills\n  .map((name) => `('${String(name).replace(/'/g, \"''\")}')`)\n  .join(',\\n    ');\n\nconst query = `WITH params AS (\n  SELECT\n    (NOW() AT TIME ZONE 'Europe/Moscow')::date AS run_date,\n    ((NOW() AT TIME ZONE 'Europe/Moscow')::date + 1) AS shift_date\n),\nsupport_skills(skill_name) AS (\n  VALUES\n    ${values}\n),\nactivities_msk AS (\n  SELECT\n    u.login AS agent_login,\n    (usa.start AT TIME ZONE 'UTC' + INTERVAL '3 hours')::date AS start_msk_date,\n    (usa.end AT TIME ZONE 'UTC' + INTERVAL '3 hours')::date AS end_msk_date\n  FROM user_schedule_activity usa\n  INNER JOIN \"user\" u ON u.id = usa.user_id\n  WHERE usa.start IS NOT NULL\n    AND usa.end IS NOT NULL\n    AND EXISTS (\n      SELECT 1\n      FROM user_skill_mapping usm\n      INNER JOIN skill sk ON sk.id = usm.skill_id\n      INNER JOIN support_skills ss ON ss.skill_name = sk.name\n      WHERE usm.user_id = u.id\n    )\n)\nSELECT\n  am.agent_login,\n  to_char(p.shift_date, 'YYYY-MM-DD') AS shift_date,\n  BOOL_OR(am.start_msk_date = p.run_date AND am.end_msk_date >= p.shift_date) AS is_night_shift\nFROM activities_msk am\nCROSS JOIN params p\nWHERE am.start_msk_date = p.shift_date\n   OR am.end_msk_date = p.shift_date\n   OR (am.start_msk_date < p.shift_date AND am.end_msk_date > p.shift_date)\nGROUP BY am.agent_login, p.shift_date, p.run_date\nORDER BY am.agent_login;`;\n\nreturn [{ json: { query, support_skills_count: skills.length } }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2032,
-        640
-      ],
-      "id": "b3630bb8-686d-4c38-b802-5871bd1ec71d",
-      "name": "Build WF1 Query",
-      "notes": "Собирает WF1-01 с фильтром навыков из mappings/fte_groups.json."
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "={{ $('Build WF1 Query').first().json.query }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.5,
-      "position": [
-        2352,
-        640
-      ],
-      "id": "f2b2c876-8210-4656-b0b9-ba2e239ad34c",
-      "name": "Get Agents D+1",
-      "credentials": {
-        "postgres": {
-          "id": "wo2M9L3CWwZ1DXUH",
-          "name": "WFM DB"
-        }
-      },
-      "notes": "ТЗ §4.5 шаг 3 / TDR §7.1 оп.1. WFM DB read-only. WF1-01 + фильтр fte_groups.json. Сбой -> BE1."
-    },
-    {
-      "parameters": {
-        "jsCode": "const processed = new Set(\n  $('Continue Phase 2').first().json.processed_agents || [],\n);\n\nreturn $input\n  .all()\n  .filter((item) => item.json.agent_login && !processed.has(item.json.agent_login))\n  .map((item) => ({ json: item.json }));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2672,
-        640
-      ],
-      "id": "3bf02c0a-e50f-484a-9d2e-2c072ccb5b1b",
-      "name": "Filter New Agents",
-      "notes": "ТЗ §4.5 шаг 3: исключить обработанных на D+1.\nprocessed_agents — снимок из Continue Phase 2 (тот же execution). Агенты — $input от Get Agents D+1."
+      "id": "ecc21d1d-d9bd-4e94-9049-227b5974c99a",
+      "name": "Execute GetTransactionData",
+      "notes": "Phase 2: Jira GetTransactionData (B0–B6). Выход — массив payload для Process."
     },
     {
       "parameters": {
@@ -219,66 +161,66 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        2672,
-        944
+        1808,
+        864
       ],
-      "id": "6848a4c1-aa43-47a8-8bfa-5195d6a2be4a",
+      "id": "907fe798-d449-4699-a874-517e2dd808f2",
       "name": "Process Each Agent",
-      "notes": "Phase 3 PROCESS. ТЗ §4.5 шаг 7: транзакция = 1 агент."
+      "notes": "Phase 3 PROCESS. Вход — payload из Execute GetTransactionData (transaction_id уже создан)."
     },
     {
       "parameters": {
-        "jsCode": "// ТЗ §4.5 шаг 8: тип контейнера (mappings/container.json / 9hrs / 12hrs)\n// BE2 если не распознан\nreturn $input.all();"
+        "jsCode": "/**\n * Phase C Process logic — источник для Code-нод BreaksRecovery_Main.\n * ТЗ §4.5 шаги 8–12 · TDR §7.2\n */\n\nconst NEWS_ACTIVITY = 'Обучение (Новости)';\nconst MAX_NEWS_MIN = 60;\nconst BONUS_DEFAULT = 10;\nconst BONUS_EXCEPTION = 15;\nconst LUNCH_MIN = 30;\nconst BREAK_MIN = 10;\nconst BREAK_LONG_MIN = 15;\nconst MIN_SLOT_MIN = 60;\nconst MSK_OFFSET = '+03:00';\n\nfunction toMskDateKey(val) {\n  if (!val) return null;\n  const s = String(val);\n  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) return s;\n  const d = new Date(s);\n  if (Number.isNaN(d.getTime())) return null;\n  const msk = new Date(d.getTime() + 3 * 3600000);\n  return msk.toISOString().slice(0, 10);\n}\n\nfunction weekdayCode(dateStr) {\n  const d = new Date(`${dateStr}T12:00:00${MSK_OFFSET}`);\n  return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][d.getUTCDay()];\n}\n\nfunction resolveNewsPattern(scheme, newsRules) {\n  if (!scheme) return null;\n  const patterns = [...new Set((newsRules || []).map((r) => r.schedule_pattern))];\n  if (patterns.includes(scheme)) return scheme;\n\n  const t2 = scheme.match(/2\\s*\\/\\s*2\\s*тип\\s*(\\d)/i);\n  if (t2) {\n    const candidate = `2/2 тип ${t2[1]}`;\n    if (patterns.includes(candidate)) return candidate;\n  }\n\n  const t52 = scheme.match(/5\\s*\\/\\s*2\\s*вых\\s*[А-Яа-я]{2}-[А-Яа-я]{2}/i);\n  if (t52) {\n    const normalized = t52[0].replace(/\\s+/g, ' ');\n    const match = patterns.find((p) => p.toLowerCase() === normalized.toLowerCase());\n    if (match) return match;\n  }\n\n  return patterns.find((p) => scheme.includes(p)) || null;\n}\n\nfunction resolveNewsPatternForNode(item) {\n  const newsRules = item.mappings?.news_reading || [];\n  const scheme = item.schedule_scheme_name || '';\n  return resolveNewsPattern(scheme, newsRules);\n}\n\nfunction shiftPlanHasFixedBreaks(shiftPlan) {\n  return (shiftPlan || []).some(\n    (r) => r.is_fixed === true || r.is_fixed === 't' || r.is_fixed === 'true',\n  );\n}\n\nfunction getBreakBudget(item) {\n  const fromPlanFixed = shiftPlanHasFixedBreaks(item.shift_plan);\n  const containers = item.mappings?.container || [];\n  const ns = containers.find((c) => c.container_name === item.container_name);\n  if (ns) {\n    return {\n      total_break_min: ns.break_duration_min,\n      has_fixed_breaks: !!ns.has_fixed_breaks || fromPlanFixed,\n    };\n  }\n  if (item.container_type === 'standard_9hrs') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_12hrs') {\n    return { total_break_min: 75, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_pattern') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  return null;\n}\n\nfunction buildBreakDurations(containerType, remaining) {\n  if (containerType === 'standard_12hrs' && remaining === 45) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN, BREAK_LONG_MIN];\n  }\n  if (containerType === 'standard_9hrs' && remaining === 30) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN];\n  }\n  const breaks = [];\n  let left = remaining;\n  while (left >= BREAK_MIN) {\n    breaks.push(BREAK_MIN);\n    left -= BREAK_MIN;\n  }\n  if (left > 0 && left < BREAK_MIN) {\n    breaks.push(roundUp5(left));\n  }\n  return breaks;\n}\n\nfunction collectBreakDurations(shiftFact) {\n  return (shiftFact || [])\n    .filter((r) => r.activity_name === 'Перерыв' && (r.duration_min || 0) >= BREAK_MIN)\n    .map((r) => roundUp5(r.duration_min));\n}\n\nfunction missingBreakActivities(requiredBreaks, factBreaks) {\n  const pool = [...factBreaks];\n  const missing = [];\n  for (const need of requiredBreaks) {\n    const exactIdx = pool.indexOf(need);\n    if (exactIdx >= 0) {\n      pool.splice(exactIdx, 1);\n      continue;\n    }\n    const flexIdx = pool.findIndex((d) => d >= need);\n    if (flexIdx >= 0) {\n      pool.splice(flexIdx, 1);\n      continue;\n    }\n    missing.push({ activity_name: 'Перерыв', duration_min: need });\n  }\n  return missing;\n}\n\nfunction roundUp5(min) {\n  return Math.ceil(min / 5) * 5;\n}\n\nfunction formatMskIso(date) {\n  const d = date instanceof Date ? date : new Date(date);\n  const pad = (n) => String(n).padStart(2, '0');\n  const y = d.getUTCFullYear();\n  const mo = pad(d.getUTCMonth() + 1);\n  const da = pad(d.getUTCDate());\n  const h = pad(d.getUTCHours());\n  const mi = pad(d.getUTCMinutes());\n  const se = pad(d.getUTCSeconds());\n  return `${y}-${mo}-${da}T${h}:${mi}:${se}${MSK_OFFSET}`;\n}\n\nfunction parseMskDateTime(str) {\n  if (!str) return null;\n  const s = String(str);\n  if (s.includes('T')) {\n    return new Date(s.endsWith('Z') ? s : `${s}${s.includes('+') ? '' : MSK_OFFSET}`);\n  }\n  return new Date(`${s}${MSK_OFFSET}`);\n}\n\nfunction canPlaceBreak(activityName, mappings) {\n  const row = (mappings?.activity || []).find((a) => a.activity_name === activityName);\n  const flag = row?.can_place_break;\n  return flag === 'yes' || flag === 'no_but_movable';\n}\n\nfunction segmentAllowsPlacement(seg, mappings) {\n  if (seg.not_erasable) return false;\n  return canPlaceBreak(seg.activity_name, mappings);\n}\n\nconst MOSCOW_TZ = 'Europe/Moscow';\n\nfunction mergeAgentSkills(payload, skillRows) {\n  const rows = (skillRows || []).filter((r) => r && r.skill_name);\n  const agent_skills = rows.map((r) => r.skill_name);\n  const badTz = rows.find(\n    (r) => r.skill_time_zone && r.skill_time_zone !== MOSCOW_TZ,\n  );\n  if (badTz) {\n    return {\n      ...payload,\n      agent_skills,\n      error_code: 'SKIP_TZ',\n      processing_comment: `Agent excluded: skill ${badTz.skill_name} time_zone=${badTz.skill_time_zone} (v1 scope)`,\n      wfms_lines: [],\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n  return { ...payload, agent_skills };\n}\n\nfunction determineContainerRules(item) {\n  const scheme = item.schedule_scheme_name || '';\n  const variant = item.schedule_variant_name || '';\n  const containerName = variant || scheme;\n  const containers = item.mappings?.container || [];\n\n  const nsMatch = containers.find((c) => c.container_name === containerName);\n  let containerType = null;\n  let errorCode = item.error_code || null;\n  let processingComment = item.processing_comment || null;\n\n  if (!errorCode) {\n    if (nsMatch) {\n      containerType = 'non_standard';\n    } else if (/\\b9\\s*hrs\\b|\\b9hrs\\b/i.test(containerName) || /\\b9\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_9hrs';\n    } else if (/\\b12\\s*hrs\\b|\\b12hrs\\b/i.test(containerName) || /\\b12\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_12hrs';\n    } else if (/\\b5\\s*\\/\\s*2\\b|\\b2\\s*\\/\\s*2\\b/i.test(scheme)) {\n      containerType = 'standard_pattern';\n    } else if (!containerName) {\n      errorCode = 'BE2';\n      processingComment = 'Container/scheme not found in WFM (proc_01 empty)';\n    } else {\n      errorCode = 'BE2';\n      processingComment = `Unrecognized container: ${containerName}`;\n    }\n  }\n\n  const newsPattern = resolveNewsPattern(scheme, item.mappings?.news_reading || []);\n\n  return {\n    ...item,\n    schedule_scheme_name: scheme,\n    schedule_variant_name: variant,\n    container_name: containerName,\n    container_type: containerType,\n    schedule_pattern: newsPattern || scheme,\n    news_pattern_resolved: newsPattern,\n    error_code: errorCode,\n    processing_comment: processingComment,\n  };\n}\n\nfunction calculateNewsDuration(item) {\n  if (item.error_code) {\n    return { ...item, news_minutes: item.news_minutes ?? null };\n  }\n\n  const newsRules = item.mappings?.news_reading || [];\n  const exceptionSkills = new Set(\n    (item.mappings?.news_exception_skills || []).map((s) => s.skill_name),\n  );\n  const hasException = (item.agent_skills || []).some((sk) => exceptionSkills.has(sk));\n  const pattern = resolveNewsPattern(item.schedule_scheme_name || '', newsRules);\n\n  if (!pattern) {\n    return {\n      ...item,\n      schedule_pattern: item.schedule_pattern || item.schedule_scheme_name || '',\n      news_minutes: 0,\n      news_pattern_resolved: null,\n    };\n  }\n\n  const shiftDate = toMskDateKey(item.shift_date);\n  const todayRule = newsRules.find(\n    (r) => r.schedule_pattern === pattern && r.weekday === weekdayCode(shiftDate),\n  );\n\n  let baseToday = 0;\n  if (todayRule && !todayRule.is_weekend) {\n    const base = hasException ? todayRule.minutes_exception : todayRule.minutes_default;\n    baseToday = Number(base) || 0;\n  }\n\n  const historyByDate = new Map();\n  for (const row of item.history_7d || []) {\n    const key = toMskDateKey(row.activity_date);\n    if (!key) continue;\n    if (!historyByDate.has(key)) historyByDate.set(key, []);\n    historyByDate.get(key).push(row);\n  }\n\n  let missedDays = 0;\n  const shiftDt = new Date(`${shiftDate}T12:00:00${MSK_OFFSET}`);\n  for (let i = 7; i >= 1; i -= 1) {\n    const d = new Date(shiftDt.getTime() - i * 86400000);\n    const key = d.toISOString().slice(0, 10);\n    const wd = weekdayCode(key);\n    const rule = newsRules.find((r) => r.schedule_pattern === pattern && r.weekday === wd);\n    if (!rule || rule.is_weekend) continue;\n\n    const expected = hasException ? rule.minutes_exception : rule.minutes_default;\n    if (!expected || expected <= 0) continue;\n\n    const dayRows = historyByDate.get(key) || [];\n    const workRows = dayRows.filter((r) => !r.is_absence);\n    if (workRows.length === 0) continue;\n\n    const newsRows = workRows.filter((r) => r.activity_name === NEWS_ACTIVITY);\n    const newsMin = newsRows.reduce((sum, r) => sum + (r.duration_min || 0), 0);\n    if (newsMin <= 0) missedDays += 1;\n  }\n\n  const bonusPerDay = hasException ? BONUS_EXCEPTION : BONUS_DEFAULT;\n  const newsMinutes = Math.min(MAX_NEWS_MIN, baseToday + missedDays * bonusPerDay);\n\n  return {\n    ...item,\n    schedule_pattern: pattern,\n    news_pattern_resolved: pattern,\n    news_minutes: newsMinutes,\n    news_missed_days: missedDays,\n  };\n}\n\nfunction buildRequiredActivities(item) {\n  const required = [];\n  const newsMin = item.news_minutes || 0;\n  if (newsMin > 0) {\n    required.push({ activity_name: NEWS_ACTIVITY, duration_min: newsMin });\n  }\n\n  const budget = getBreakBudget(item);\n  if (!budget) {\n    return { required, skip_slots: true, skip_reason: 'no_break_budget' };\n  }\n  if (budget.has_fixed_breaks) {\n    return { required, skip_slots: true, skip_reason: 'fixed_breaks' };\n  }\n\n  let remaining = budget.total_break_min || 0;\n  if (remaining >= LUNCH_MIN) {\n    required.push({ activity_name: 'Обед', duration_min: LUNCH_MIN });\n    remaining -= LUNCH_MIN;\n  }\n  for (const durationMin of buildBreakDurations(item.container_type, remaining)) {\n    required.push({ activity_name: 'Перерыв', duration_min: durationMin });\n  }\n\n  return { required, skip_slots: false };\n}\n\nfunction findMissingActivities(item) {\n  if (item.error_code) {\n    return {\n      ...item,\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n\n  const { required, skip_slots, skip_reason } = buildRequiredActivities(item);\n  const shiftFact = item.shift_fact || [];\n\n  const factByName = {};\n  for (const row of shiftFact) {\n    factByName[row.activity_name] = (factByName[row.activity_name] || 0) + (row.duration_min || 0);\n  }\n\n  const requiredBreaks = required\n    .filter((r) => r.activity_name === 'Перерыв')\n    .map((r) => r.duration_min);\n  const factBreaks = collectBreakDurations(shiftFact);\n\n  const missing = [];\n  for (const req of required) {\n    if (req.activity_name === 'Перерыв') continue;\n    const have = factByName[req.activity_name] || 0;\n    const deficit = req.duration_min - have;\n    if (deficit > 0) {\n      missing.push({ activity_name: req.activity_name, duration_min: deficit });\n    }\n  }\n\n  missing.push(...missingBreakActivities(requiredBreaks, factBreaks));\n\n  return {\n    ...item,\n    activities_to_restore: missing,\n    activities_restored: missing.length,\n    skip_slots,\n    skip_reason: skip_reason || null,\n    shift_plan_count: (item.shift_plan || []).length,\n  };\n}\n\nfunction buildSlots(segments, mappings) {\n  const slots = [];\n  const sorted = [...segments]\n    .filter((s) => s.start_msk && s.end_msk)\n    .sort((a, b) => parseMskDateTime(a.start_msk) - parseMskDateTime(b.start_msk));\n\n  for (const seg of sorted) {\n    if (!segmentAllowsPlacement(seg, mappings)) continue;\n    if ((seg.duration_min || 0) < MIN_SLOT_MIN) continue;\n    const start = parseMskDateTime(seg.start_msk);\n    const end = parseMskDateTime(seg.end_msk);\n    if (!start || !end) continue;\n    slots.push({\n      start_msk: start,\n      end_msk: end,\n      duration_min: seg.duration_min,\n      kind: 'inline',\n    });\n  }\n\n  for (let i = 0; i < sorted.length - 1; i += 1) {\n    const left = sorted[i];\n    const right = sorted[i + 1];\n    if (!segmentAllowsPlacement(left, mappings) || !segmentAllowsPlacement(right, mappings)) {\n      continue;\n    }\n    const gapStart = parseMskDateTime(left.end_msk);\n    const gapEnd = parseMskDateTime(right.start_msk);\n    if (!gapStart || !gapEnd) continue;\n    const gapMin = (gapEnd - gapStart) / 60000;\n    if (gapMin >= BREAK_MIN) {\n      slots.push({\n        start_msk: gapStart,\n        end_msk: gapEnd,\n        duration_min: gapMin,\n        kind: 'gap',\n      });\n    }\n  }\n\n  return slots.sort((a, b) => b.duration_min - a.duration_min);\n}\n\nfunction calculateSlots(item) {\n  if (item.error_code) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  if (item.skip_slots) {\n    return {\n      ...item,\n      wfms_lines: [],\n      placement_slots: [],\n      processing_comment: item.processing_comment || `Skip slots: ${item.skip_reason || 'n/a'}`,\n    };\n  }\n\n  const toRestore = item.activities_to_restore || [];\n  if (toRestore.length === 0) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  const slots = buildSlots(item.shift_fact || [], item.mappings);\n  const wfmsLines = [];\n  const usedSlots = new Set();\n\n  for (const act of toRestore) {\n    const needMin = roundUp5(act.duration_min);\n    const slotIdx = slots.findIndex((s, idx) => !usedSlots.has(idx) && s.duration_min >= needMin);\n    if (slotIdx < 0) {\n      return {\n        ...item,\n        wfms_lines: [],\n        placement_slots: slots,\n        error_code: 'BE3',\n        processing_comment: `No slot for ${act.activity_name} (${needMin} min)`,\n      };\n    }\n    usedSlots.add(slotIdx);\n    const slot = slots[slotIdx];\n    const start = slot.start_msk;\n    const end = new Date(start.getTime() + needMin * 60000);\n    wfmsLines.push({\n      login: item.agent_login,\n      activity: act.activity_name,\n      start: formatMskIso(start),\n      end: formatMskIso(end),\n      timeZone: 'Europe/Moscow',\n    });\n  }\n\n  return {\n    ...item,\n    wfms_lines: wfmsLines,\n    placement_slots: slots,\n    activities_restored: wfmsLines.length,\n  };\n}\n\n// ТЗ §4.5 шаг 8: тип контейнера\nconst item = $input.first().json;\nreturn [{ json: determineContainerRules(item) }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2944,
-        944
+        3824,
+        720
       ],
-      "id": "351756f8-f306-4798-a97e-64d833d20f50",
+      "id": "fe3291d0-a16a-458c-b7bc-95bb27d4081f",
       "name": "Determine Container Rules",
-      "notes": "Шаг 8."
+      "notes": "C1 шаг 8. container_name = variant || scheme (WFM test fallback). BE2 если не в mappings и не 9/12hrs/5-2/2-2."
     },
     {
       "parameters": {
-        "jsCode": "// ТЗ §4.5 шаг 9: минуты новостей (mappings/news_reading.json + news_exception_skills.json)\nreturn $input.all();"
+        "jsCode": "/**\n * Phase C Process logic — источник для Code-нод BreaksRecovery_Main.\n * ТЗ §4.5 шаги 8–12 · TDR §7.2\n */\n\nconst NEWS_ACTIVITY = 'Обучение (Новости)';\nconst MAX_NEWS_MIN = 60;\nconst BONUS_DEFAULT = 10;\nconst BONUS_EXCEPTION = 15;\nconst LUNCH_MIN = 30;\nconst BREAK_MIN = 10;\nconst BREAK_LONG_MIN = 15;\nconst MIN_SLOT_MIN = 60;\nconst MSK_OFFSET = '+03:00';\n\nfunction toMskDateKey(val) {\n  if (!val) return null;\n  const s = String(val);\n  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) return s;\n  const d = new Date(s);\n  if (Number.isNaN(d.getTime())) return null;\n  const msk = new Date(d.getTime() + 3 * 3600000);\n  return msk.toISOString().slice(0, 10);\n}\n\nfunction weekdayCode(dateStr) {\n  const d = new Date(`${dateStr}T12:00:00${MSK_OFFSET}`);\n  return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][d.getUTCDay()];\n}\n\nfunction resolveNewsPattern(scheme, newsRules) {\n  if (!scheme) return null;\n  const patterns = [...new Set((newsRules || []).map((r) => r.schedule_pattern))];\n  if (patterns.includes(scheme)) return scheme;\n\n  const t2 = scheme.match(/2\\s*\\/\\s*2\\s*тип\\s*(\\d)/i);\n  if (t2) {\n    const candidate = `2/2 тип ${t2[1]}`;\n    if (patterns.includes(candidate)) return candidate;\n  }\n\n  const t52 = scheme.match(/5\\s*\\/\\s*2\\s*вых\\s*[А-Яа-я]{2}-[А-Яа-я]{2}/i);\n  if (t52) {\n    const normalized = t52[0].replace(/\\s+/g, ' ');\n    const match = patterns.find((p) => p.toLowerCase() === normalized.toLowerCase());\n    if (match) return match;\n  }\n\n  return patterns.find((p) => scheme.includes(p)) || null;\n}\n\nfunction resolveNewsPatternForNode(item) {\n  const newsRules = item.mappings?.news_reading || [];\n  const scheme = item.schedule_scheme_name || '';\n  return resolveNewsPattern(scheme, newsRules);\n}\n\nfunction shiftPlanHasFixedBreaks(shiftPlan) {\n  return (shiftPlan || []).some(\n    (r) => r.is_fixed === true || r.is_fixed === 't' || r.is_fixed === 'true',\n  );\n}\n\nfunction getBreakBudget(item) {\n  const fromPlanFixed = shiftPlanHasFixedBreaks(item.shift_plan);\n  const containers = item.mappings?.container || [];\n  const ns = containers.find((c) => c.container_name === item.container_name);\n  if (ns) {\n    return {\n      total_break_min: ns.break_duration_min,\n      has_fixed_breaks: !!ns.has_fixed_breaks || fromPlanFixed,\n    };\n  }\n  if (item.container_type === 'standard_9hrs') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_12hrs') {\n    return { total_break_min: 75, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_pattern') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  return null;\n}\n\nfunction buildBreakDurations(containerType, remaining) {\n  if (containerType === 'standard_12hrs' && remaining === 45) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN, BREAK_LONG_MIN];\n  }\n  if (containerType === 'standard_9hrs' && remaining === 30) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN];\n  }\n  const breaks = [];\n  let left = remaining;\n  while (left >= BREAK_MIN) {\n    breaks.push(BREAK_MIN);\n    left -= BREAK_MIN;\n  }\n  if (left > 0 && left < BREAK_MIN) {\n    breaks.push(roundUp5(left));\n  }\n  return breaks;\n}\n\nfunction collectBreakDurations(shiftFact) {\n  return (shiftFact || [])\n    .filter((r) => r.activity_name === 'Перерыв' && (r.duration_min || 0) >= BREAK_MIN)\n    .map((r) => roundUp5(r.duration_min));\n}\n\nfunction missingBreakActivities(requiredBreaks, factBreaks) {\n  const pool = [...factBreaks];\n  const missing = [];\n  for (const need of requiredBreaks) {\n    const exactIdx = pool.indexOf(need);\n    if (exactIdx >= 0) {\n      pool.splice(exactIdx, 1);\n      continue;\n    }\n    const flexIdx = pool.findIndex((d) => d >= need);\n    if (flexIdx >= 0) {\n      pool.splice(flexIdx, 1);\n      continue;\n    }\n    missing.push({ activity_name: 'Перерыв', duration_min: need });\n  }\n  return missing;\n}\n\nfunction roundUp5(min) {\n  return Math.ceil(min / 5) * 5;\n}\n\nfunction formatMskIso(date) {\n  const d = date instanceof Date ? date : new Date(date);\n  const pad = (n) => String(n).padStart(2, '0');\n  const y = d.getUTCFullYear();\n  const mo = pad(d.getUTCMonth() + 1);\n  const da = pad(d.getUTCDate());\n  const h = pad(d.getUTCHours());\n  const mi = pad(d.getUTCMinutes());\n  const se = pad(d.getUTCSeconds());\n  return `${y}-${mo}-${da}T${h}:${mi}:${se}${MSK_OFFSET}`;\n}\n\nfunction parseMskDateTime(str) {\n  if (!str) return null;\n  const s = String(str);\n  if (s.includes('T')) {\n    return new Date(s.endsWith('Z') ? s : `${s}${s.includes('+') ? '' : MSK_OFFSET}`);\n  }\n  return new Date(`${s}${MSK_OFFSET}`);\n}\n\nfunction canPlaceBreak(activityName, mappings) {\n  const row = (mappings?.activity || []).find((a) => a.activity_name === activityName);\n  const flag = row?.can_place_break;\n  return flag === 'yes' || flag === 'no_but_movable';\n}\n\nfunction segmentAllowsPlacement(seg, mappings) {\n  if (seg.not_erasable) return false;\n  return canPlaceBreak(seg.activity_name, mappings);\n}\n\nconst MOSCOW_TZ = 'Europe/Moscow';\n\nfunction mergeAgentSkills(payload, skillRows) {\n  const rows = (skillRows || []).filter((r) => r && r.skill_name);\n  const agent_skills = rows.map((r) => r.skill_name);\n  const badTz = rows.find(\n    (r) => r.skill_time_zone && r.skill_time_zone !== MOSCOW_TZ,\n  );\n  if (badTz) {\n    return {\n      ...payload,\n      agent_skills,\n      error_code: 'SKIP_TZ',\n      processing_comment: `Agent excluded: skill ${badTz.skill_name} time_zone=${badTz.skill_time_zone} (v1 scope)`,\n      wfms_lines: [],\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n  return { ...payload, agent_skills };\n}\n\nfunction determineContainerRules(item) {\n  const scheme = item.schedule_scheme_name || '';\n  const variant = item.schedule_variant_name || '';\n  const containerName = variant || scheme;\n  const containers = item.mappings?.container || [];\n\n  const nsMatch = containers.find((c) => c.container_name === containerName);\n  let containerType = null;\n  let errorCode = item.error_code || null;\n  let processingComment = item.processing_comment || null;\n\n  if (!errorCode) {\n    if (nsMatch) {\n      containerType = 'non_standard';\n    } else if (/\\b9\\s*hrs\\b|\\b9hrs\\b/i.test(containerName) || /\\b9\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_9hrs';\n    } else if (/\\b12\\s*hrs\\b|\\b12hrs\\b/i.test(containerName) || /\\b12\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_12hrs';\n    } else if (/\\b5\\s*\\/\\s*2\\b|\\b2\\s*\\/\\s*2\\b/i.test(scheme)) {\n      containerType = 'standard_pattern';\n    } else if (!containerName) {\n      errorCode = 'BE2';\n      processingComment = 'Container/scheme not found in WFM (proc_01 empty)';\n    } else {\n      errorCode = 'BE2';\n      processingComment = `Unrecognized container: ${containerName}`;\n    }\n  }\n\n  const newsPattern = resolveNewsPattern(scheme, item.mappings?.news_reading || []);\n\n  return {\n    ...item,\n    schedule_scheme_name: scheme,\n    schedule_variant_name: variant,\n    container_name: containerName,\n    container_type: containerType,\n    schedule_pattern: newsPattern || scheme,\n    news_pattern_resolved: newsPattern,\n    error_code: errorCode,\n    processing_comment: processingComment,\n  };\n}\n\nfunction calculateNewsDuration(item) {\n  if (item.error_code) {\n    return { ...item, news_minutes: item.news_minutes ?? null };\n  }\n\n  const newsRules = item.mappings?.news_reading || [];\n  const exceptionSkills = new Set(\n    (item.mappings?.news_exception_skills || []).map((s) => s.skill_name),\n  );\n  const hasException = (item.agent_skills || []).some((sk) => exceptionSkills.has(sk));\n  const pattern = resolveNewsPattern(item.schedule_scheme_name || '', newsRules);\n\n  if (!pattern) {\n    return {\n      ...item,\n      schedule_pattern: item.schedule_pattern || item.schedule_scheme_name || '',\n      news_minutes: 0,\n      news_pattern_resolved: null,\n    };\n  }\n\n  const shiftDate = toMskDateKey(item.shift_date);\n  const todayRule = newsRules.find(\n    (r) => r.schedule_pattern === pattern && r.weekday === weekdayCode(shiftDate),\n  );\n\n  let baseToday = 0;\n  if (todayRule && !todayRule.is_weekend) {\n    const base = hasException ? todayRule.minutes_exception : todayRule.minutes_default;\n    baseToday = Number(base) || 0;\n  }\n\n  const historyByDate = new Map();\n  for (const row of item.history_7d || []) {\n    const key = toMskDateKey(row.activity_date);\n    if (!key) continue;\n    if (!historyByDate.has(key)) historyByDate.set(key, []);\n    historyByDate.get(key).push(row);\n  }\n\n  let missedDays = 0;\n  const shiftDt = new Date(`${shiftDate}T12:00:00${MSK_OFFSET}`);\n  for (let i = 7; i >= 1; i -= 1) {\n    const d = new Date(shiftDt.getTime() - i * 86400000);\n    const key = d.toISOString().slice(0, 10);\n    const wd = weekdayCode(key);\n    const rule = newsRules.find((r) => r.schedule_pattern === pattern && r.weekday === wd);\n    if (!rule || rule.is_weekend) continue;\n\n    const expected = hasException ? rule.minutes_exception : rule.minutes_default;\n    if (!expected || expected <= 0) continue;\n\n    const dayRows = historyByDate.get(key) || [];\n    const workRows = dayRows.filter((r) => !r.is_absence);\n    if (workRows.length === 0) continue;\n\n    const newsRows = workRows.filter((r) => r.activity_name === NEWS_ACTIVITY);\n    const newsMin = newsRows.reduce((sum, r) => sum + (r.duration_min || 0), 0);\n    if (newsMin <= 0) missedDays += 1;\n  }\n\n  const bonusPerDay = hasException ? BONUS_EXCEPTION : BONUS_DEFAULT;\n  const newsMinutes = Math.min(MAX_NEWS_MIN, baseToday + missedDays * bonusPerDay);\n\n  return {\n    ...item,\n    schedule_pattern: pattern,\n    news_pattern_resolved: pattern,\n    news_minutes: newsMinutes,\n    news_missed_days: missedDays,\n  };\n}\n\nfunction buildRequiredActivities(item) {\n  const required = [];\n  const newsMin = item.news_minutes || 0;\n  if (newsMin > 0) {\n    required.push({ activity_name: NEWS_ACTIVITY, duration_min: newsMin });\n  }\n\n  const budget = getBreakBudget(item);\n  if (!budget) {\n    return { required, skip_slots: true, skip_reason: 'no_break_budget' };\n  }\n  if (budget.has_fixed_breaks) {\n    return { required, skip_slots: true, skip_reason: 'fixed_breaks' };\n  }\n\n  let remaining = budget.total_break_min || 0;\n  if (remaining >= LUNCH_MIN) {\n    required.push({ activity_name: 'Обед', duration_min: LUNCH_MIN });\n    remaining -= LUNCH_MIN;\n  }\n  for (const durationMin of buildBreakDurations(item.container_type, remaining)) {\n    required.push({ activity_name: 'Перерыв', duration_min: durationMin });\n  }\n\n  return { required, skip_slots: false };\n}\n\nfunction findMissingActivities(item) {\n  if (item.error_code) {\n    return {\n      ...item,\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n\n  const { required, skip_slots, skip_reason } = buildRequiredActivities(item);\n  const shiftFact = item.shift_fact || [];\n\n  const factByName = {};\n  for (const row of shiftFact) {\n    factByName[row.activity_name] = (factByName[row.activity_name] || 0) + (row.duration_min || 0);\n  }\n\n  const requiredBreaks = required\n    .filter((r) => r.activity_name === 'Перерыв')\n    .map((r) => r.duration_min);\n  const factBreaks = collectBreakDurations(shiftFact);\n\n  const missing = [];\n  for (const req of required) {\n    if (req.activity_name === 'Перерыв') continue;\n    const have = factByName[req.activity_name] || 0;\n    const deficit = req.duration_min - have;\n    if (deficit > 0) {\n      missing.push({ activity_name: req.activity_name, duration_min: deficit });\n    }\n  }\n\n  missing.push(...missingBreakActivities(requiredBreaks, factBreaks));\n\n  return {\n    ...item,\n    activities_to_restore: missing,\n    activities_restored: missing.length,\n    skip_slots,\n    skip_reason: skip_reason || null,\n    shift_plan_count: (item.shift_plan || []).length,\n  };\n}\n\nfunction buildSlots(segments, mappings) {\n  const slots = [];\n  const sorted = [...segments]\n    .filter((s) => s.start_msk && s.end_msk)\n    .sort((a, b) => parseMskDateTime(a.start_msk) - parseMskDateTime(b.start_msk));\n\n  for (const seg of sorted) {\n    if (!segmentAllowsPlacement(seg, mappings)) continue;\n    if ((seg.duration_min || 0) < MIN_SLOT_MIN) continue;\n    const start = parseMskDateTime(seg.start_msk);\n    const end = parseMskDateTime(seg.end_msk);\n    if (!start || !end) continue;\n    slots.push({\n      start_msk: start,\n      end_msk: end,\n      duration_min: seg.duration_min,\n      kind: 'inline',\n    });\n  }\n\n  for (let i = 0; i < sorted.length - 1; i += 1) {\n    const left = sorted[i];\n    const right = sorted[i + 1];\n    if (!segmentAllowsPlacement(left, mappings) || !segmentAllowsPlacement(right, mappings)) {\n      continue;\n    }\n    const gapStart = parseMskDateTime(left.end_msk);\n    const gapEnd = parseMskDateTime(right.start_msk);\n    if (!gapStart || !gapEnd) continue;\n    const gapMin = (gapEnd - gapStart) / 60000;\n    if (gapMin >= BREAK_MIN) {\n      slots.push({\n        start_msk: gapStart,\n        end_msk: gapEnd,\n        duration_min: gapMin,\n        kind: 'gap',\n      });\n    }\n  }\n\n  return slots.sort((a, b) => b.duration_min - a.duration_min);\n}\n\nfunction calculateSlots(item) {\n  if (item.error_code) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  if (item.skip_slots) {\n    return {\n      ...item,\n      wfms_lines: [],\n      placement_slots: [],\n      processing_comment: item.processing_comment || `Skip slots: ${item.skip_reason || 'n/a'}`,\n    };\n  }\n\n  const toRestore = item.activities_to_restore || [];\n  if (toRestore.length === 0) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  const slots = buildSlots(item.shift_fact || [], item.mappings);\n  const wfmsLines = [];\n  const usedSlots = new Set();\n\n  for (const act of toRestore) {\n    const needMin = roundUp5(act.duration_min);\n    const slotIdx = slots.findIndex((s, idx) => !usedSlots.has(idx) && s.duration_min >= needMin);\n    if (slotIdx < 0) {\n      return {\n        ...item,\n        wfms_lines: [],\n        placement_slots: slots,\n        error_code: 'BE3',\n        processing_comment: `No slot for ${act.activity_name} (${needMin} min)`,\n      };\n    }\n    usedSlots.add(slotIdx);\n    const slot = slots[slotIdx];\n    const start = slot.start_msk;\n    const end = new Date(start.getTime() + needMin * 60000);\n    wfmsLines.push({\n      login: item.agent_login,\n      activity: act.activity_name,\n      start: formatMskIso(start),\n      end: formatMskIso(end),\n      timeZone: 'Europe/Moscow',\n    });\n  }\n\n  return {\n    ...item,\n    wfms_lines: wfmsLines,\n    placement_slots: slots,\n    activities_restored: wfmsLines.length,\n  };\n}\n\n// ТЗ §4.5 шаг 9: минуты новостей\nreturn [{ json: calculateNewsDuration($input.first().json) }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3232,
-        944
+        4048,
+        720
       ],
-      "id": "18c42ead-dae0-420c-9442-aa57f8bff534",
+      "id": "adfe9f28-363a-4880-a771-a93a397f7326",
       "name": "Calculate News Duration",
       "notes": "Шаг 9."
     },
     {
       "parameters": {
-        "jsCode": "// ТЗ §4.5 шаг 10: положенное vs факт (mappings/activity.json)\nreturn $input.all();"
+        "jsCode": "/**\n * Phase C Process logic — источник для Code-нод BreaksRecovery_Main.\n * ТЗ §4.5 шаги 8–12 · TDR §7.2\n */\n\nconst NEWS_ACTIVITY = 'Обучение (Новости)';\nconst MAX_NEWS_MIN = 60;\nconst BONUS_DEFAULT = 10;\nconst BONUS_EXCEPTION = 15;\nconst LUNCH_MIN = 30;\nconst BREAK_MIN = 10;\nconst BREAK_LONG_MIN = 15;\nconst MIN_SLOT_MIN = 60;\nconst MSK_OFFSET = '+03:00';\n\nfunction toMskDateKey(val) {\n  if (!val) return null;\n  const s = String(val);\n  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) return s;\n  const d = new Date(s);\n  if (Number.isNaN(d.getTime())) return null;\n  const msk = new Date(d.getTime() + 3 * 3600000);\n  return msk.toISOString().slice(0, 10);\n}\n\nfunction weekdayCode(dateStr) {\n  const d = new Date(`${dateStr}T12:00:00${MSK_OFFSET}`);\n  return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][d.getUTCDay()];\n}\n\nfunction resolveNewsPattern(scheme, newsRules) {\n  if (!scheme) return null;\n  const patterns = [...new Set((newsRules || []).map((r) => r.schedule_pattern))];\n  if (patterns.includes(scheme)) return scheme;\n\n  const t2 = scheme.match(/2\\s*\\/\\s*2\\s*тип\\s*(\\d)/i);\n  if (t2) {\n    const candidate = `2/2 тип ${t2[1]}`;\n    if (patterns.includes(candidate)) return candidate;\n  }\n\n  const t52 = scheme.match(/5\\s*\\/\\s*2\\s*вых\\s*[А-Яа-я]{2}-[А-Яа-я]{2}/i);\n  if (t52) {\n    const normalized = t52[0].replace(/\\s+/g, ' ');\n    const match = patterns.find((p) => p.toLowerCase() === normalized.toLowerCase());\n    if (match) return match;\n  }\n\n  return patterns.find((p) => scheme.includes(p)) || null;\n}\n\nfunction resolveNewsPatternForNode(item) {\n  const newsRules = item.mappings?.news_reading || [];\n  const scheme = item.schedule_scheme_name || '';\n  return resolveNewsPattern(scheme, newsRules);\n}\n\nfunction shiftPlanHasFixedBreaks(shiftPlan) {\n  return (shiftPlan || []).some(\n    (r) => r.is_fixed === true || r.is_fixed === 't' || r.is_fixed === 'true',\n  );\n}\n\nfunction getBreakBudget(item) {\n  const fromPlanFixed = shiftPlanHasFixedBreaks(item.shift_plan);\n  const containers = item.mappings?.container || [];\n  const ns = containers.find((c) => c.container_name === item.container_name);\n  if (ns) {\n    return {\n      total_break_min: ns.break_duration_min,\n      has_fixed_breaks: !!ns.has_fixed_breaks || fromPlanFixed,\n    };\n  }\n  if (item.container_type === 'standard_9hrs') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_12hrs') {\n    return { total_break_min: 75, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_pattern') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  return null;\n}\n\nfunction buildBreakDurations(containerType, remaining) {\n  if (containerType === 'standard_12hrs' && remaining === 45) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN, BREAK_LONG_MIN];\n  }\n  if (containerType === 'standard_9hrs' && remaining === 30) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN];\n  }\n  const breaks = [];\n  let left = remaining;\n  while (left >= BREAK_MIN) {\n    breaks.push(BREAK_MIN);\n    left -= BREAK_MIN;\n  }\n  if (left > 0 && left < BREAK_MIN) {\n    breaks.push(roundUp5(left));\n  }\n  return breaks;\n}\n\nfunction collectBreakDurations(shiftFact) {\n  return (shiftFact || [])\n    .filter((r) => r.activity_name === 'Перерыв' && (r.duration_min || 0) >= BREAK_MIN)\n    .map((r) => roundUp5(r.duration_min));\n}\n\nfunction missingBreakActivities(requiredBreaks, factBreaks) {\n  const pool = [...factBreaks];\n  const missing = [];\n  for (const need of requiredBreaks) {\n    const exactIdx = pool.indexOf(need);\n    if (exactIdx >= 0) {\n      pool.splice(exactIdx, 1);\n      continue;\n    }\n    const flexIdx = pool.findIndex((d) => d >= need);\n    if (flexIdx >= 0) {\n      pool.splice(flexIdx, 1);\n      continue;\n    }\n    missing.push({ activity_name: 'Перерыв', duration_min: need });\n  }\n  return missing;\n}\n\nfunction roundUp5(min) {\n  return Math.ceil(min / 5) * 5;\n}\n\nfunction formatMskIso(date) {\n  const d = date instanceof Date ? date : new Date(date);\n  const pad = (n) => String(n).padStart(2, '0');\n  const y = d.getUTCFullYear();\n  const mo = pad(d.getUTCMonth() + 1);\n  const da = pad(d.getUTCDate());\n  const h = pad(d.getUTCHours());\n  const mi = pad(d.getUTCMinutes());\n  const se = pad(d.getUTCSeconds());\n  return `${y}-${mo}-${da}T${h}:${mi}:${se}${MSK_OFFSET}`;\n}\n\nfunction parseMskDateTime(str) {\n  if (!str) return null;\n  const s = String(str);\n  if (s.includes('T')) {\n    return new Date(s.endsWith('Z') ? s : `${s}${s.includes('+') ? '' : MSK_OFFSET}`);\n  }\n  return new Date(`${s}${MSK_OFFSET}`);\n}\n\nfunction canPlaceBreak(activityName, mappings) {\n  const row = (mappings?.activity || []).find((a) => a.activity_name === activityName);\n  const flag = row?.can_place_break;\n  return flag === 'yes' || flag === 'no_but_movable';\n}\n\nfunction segmentAllowsPlacement(seg, mappings) {\n  if (seg.not_erasable) return false;\n  return canPlaceBreak(seg.activity_name, mappings);\n}\n\nconst MOSCOW_TZ = 'Europe/Moscow';\n\nfunction mergeAgentSkills(payload, skillRows) {\n  const rows = (skillRows || []).filter((r) => r && r.skill_name);\n  const agent_skills = rows.map((r) => r.skill_name);\n  const badTz = rows.find(\n    (r) => r.skill_time_zone && r.skill_time_zone !== MOSCOW_TZ,\n  );\n  if (badTz) {\n    return {\n      ...payload,\n      agent_skills,\n      error_code: 'SKIP_TZ',\n      processing_comment: `Agent excluded: skill ${badTz.skill_name} time_zone=${badTz.skill_time_zone} (v1 scope)`,\n      wfms_lines: [],\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n  return { ...payload, agent_skills };\n}\n\nfunction determineContainerRules(item) {\n  const scheme = item.schedule_scheme_name || '';\n  const variant = item.schedule_variant_name || '';\n  const containerName = variant || scheme;\n  const containers = item.mappings?.container || [];\n\n  const nsMatch = containers.find((c) => c.container_name === containerName);\n  let containerType = null;\n  let errorCode = item.error_code || null;\n  let processingComment = item.processing_comment || null;\n\n  if (!errorCode) {\n    if (nsMatch) {\n      containerType = 'non_standard';\n    } else if (/\\b9\\s*hrs\\b|\\b9hrs\\b/i.test(containerName) || /\\b9\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_9hrs';\n    } else if (/\\b12\\s*hrs\\b|\\b12hrs\\b/i.test(containerName) || /\\b12\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_12hrs';\n    } else if (/\\b5\\s*\\/\\s*2\\b|\\b2\\s*\\/\\s*2\\b/i.test(scheme)) {\n      containerType = 'standard_pattern';\n    } else if (!containerName) {\n      errorCode = 'BE2';\n      processingComment = 'Container/scheme not found in WFM (proc_01 empty)';\n    } else {\n      errorCode = 'BE2';\n      processingComment = `Unrecognized container: ${containerName}`;\n    }\n  }\n\n  const newsPattern = resolveNewsPattern(scheme, item.mappings?.news_reading || []);\n\n  return {\n    ...item,\n    schedule_scheme_name: scheme,\n    schedule_variant_name: variant,\n    container_name: containerName,\n    container_type: containerType,\n    schedule_pattern: newsPattern || scheme,\n    news_pattern_resolved: newsPattern,\n    error_code: errorCode,\n    processing_comment: processingComment,\n  };\n}\n\nfunction calculateNewsDuration(item) {\n  if (item.error_code) {\n    return { ...item, news_minutes: item.news_minutes ?? null };\n  }\n\n  const newsRules = item.mappings?.news_reading || [];\n  const exceptionSkills = new Set(\n    (item.mappings?.news_exception_skills || []).map((s) => s.skill_name),\n  );\n  const hasException = (item.agent_skills || []).some((sk) => exceptionSkills.has(sk));\n  const pattern = resolveNewsPattern(item.schedule_scheme_name || '', newsRules);\n\n  if (!pattern) {\n    return {\n      ...item,\n      schedule_pattern: item.schedule_pattern || item.schedule_scheme_name || '',\n      news_minutes: 0,\n      news_pattern_resolved: null,\n    };\n  }\n\n  const shiftDate = toMskDateKey(item.shift_date);\n  const todayRule = newsRules.find(\n    (r) => r.schedule_pattern === pattern && r.weekday === weekdayCode(shiftDate),\n  );\n\n  let baseToday = 0;\n  if (todayRule && !todayRule.is_weekend) {\n    const base = hasException ? todayRule.minutes_exception : todayRule.minutes_default;\n    baseToday = Number(base) || 0;\n  }\n\n  const historyByDate = new Map();\n  for (const row of item.history_7d || []) {\n    const key = toMskDateKey(row.activity_date);\n    if (!key) continue;\n    if (!historyByDate.has(key)) historyByDate.set(key, []);\n    historyByDate.get(key).push(row);\n  }\n\n  let missedDays = 0;\n  const shiftDt = new Date(`${shiftDate}T12:00:00${MSK_OFFSET}`);\n  for (let i = 7; i >= 1; i -= 1) {\n    const d = new Date(shiftDt.getTime() - i * 86400000);\n    const key = d.toISOString().slice(0, 10);\n    const wd = weekdayCode(key);\n    const rule = newsRules.find((r) => r.schedule_pattern === pattern && r.weekday === wd);\n    if (!rule || rule.is_weekend) continue;\n\n    const expected = hasException ? rule.minutes_exception : rule.minutes_default;\n    if (!expected || expected <= 0) continue;\n\n    const dayRows = historyByDate.get(key) || [];\n    const workRows = dayRows.filter((r) => !r.is_absence);\n    if (workRows.length === 0) continue;\n\n    const newsRows = workRows.filter((r) => r.activity_name === NEWS_ACTIVITY);\n    const newsMin = newsRows.reduce((sum, r) => sum + (r.duration_min || 0), 0);\n    if (newsMin <= 0) missedDays += 1;\n  }\n\n  const bonusPerDay = hasException ? BONUS_EXCEPTION : BONUS_DEFAULT;\n  const newsMinutes = Math.min(MAX_NEWS_MIN, baseToday + missedDays * bonusPerDay);\n\n  return {\n    ...item,\n    schedule_pattern: pattern,\n    news_pattern_resolved: pattern,\n    news_minutes: newsMinutes,\n    news_missed_days: missedDays,\n  };\n}\n\nfunction buildRequiredActivities(item) {\n  const required = [];\n  const newsMin = item.news_minutes || 0;\n  if (newsMin > 0) {\n    required.push({ activity_name: NEWS_ACTIVITY, duration_min: newsMin });\n  }\n\n  const budget = getBreakBudget(item);\n  if (!budget) {\n    return { required, skip_slots: true, skip_reason: 'no_break_budget' };\n  }\n  if (budget.has_fixed_breaks) {\n    return { required, skip_slots: true, skip_reason: 'fixed_breaks' };\n  }\n\n  let remaining = budget.total_break_min || 0;\n  if (remaining >= LUNCH_MIN) {\n    required.push({ activity_name: 'Обед', duration_min: LUNCH_MIN });\n    remaining -= LUNCH_MIN;\n  }\n  for (const durationMin of buildBreakDurations(item.container_type, remaining)) {\n    required.push({ activity_name: 'Перерыв', duration_min: durationMin });\n  }\n\n  return { required, skip_slots: false };\n}\n\nfunction findMissingActivities(item) {\n  if (item.error_code) {\n    return {\n      ...item,\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n\n  const { required, skip_slots, skip_reason } = buildRequiredActivities(item);\n  const shiftFact = item.shift_fact || [];\n\n  const factByName = {};\n  for (const row of shiftFact) {\n    factByName[row.activity_name] = (factByName[row.activity_name] || 0) + (row.duration_min || 0);\n  }\n\n  const requiredBreaks = required\n    .filter((r) => r.activity_name === 'Перерыв')\n    .map((r) => r.duration_min);\n  const factBreaks = collectBreakDurations(shiftFact);\n\n  const missing = [];\n  for (const req of required) {\n    if (req.activity_name === 'Перерыв') continue;\n    const have = factByName[req.activity_name] || 0;\n    const deficit = req.duration_min - have;\n    if (deficit > 0) {\n      missing.push({ activity_name: req.activity_name, duration_min: deficit });\n    }\n  }\n\n  missing.push(...missingBreakActivities(requiredBreaks, factBreaks));\n\n  return {\n    ...item,\n    activities_to_restore: missing,\n    activities_restored: missing.length,\n    skip_slots,\n    skip_reason: skip_reason || null,\n    shift_plan_count: (item.shift_plan || []).length,\n  };\n}\n\nfunction buildSlots(segments, mappings) {\n  const slots = [];\n  const sorted = [...segments]\n    .filter((s) => s.start_msk && s.end_msk)\n    .sort((a, b) => parseMskDateTime(a.start_msk) - parseMskDateTime(b.start_msk));\n\n  for (const seg of sorted) {\n    if (!segmentAllowsPlacement(seg, mappings)) continue;\n    if ((seg.duration_min || 0) < MIN_SLOT_MIN) continue;\n    const start = parseMskDateTime(seg.start_msk);\n    const end = parseMskDateTime(seg.end_msk);\n    if (!start || !end) continue;\n    slots.push({\n      start_msk: start,\n      end_msk: end,\n      duration_min: seg.duration_min,\n      kind: 'inline',\n    });\n  }\n\n  for (let i = 0; i < sorted.length - 1; i += 1) {\n    const left = sorted[i];\n    const right = sorted[i + 1];\n    if (!segmentAllowsPlacement(left, mappings) || !segmentAllowsPlacement(right, mappings)) {\n      continue;\n    }\n    const gapStart = parseMskDateTime(left.end_msk);\n    const gapEnd = parseMskDateTime(right.start_msk);\n    if (!gapStart || !gapEnd) continue;\n    const gapMin = (gapEnd - gapStart) / 60000;\n    if (gapMin >= BREAK_MIN) {\n      slots.push({\n        start_msk: gapStart,\n        end_msk: gapEnd,\n        duration_min: gapMin,\n        kind: 'gap',\n      });\n    }\n  }\n\n  return slots.sort((a, b) => b.duration_min - a.duration_min);\n}\n\nfunction calculateSlots(item) {\n  if (item.error_code) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  if (item.skip_slots) {\n    return {\n      ...item,\n      wfms_lines: [],\n      placement_slots: [],\n      processing_comment: item.processing_comment || `Skip slots: ${item.skip_reason || 'n/a'}`,\n    };\n  }\n\n  const toRestore = item.activities_to_restore || [];\n  if (toRestore.length === 0) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  const slots = buildSlots(item.shift_fact || [], item.mappings);\n  const wfmsLines = [];\n  const usedSlots = new Set();\n\n  for (const act of toRestore) {\n    const needMin = roundUp5(act.duration_min);\n    const slotIdx = slots.findIndex((s, idx) => !usedSlots.has(idx) && s.duration_min >= needMin);\n    if (slotIdx < 0) {\n      return {\n        ...item,\n        wfms_lines: [],\n        placement_slots: slots,\n        error_code: 'BE3',\n        processing_comment: `No slot for ${act.activity_name} (${needMin} min)`,\n      };\n    }\n    usedSlots.add(slotIdx);\n    const slot = slots[slotIdx];\n    const start = slot.start_msk;\n    const end = new Date(start.getTime() + needMin * 60000);\n    wfmsLines.push({\n      login: item.agent_login,\n      activity: act.activity_name,\n      start: formatMskIso(start),\n      end: formatMskIso(end),\n      timeZone: 'Europe/Moscow',\n    });\n  }\n\n  return {\n    ...item,\n    wfms_lines: wfmsLines,\n    placement_slots: slots,\n    activities_restored: wfmsLines.length,\n  };\n}\n\n// ТЗ §4.5 шаг 10: положенное vs факт\nreturn [{ json: findMissingActivities($input.first().json) }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3504,
-        944
+        5168,
+        592
       ],
-      "id": "7590ed83-c2a0-4186-b21b-70dfcbc67d1d",
+      "id": "863f8a16-9377-4d11-8d7b-f6a3fef1e314",
       "name": "Find Missing Activities",
       "notes": "Шаг 10."
     },
     {
       "parameters": {
-        "jsCode": "// ТЗ §4.5 шаг 11: подбор слотов; нет слота -> error_code = BE3\nreturn $input.all();"
+        "jsCode": "/**\n * Phase C Process logic — источник для Code-нод BreaksRecovery_Main.\n * ТЗ §4.5 шаги 8–12 · TDR §7.2\n */\n\nconst NEWS_ACTIVITY = 'Обучение (Новости)';\nconst MAX_NEWS_MIN = 60;\nconst BONUS_DEFAULT = 10;\nconst BONUS_EXCEPTION = 15;\nconst LUNCH_MIN = 30;\nconst BREAK_MIN = 10;\nconst BREAK_LONG_MIN = 15;\nconst MIN_SLOT_MIN = 60;\nconst MSK_OFFSET = '+03:00';\n\nfunction toMskDateKey(val) {\n  if (!val) return null;\n  const s = String(val);\n  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) return s;\n  const d = new Date(s);\n  if (Number.isNaN(d.getTime())) return null;\n  const msk = new Date(d.getTime() + 3 * 3600000);\n  return msk.toISOString().slice(0, 10);\n}\n\nfunction weekdayCode(dateStr) {\n  const d = new Date(`${dateStr}T12:00:00${MSK_OFFSET}`);\n  return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][d.getUTCDay()];\n}\n\nfunction resolveNewsPattern(scheme, newsRules) {\n  if (!scheme) return null;\n  const patterns = [...new Set((newsRules || []).map((r) => r.schedule_pattern))];\n  if (patterns.includes(scheme)) return scheme;\n\n  const t2 = scheme.match(/2\\s*\\/\\s*2\\s*тип\\s*(\\d)/i);\n  if (t2) {\n    const candidate = `2/2 тип ${t2[1]}`;\n    if (patterns.includes(candidate)) return candidate;\n  }\n\n  const t52 = scheme.match(/5\\s*\\/\\s*2\\s*вых\\s*[А-Яа-я]{2}-[А-Яа-я]{2}/i);\n  if (t52) {\n    const normalized = t52[0].replace(/\\s+/g, ' ');\n    const match = patterns.find((p) => p.toLowerCase() === normalized.toLowerCase());\n    if (match) return match;\n  }\n\n  return patterns.find((p) => scheme.includes(p)) || null;\n}\n\nfunction resolveNewsPatternForNode(item) {\n  const newsRules = item.mappings?.news_reading || [];\n  const scheme = item.schedule_scheme_name || '';\n  return resolveNewsPattern(scheme, newsRules);\n}\n\nfunction shiftPlanHasFixedBreaks(shiftPlan) {\n  return (shiftPlan || []).some(\n    (r) => r.is_fixed === true || r.is_fixed === 't' || r.is_fixed === 'true',\n  );\n}\n\nfunction getBreakBudget(item) {\n  const fromPlanFixed = shiftPlanHasFixedBreaks(item.shift_plan);\n  const containers = item.mappings?.container || [];\n  const ns = containers.find((c) => c.container_name === item.container_name);\n  if (ns) {\n    return {\n      total_break_min: ns.break_duration_min,\n      has_fixed_breaks: !!ns.has_fixed_breaks || fromPlanFixed,\n    };\n  }\n  if (item.container_type === 'standard_9hrs') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_12hrs') {\n    return { total_break_min: 75, has_fixed_breaks: fromPlanFixed };\n  }\n  if (item.container_type === 'standard_pattern') {\n    return { total_break_min: 60, has_fixed_breaks: fromPlanFixed };\n  }\n  return null;\n}\n\nfunction buildBreakDurations(containerType, remaining) {\n  if (containerType === 'standard_12hrs' && remaining === 45) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN, BREAK_LONG_MIN];\n  }\n  if (containerType === 'standard_9hrs' && remaining === 30) {\n    return [BREAK_MIN, BREAK_MIN, BREAK_MIN];\n  }\n  const breaks = [];\n  let left = remaining;\n  while (left >= BREAK_MIN) {\n    breaks.push(BREAK_MIN);\n    left -= BREAK_MIN;\n  }\n  if (left > 0 && left < BREAK_MIN) {\n    breaks.push(roundUp5(left));\n  }\n  return breaks;\n}\n\nfunction collectBreakDurations(shiftFact) {\n  return (shiftFact || [])\n    .filter((r) => r.activity_name === 'Перерыв' && (r.duration_min || 0) >= BREAK_MIN)\n    .map((r) => roundUp5(r.duration_min));\n}\n\nfunction missingBreakActivities(requiredBreaks, factBreaks) {\n  const pool = [...factBreaks];\n  const missing = [];\n  for (const need of requiredBreaks) {\n    const exactIdx = pool.indexOf(need);\n    if (exactIdx >= 0) {\n      pool.splice(exactIdx, 1);\n      continue;\n    }\n    const flexIdx = pool.findIndex((d) => d >= need);\n    if (flexIdx >= 0) {\n      pool.splice(flexIdx, 1);\n      continue;\n    }\n    missing.push({ activity_name: 'Перерыв', duration_min: need });\n  }\n  return missing;\n}\n\nfunction roundUp5(min) {\n  return Math.ceil(min / 5) * 5;\n}\n\nfunction formatMskIso(date) {\n  const d = date instanceof Date ? date : new Date(date);\n  const pad = (n) => String(n).padStart(2, '0');\n  const y = d.getUTCFullYear();\n  const mo = pad(d.getUTCMonth() + 1);\n  const da = pad(d.getUTCDate());\n  const h = pad(d.getUTCHours());\n  const mi = pad(d.getUTCMinutes());\n  const se = pad(d.getUTCSeconds());\n  return `${y}-${mo}-${da}T${h}:${mi}:${se}${MSK_OFFSET}`;\n}\n\nfunction parseMskDateTime(str) {\n  if (!str) return null;\n  const s = String(str);\n  if (s.includes('T')) {\n    return new Date(s.endsWith('Z') ? s : `${s}${s.includes('+') ? '' : MSK_OFFSET}`);\n  }\n  return new Date(`${s}${MSK_OFFSET}`);\n}\n\nfunction canPlaceBreak(activityName, mappings) {\n  const row = (mappings?.activity || []).find((a) => a.activity_name === activityName);\n  const flag = row?.can_place_break;\n  return flag === 'yes' || flag === 'no_but_movable';\n}\n\nfunction segmentAllowsPlacement(seg, mappings) {\n  if (seg.not_erasable) return false;\n  return canPlaceBreak(seg.activity_name, mappings);\n}\n\nconst MOSCOW_TZ = 'Europe/Moscow';\n\nfunction mergeAgentSkills(payload, skillRows) {\n  const rows = (skillRows || []).filter((r) => r && r.skill_name);\n  const agent_skills = rows.map((r) => r.skill_name);\n  const badTz = rows.find(\n    (r) => r.skill_time_zone && r.skill_time_zone !== MOSCOW_TZ,\n  );\n  if (badTz) {\n    return {\n      ...payload,\n      agent_skills,\n      error_code: 'SKIP_TZ',\n      processing_comment: `Agent excluded: skill ${badTz.skill_name} time_zone=${badTz.skill_time_zone} (v1 scope)`,\n      wfms_lines: [],\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n  return { ...payload, agent_skills };\n}\n\nfunction determineContainerRules(item) {\n  const scheme = item.schedule_scheme_name || '';\n  const variant = item.schedule_variant_name || '';\n  const containerName = variant || scheme;\n  const containers = item.mappings?.container || [];\n\n  const nsMatch = containers.find((c) => c.container_name === containerName);\n  let containerType = null;\n  let errorCode = item.error_code || null;\n  let processingComment = item.processing_comment || null;\n\n  if (!errorCode) {\n    if (nsMatch) {\n      containerType = 'non_standard';\n    } else if (/\\b9\\s*hrs\\b|\\b9hrs\\b/i.test(containerName) || /\\b9\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_9hrs';\n    } else if (/\\b12\\s*hrs\\b|\\b12hrs\\b/i.test(containerName) || /\\b12\\s*hrs\\b/i.test(scheme)) {\n      containerType = 'standard_12hrs';\n    } else if (/\\b5\\s*\\/\\s*2\\b|\\b2\\s*\\/\\s*2\\b/i.test(scheme)) {\n      containerType = 'standard_pattern';\n    } else if (!containerName) {\n      errorCode = 'BE2';\n      processingComment = 'Container/scheme not found in WFM (proc_01 empty)';\n    } else {\n      errorCode = 'BE2';\n      processingComment = `Unrecognized container: ${containerName}`;\n    }\n  }\n\n  const newsPattern = resolveNewsPattern(scheme, item.mappings?.news_reading || []);\n\n  return {\n    ...item,\n    schedule_scheme_name: scheme,\n    schedule_variant_name: variant,\n    container_name: containerName,\n    container_type: containerType,\n    schedule_pattern: newsPattern || scheme,\n    news_pattern_resolved: newsPattern,\n    error_code: errorCode,\n    processing_comment: processingComment,\n  };\n}\n\nfunction calculateNewsDuration(item) {\n  if (item.error_code) {\n    return { ...item, news_minutes: item.news_minutes ?? null };\n  }\n\n  const newsRules = item.mappings?.news_reading || [];\n  const exceptionSkills = new Set(\n    (item.mappings?.news_exception_skills || []).map((s) => s.skill_name),\n  );\n  const hasException = (item.agent_skills || []).some((sk) => exceptionSkills.has(sk));\n  const pattern = resolveNewsPattern(item.schedule_scheme_name || '', newsRules);\n\n  if (!pattern) {\n    return {\n      ...item,\n      schedule_pattern: item.schedule_pattern || item.schedule_scheme_name || '',\n      news_minutes: 0,\n      news_pattern_resolved: null,\n    };\n  }\n\n  const shiftDate = toMskDateKey(item.shift_date);\n  const todayRule = newsRules.find(\n    (r) => r.schedule_pattern === pattern && r.weekday === weekdayCode(shiftDate),\n  );\n\n  let baseToday = 0;\n  if (todayRule && !todayRule.is_weekend) {\n    const base = hasException ? todayRule.minutes_exception : todayRule.minutes_default;\n    baseToday = Number(base) || 0;\n  }\n\n  const historyByDate = new Map();\n  for (const row of item.history_7d || []) {\n    const key = toMskDateKey(row.activity_date);\n    if (!key) continue;\n    if (!historyByDate.has(key)) historyByDate.set(key, []);\n    historyByDate.get(key).push(row);\n  }\n\n  let missedDays = 0;\n  const shiftDt = new Date(`${shiftDate}T12:00:00${MSK_OFFSET}`);\n  for (let i = 7; i >= 1; i -= 1) {\n    const d = new Date(shiftDt.getTime() - i * 86400000);\n    const key = d.toISOString().slice(0, 10);\n    const wd = weekdayCode(key);\n    const rule = newsRules.find((r) => r.schedule_pattern === pattern && r.weekday === wd);\n    if (!rule || rule.is_weekend) continue;\n\n    const expected = hasException ? rule.minutes_exception : rule.minutes_default;\n    if (!expected || expected <= 0) continue;\n\n    const dayRows = historyByDate.get(key) || [];\n    const workRows = dayRows.filter((r) => !r.is_absence);\n    if (workRows.length === 0) continue;\n\n    const newsRows = workRows.filter((r) => r.activity_name === NEWS_ACTIVITY);\n    const newsMin = newsRows.reduce((sum, r) => sum + (r.duration_min || 0), 0);\n    if (newsMin <= 0) missedDays += 1;\n  }\n\n  const bonusPerDay = hasException ? BONUS_EXCEPTION : BONUS_DEFAULT;\n  const newsMinutes = Math.min(MAX_NEWS_MIN, baseToday + missedDays * bonusPerDay);\n\n  return {\n    ...item,\n    schedule_pattern: pattern,\n    news_pattern_resolved: pattern,\n    news_minutes: newsMinutes,\n    news_missed_days: missedDays,\n  };\n}\n\nfunction buildRequiredActivities(item) {\n  const required = [];\n  const newsMin = item.news_minutes || 0;\n  if (newsMin > 0) {\n    required.push({ activity_name: NEWS_ACTIVITY, duration_min: newsMin });\n  }\n\n  const budget = getBreakBudget(item);\n  if (!budget) {\n    return { required, skip_slots: true, skip_reason: 'no_break_budget' };\n  }\n  if (budget.has_fixed_breaks) {\n    return { required, skip_slots: true, skip_reason: 'fixed_breaks' };\n  }\n\n  let remaining = budget.total_break_min || 0;\n  if (remaining >= LUNCH_MIN) {\n    required.push({ activity_name: 'Обед', duration_min: LUNCH_MIN });\n    remaining -= LUNCH_MIN;\n  }\n  for (const durationMin of buildBreakDurations(item.container_type, remaining)) {\n    required.push({ activity_name: 'Перерыв', duration_min: durationMin });\n  }\n\n  return { required, skip_slots: false };\n}\n\nfunction findMissingActivities(item) {\n  if (item.error_code) {\n    return {\n      ...item,\n      activities_to_restore: [],\n      activities_restored: 0,\n    };\n  }\n\n  const { required, skip_slots, skip_reason } = buildRequiredActivities(item);\n  const shiftFact = item.shift_fact || [];\n\n  const factByName = {};\n  for (const row of shiftFact) {\n    factByName[row.activity_name] = (factByName[row.activity_name] || 0) + (row.duration_min || 0);\n  }\n\n  const requiredBreaks = required\n    .filter((r) => r.activity_name === 'Перерыв')\n    .map((r) => r.duration_min);\n  const factBreaks = collectBreakDurations(shiftFact);\n\n  const missing = [];\n  for (const req of required) {\n    if (req.activity_name === 'Перерыв') continue;\n    const have = factByName[req.activity_name] || 0;\n    const deficit = req.duration_min - have;\n    if (deficit > 0) {\n      missing.push({ activity_name: req.activity_name, duration_min: deficit });\n    }\n  }\n\n  missing.push(...missingBreakActivities(requiredBreaks, factBreaks));\n\n  return {\n    ...item,\n    activities_to_restore: missing,\n    activities_restored: missing.length,\n    skip_slots,\n    skip_reason: skip_reason || null,\n    shift_plan_count: (item.shift_plan || []).length,\n  };\n}\n\nfunction buildSlots(segments, mappings) {\n  const slots = [];\n  const sorted = [...segments]\n    .filter((s) => s.start_msk && s.end_msk)\n    .sort((a, b) => parseMskDateTime(a.start_msk) - parseMskDateTime(b.start_msk));\n\n  for (const seg of sorted) {\n    if (!segmentAllowsPlacement(seg, mappings)) continue;\n    if ((seg.duration_min || 0) < MIN_SLOT_MIN) continue;\n    const start = parseMskDateTime(seg.start_msk);\n    const end = parseMskDateTime(seg.end_msk);\n    if (!start || !end) continue;\n    slots.push({\n      start_msk: start,\n      end_msk: end,\n      duration_min: seg.duration_min,\n      kind: 'inline',\n    });\n  }\n\n  for (let i = 0; i < sorted.length - 1; i += 1) {\n    const left = sorted[i];\n    const right = sorted[i + 1];\n    if (!segmentAllowsPlacement(left, mappings) || !segmentAllowsPlacement(right, mappings)) {\n      continue;\n    }\n    const gapStart = parseMskDateTime(left.end_msk);\n    const gapEnd = parseMskDateTime(right.start_msk);\n    if (!gapStart || !gapEnd) continue;\n    const gapMin = (gapEnd - gapStart) / 60000;\n    if (gapMin >= BREAK_MIN) {\n      slots.push({\n        start_msk: gapStart,\n        end_msk: gapEnd,\n        duration_min: gapMin,\n        kind: 'gap',\n      });\n    }\n  }\n\n  return slots.sort((a, b) => b.duration_min - a.duration_min);\n}\n\nfunction calculateSlots(item) {\n  if (item.error_code) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  if (item.skip_slots) {\n    return {\n      ...item,\n      wfms_lines: [],\n      placement_slots: [],\n      processing_comment: item.processing_comment || `Skip slots: ${item.skip_reason || 'n/a'}`,\n    };\n  }\n\n  const toRestore = item.activities_to_restore || [];\n  if (toRestore.length === 0) {\n    return { ...item, wfms_lines: [], placement_slots: [] };\n  }\n\n  const slots = buildSlots(item.shift_fact || [], item.mappings);\n  const wfmsLines = [];\n  const usedSlots = new Set();\n\n  for (const act of toRestore) {\n    const needMin = roundUp5(act.duration_min);\n    const slotIdx = slots.findIndex((s, idx) => !usedSlots.has(idx) && s.duration_min >= needMin);\n    if (slotIdx < 0) {\n      return {\n        ...item,\n        wfms_lines: [],\n        placement_slots: slots,\n        error_code: 'BE3',\n        processing_comment: `No slot for ${act.activity_name} (${needMin} min)`,\n      };\n    }\n    usedSlots.add(slotIdx);\n    const slot = slots[slotIdx];\n    const start = slot.start_msk;\n    const end = new Date(start.getTime() + needMin * 60000);\n    wfmsLines.push({\n      login: item.agent_login,\n      activity: act.activity_name,\n      start: formatMskIso(start),\n      end: formatMskIso(end),\n      timeZone: 'Europe/Moscow',\n    });\n  }\n\n  return {\n    ...item,\n    wfms_lines: wfmsLines,\n    placement_slots: slots,\n    activities_restored: wfmsLines.length,\n  };\n}\n\n// ТЗ §4.5 шаг 11: слоты; нет слота -> BE3\nreturn [{ json: calculateSlots($input.first().json) }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3792,
-        944
+        5392,
+        544
       ],
-      "id": "d3d33f16-5942-426c-bacb-ffe2a0052a42",
+      "id": "ba241389-bc24-4947-8981-3db5e36e82fa",
       "name": "Calculate Slots",
       "notes": "Шаг 11."
     },
@@ -288,7 +230,8 @@
           "options": {
             "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "loose"
+            "typeValidation": "strict",
+            "version": 2
           },
           "conditions": [
             {
@@ -309,50 +252,54 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4064,
-        944
+        5584,
+        528
       ],
-      "id": "c93c4f8f-266f-4d56-b5a4-0c3131a3e89a",
+      "id": "61c27e80-054e-4558-9923-aad859089eeb",
       "name": "BE2/BE3 Check",
       "notes": "true (error_code) -> skipped; false -> Add to Batch."
     },
     {
       "parameters": {
-        "jsCode": "// ТЗ §4.5 шаг 12: строки пакета загрузки (TDR §7.2 JSON)\nreturn $input.all();"
+        "jsCode": "// ТЗ §4.5 шаг 12: накопление пакета WFMS (TDR §7.2) в workflow staticData\nconst item = $input.first().json;\nconst staticData = $getWorkflowStaticData('global');\nif (!staticData.wfmsBatch) staticData.wfmsBatch = { lines: [], agents: 0 };\n\nconst lines = item.wfms_lines || [];\nif (lines.length > 0) {\n  staticData.wfmsBatch.lines.push(...lines);\n  staticData.wfmsBatch.agents += 1;\n}\n\nconst maxAgents = item.mappings?.runtime?.batch_size_max_agents ?? 200;\nconst maxBytes = item.mappings?.runtime?.batch_size_max_bytes ?? 262144;\nconst batchBytes = Buffer.byteLength(JSON.stringify(staticData.wfmsBatch.lines), 'utf8');\n\nreturn [{\n  json: {\n    ...item,\n    batch_line_count: staticData.wfmsBatch.lines.length,\n    batch_agent_count: staticData.wfmsBatch.agents,\n    batch_bytes: batchBytes,\n    batch_limits: { maxAgents, maxBytes },\n  },\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4064,
-        1168
+        5936,
+        544
       ],
-      "id": "de4c5f5c-c8a4-4e62-855a-0cde71045313",
+      "id": "7fc33304-b83d-44b9-b88e-a78e870a04aa",
       "name": "Add to Batch",
       "notes": "Шаг 12."
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "WITH input AS (\n  SELECT\n    $1::varchar AS agent_login,\n    $2::date AS shift_date,\n    $3::boolean AS is_night_shift,\n    NULLIF($4::text, '') AS error_code,\n    NULLIF($5::text, '') AS processing_comment\n),\nupsert_agent AS (\n  INSERT INTO n8n_breaks_recovery.agents (agent_login)\n  SELECT agent_login FROM input\n  ON CONFLICT (agent_login) DO NOTHING\n  RETURNING id\n),\nagent_row AS (\n  SELECT id FROM upsert_agent\n  UNION ALL\n  SELECT a.id\n  FROM n8n_breaks_recovery.agents a\n  INNER JOIN input i ON a.agent_login = i.agent_login\n  LIMIT 1\n)\nINSERT INTO n8n_breaks_recovery.recovery_transactions (\n  processing_start_time,\n  processing_end_time,\n  processing_status,\n  processing_comment,\n  agent_id,\n  shift_date,\n  is_night_shift,\n  error_code\n)\nSELECT\n  NOW(),\n  CASE WHEN i.error_code IS NOT NULL THEN NOW() ELSE NULL END,\n  CASE\n    WHEN i.error_code IS NULL THEN 'in_progress'\n    WHEN i.error_code = 'BE2' THEN 'skipped_BE2'\n    WHEN i.error_code = 'BE3' THEN 'skipped_BE3'\n    ELSE 'failed'\n  END,\n  i.processing_comment,\n  (SELECT id FROM agent_row),\n  i.shift_date,\n  i.is_night_shift,\n  i.error_code\nFROM input i\nON CONFLICT (agent_id, shift_date) DO UPDATE SET\n  processing_status = EXCLUDED.processing_status,\n  processing_end_time = EXCLUDED.processing_end_time,\n  processing_comment = COALESCE(EXCLUDED.processing_comment, recovery_transactions.processing_comment),\n  error_code = COALESCE(EXCLUDED.error_code, recovery_transactions.error_code),\n  is_night_shift = EXCLUDED.is_night_shift\nRETURNING id AS transaction_id, agent_id, processing_status;",
+        "query": "-- PROC-07 / C7: UPDATE recovery_transactions после Process (INSERT только в GTD B5)\n-- Credential: RPA DB ONLY\n-- Params:\n--   $1 transaction_id, $2 container_name, $3 container_type, $4 schedule_pattern,\n--   $5 news_minutes (nullable), $6 error_code, $7 processing_comment, $8 is_night_shift,\n--   $9 activities_restored (nullable)\n--\n-- n8n Query Parameters:\n-- {{ [$json.transaction_id, $json.container_name || '', $json.container_type || '',\n--     $json.schedule_pattern || '', $json.news_minutes ?? '', $json.error_code || '',\n--     $json.processing_comment || '', $json.is_night_shift, $json.activities_restored ?? ''] }}\n\nUPDATE n8n_breaks_recovery.recovery_transactions rt\nSET\n  container_name = NULLIF($2::text, ''),\n  container_type = NULLIF($3::text, ''),\n  schedule_pattern = NULLIF($4::text, ''),\n  news_minutes = CASE\n    WHEN NULLIF($5::text, '') IS NULL THEN rt.news_minutes\n    ELSE NULLIF($5::text, '')::integer\n  END,\n  is_night_shift = COALESCE($8::boolean, rt.is_night_shift),\n  activities_restored = CASE\n    WHEN NULLIF($9::text, '') IS NULL THEN rt.activities_restored\n    ELSE NULLIF($9::text, '')::integer\n  END,\n  error_code = NULLIF($6::text, ''),\n  processing_comment = COALESCE(NULLIF($7::text, ''), rt.processing_comment),\n  processing_status = CASE\n    WHEN NULLIF($6::text, '') = 'BE2' THEN 'skipped_BE2'\n    WHEN NULLIF($6::text, '') = 'BE3' THEN 'skipped_BE3'\n    WHEN NULLIF($6::text, '') = 'SKIP_TZ' THEN 'skipped_TZ'\n    WHEN NULLIF($6::text, '') IS NOT NULL THEN 'failed'\n    ELSE 'success'\n  END,\n  processing_end_time = NOW()\nWHERE rt.id = $1::integer\nRETURNING\n  rt.id AS transaction_id,\n  rt.agent_id,\n  rt.processing_status,\n  rt.container_name,\n  rt.container_type,\n  rt.schedule_pattern,\n  rt.news_minutes;",
         "options": {
-          "queryReplacement": "={{ [$json.agent_login, $json.shift_date, $json.is_night_shift, $json.error_code || '', $json.processing_comment || ''] }}"
+          "queryReplacement": "={{ [$json.transaction_id, $json.container_name || '', $json.container_type || '', $json.schedule_pattern || '', $json.news_minutes ?? '', $json.error_code || '', $json.processing_comment || '', $json.is_night_shift, $json.activities_restored ?? ''] }}"
         }
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        4352,
-        944
+        6064,
+        704
       ],
-      "id": "faee5699-c049-4f39-bb49-4a6c172e22e0",
+      "id": "50cbfb83-99ba-4149-ab25-f89a0fb98d9f",
       "name": "Write Transaction",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
       "credentials": {
         "postgres": {
-          "id": "eNK5wIS7Kw9Ah8Lf",
-          "name": "RPA DB"
+          "id": "IhJxgMmle7W9gSiw",
+          "name": "Test_DataBaseRPA"
         }
       },
-      "notes": "Credential: RPA DB ONLY (TDR §7.3). ADR-006: INSERT agents ON CONFLICT + recovery_transactions (agent_id). Параметризованный SQL. Сбой -> SE1."
+      "onError": "continueErrorOutput",
+      "notes": "C7 / proc_07. SE1 при сбое RPA DB после 3 retries."
     },
     {
       "parameters": {
@@ -360,16 +307,16 @@
         "url": "={{ $('Execute LoadMappings').first().json.Mattermost1CChannelBaseURL }}/{{ $('Execute LoadMappings').first().json.MMCBotAlertChannel }}",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ message: 'BreaksRecovery WF-1 завершён (заглушка MM)' }) }}",
+        "jsonBody": "={{ (() => {  const login = ($('Init WFMS Batch').first()?.json?.agent_login) || '';  const masked = login.length <= 2    ? (login || '—')    : login[0] + '*'.repeat(Math.max(login.length - 2, 1)) + login[login.length - 1];  return JSON.stringify({    message: `BreaksRecovery WF-1 завершён (заглушка MM) | last agent: ${masked}`  });})() }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        3040,
-        640
+        2032,
+        672
       ],
-      "id": "9cfd48a5-60bd-4e6e-b8f0-fec735b789dd",
+      "id": "fbcd34fe-4e46-4a86-908d-9c518db096c3",
       "name": "Send MM Notification",
       "continueOnFail": true,
       "notes": "ЗАГЛУШКА Phase 5. 1C Bot API (R-09). Конфиг из Execute LoadMappings."
@@ -381,7 +328,7 @@
           "value": "2KtSU7WjX65f8jqJ",
           "mode": "list",
           "cachedResultUrl": "/workflow/2KtSU7WjX65f8jqJ",
-          "cachedResultName": "BreaksRecovery_Balance"
+          "cachedResultName": "[BreaksRecovery] 1. Balance_main"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -396,12 +343,142 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        3264,
-        640
+        2256,
+        672
       ],
-      "id": "aa731072-f10b-4eed-a1ef-5644aaf8cf2c",
+      "id": "64603a81-2821-4908-ad73-5f93a37eff00",
       "name": "Trigger WF-2",
+      "disabled": true,
       "notes": "ТЗ §4.5 / ADR-001: Execute Workflow после завершения WF-1."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- PROC-01 / C1: схема + variant контейнера (PDF №3, №5, №6)\n-- Credential: WFM DB read-only\n-- Params: $1 = wfm_user_id (UUID text), $2 = shift_date (DATE, D+1)\n--\n-- test WFM: schedule_variant.name нет → schedule_container.name;\n--   day ротации — schedule_scheme_container.day (PDF №6), не schedule_variant.day\n-- Цепочка: schedule_scheme_validity_period → schedule_scheme\n--   → schedule_scheme_container → schedule_variant (день ротации по ss.date / ss.max_day)\n--\n-- Выход: schedule_scheme_name, schedule_variant_name, schedule_variant_id\n\nWITH validity AS (\n  SELECT ssvp.schedule_scheme_id\n  FROM public.schedule_scheme_validity_period ssvp\n  WHERE ssvp.user_id = $1::uuid\n    AND $2::date >= ssvp.start_date::date\n    AND (ssvp.end_date IS NULL OR $2::date <= ssvp.end_date::date)\n  ORDER BY ssvp.start_date DESC\n  LIMIT 1\n),\nscheme AS (\n  SELECT\n    ss.id,\n    ss.name,\n    ss.date::date AS day_start_scheme,\n    COALESCE(ss.max_day, 0) AS period_schedule\n  FROM validity v\n  INNER JOIN public.schedule_scheme ss\n    ON ss.id = v.schedule_scheme_id\n),\nrotation AS (\n  SELECT\n    s.id,\n    s.name,\n    CASE\n      WHEN s.period_schedule > 0 THEN\n        ((($2::date - s.day_start_scheme) % s.period_schedule) + s.period_schedule)\n        % s.period_schedule\n      ELSE 0\n    END AS shift_day\n  FROM scheme s\n),\nvariants AS (\n  SELECT\n    r.name AS schedule_scheme_name,\n    COALESCE(\n      NULLIF(trim(sc.name), ''),\n      to_char(sv.start, 'FMHH24:MI') || '-' || to_char(sv.end, 'FMHH24:MI')\n    ) AS schedule_variant_name,\n    sv.id::text AS schedule_variant_id,\n    ssc.day AS variant_day,\n    r.shift_day,\n    ABS(ssc.day - r.shift_day) AS day_distance\n  FROM rotation r\n  INNER JOIN public.schedule_scheme_container ssc\n    ON ssc.schedule_scheme_id = r.id\n  INNER JOIN public.schedule_variant sv\n    ON sv.schedule_container_id = ssc.schedule_container_id\n  LEFT JOIN public.schedule_container sc\n    ON sc.id = sv.schedule_container_id\n),\npicked AS (\n  SELECT\n    schedule_scheme_name,\n    schedule_variant_name,\n    schedule_variant_id\n  FROM variants\n  WHERE variant_day = shift_day\n  ORDER BY schedule_variant_name\n  LIMIT 1\n),\nfallback AS (\n  SELECT\n    schedule_scheme_name,\n    schedule_variant_name,\n    schedule_variant_id\n  FROM variants\n  ORDER BY day_distance, variant_day, schedule_variant_name\n  LIMIT 1\n),\nscheme_only AS (\n  SELECT\n    r.name AS schedule_scheme_name,\n    NULL::text AS schedule_variant_name,\n    NULL::text AS schedule_variant_id\n  FROM rotation r\n)\nSELECT\n  schedule_scheme_name,\n  schedule_variant_name,\n  schedule_variant_id\nFROM picked\nUNION ALL\nSELECT\n  f.schedule_scheme_name,\n  f.schedule_variant_name,\n  f.schedule_variant_id\nFROM fallback f\nWHERE NOT EXISTS (SELECT 1 FROM picked)\nUNION ALL\nSELECT\n  s.schedule_scheme_name,\n  s.schedule_variant_name,\n  s.schedule_variant_id\nFROM scheme_only s\nWHERE NOT EXISTS (SELECT 1 FROM picked)\n  AND NOT EXISTS (SELECT 1 FROM fallback)\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ [$json.wfm_user_id, $json.shift_date] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2256,
+        864
+      ],
+      "id": "6198e2b0-96b5-4bc4-a0a3-2880f42ea847",
+      "name": "Get Container Scheme",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "postgres": {
+          "id": "UiPJoGU0APYbfsjf",
+          "name": "Test_DataBaseWFM"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "notes": "C1 / proc_01_get_container_scheme.sql. PDF №3+№5+№6."
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $getWorkflowStaticData('global').currentAgentPayload ?? {};\nconst rows = $input.all().map((item) => item.json).filter((row) => row.schedule_scheme_name || row.schedule_variant_name);\nconst wfm = rows[0] || {};\nreturn [{ json: { ...payload, ...wfm } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2480,
+        784
+      ],
+      "id": "04268f08-cb9c-4848-bdb5-8c91b62722dc",
+      "name": "Merge WFM Container",
+      "notes": "Склеивает payload GTD + результат proc_01."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- PROC-02 / C2 / A.3: навыки агента на D+1 (Jira RPA-1834)\n-- Credential: WFM DB read-only\n-- Params: $1 = wfm_user_id (UUID text), $2 = shift_date (DATE, D+1)\n--\n-- Выход: skill_id, skill_priority, skill_name, skill_time_zone\n-- Исключение non-Moscow TZ — в Merge Agent Skills (phase_c_logic.mergeAgentSkills)\n\nSELECT\n  usm.skill_id,\n  usm.skill_priority,\n  s.name AS skill_name,\n  s.time_zone AS skill_time_zone\nFROM public.user_skill_mapping usm\nINNER JOIN public.skill s\n  ON s.id = usm.skill_id\nWHERE usm.user_id = $1::uuid\n  AND usm.start <= $2::date\n  AND (usm.\"end\" IS NULL OR usm.\"end\" >= $2::date)\nORDER BY usm.skill_priority NULLS LAST, s.name;",
+        "options": {
+          "queryReplacement": "={{ [$json.wfm_user_id, $json.shift_date] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2704,
+        784
+      ],
+      "id": "c6f98dff-7c99-4a74-8239-f460c0636479",
+      "name": "Get Agent Skills",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "postgres": {
+          "id": "UiPJoGU0APYbfsjf",
+          "name": "Test_DataBaseWFM"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "notes": "C2 / proc_02_get_agent_skills.sql. WFM DB."
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $('Merge WFM Container').first().json;\nconst rows = $input.all().map((item) => item.json).filter((r) => r.skill_name);\nconst MOSCOW_TZ = 'Europe/Moscow';\nconst agent_skills = rows.map((r) => r.skill_name);\nconst badTz = rows.find((r) => r.skill_time_zone && r.skill_time_zone !== MOSCOW_TZ);\nif (badTz) {\n  return [{\n    json: {\n      ...payload,\n      agent_skills,\n      error_code: 'SKIP_TZ',\n      processing_comment: `Agent excluded: skill ${badTz.skill_name} time_zone=${badTz.skill_time_zone} (v1 scope)`,\n      wfms_lines: [],\n      activities_to_restore: [],\n      activities_restored: 0,\n    },\n  }];\n}\nreturn [{ json: { ...payload, agent_skills } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2928,
+        720
+      ],
+      "id": "441d263f-5ef3-4ecb-90f2-1095b9147a33",
+      "name": "Merge Agent Skills",
+      "notes": "C2 / proc_02 + SKIP_TZ if skill.time_zone != Europe/Moscow."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- PROC-03 / C3: активности за 7 календарных дней до shift_date (новости)\n-- Credential: WFM DB read-only\n-- Params: $1 = wfm_user_id (UUID text), $2 = shift_date (DATE, D+1)\n-- ADR-007: UTC → MSK +3h\n-- PDF №7 / №10: user_schedule_activity + work_activity\n--\n-- Выход: activity_date, activity_name, duration_min, is_absence\n-- is_absence: bonus за пропуск новостей только если в день была рабочая активность\n\nSELECT\n  ((usa.start + INTERVAL '3 hours')::date) AS activity_date,\n  wa.name AS activity_name,\n  (EXTRACT(EPOCH FROM (usa.\"end\" - usa.start)) / 60)::integer AS duration_min,\n  wa.absence AS is_absence\nFROM public.user_schedule_activity usa\nINNER JOIN public.work_activity wa\n  ON wa.id = usa.work_activity_id\nWHERE usa.user_id = $1::uuid\n  AND (usa.start + INTERVAL '3 hours')::date >= ($2::date - INTERVAL '7 days')\n  AND (usa.start + INTERVAL '3 hours')::date < $2::date\nORDER BY activity_date, activity_name;",
+        "options": {
+          "queryReplacement": "={{ [$json.wfm_user_id, $json.shift_date] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3376,
+        784
+      ],
+      "id": "62d83954-cabb-4c84-bb13-e929f23cfa82",
+      "name": "Get History 7d",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "postgres": {
+          "id": "UiPJoGU0APYbfsjf",
+          "name": "Test_DataBaseWFM"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "notes": "C3 / proc_03_get_history_7d.sql. WFM DB."
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $('Merge Agent Skills').first().json;\nconst history = $input.all().map((item) => item.json).filter((row) => row.activity_date);\nreturn [{ json: { ...payload, history_7d: history } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3600,
+        720
+      ],
+      "id": "a00af390-3efe-44c7-8bfb-02ef8d13951f",
+      "name": "Merge History 7d",
+      "notes": "history_7d[] для шага 9–10."
     },
     {
       "parameters": {
@@ -414,7 +491,7 @@
         0,
         0
       ],
-      "id": "5713be3d-869d-48d2-b2f1-158cb7e03de0",
+      "id": "6c2dd7b5-d911-4931-b561-acd3c1432a94",
       "name": "Note — Overview"
     },
     {
@@ -430,12 +507,12 @@
         0,
         272
       ],
-      "id": "cd42f149-30ba-4ef9-ab7a-8219e32352cd",
+      "id": "9b49a779-312d-40ce-8892-9981d57ed1bc",
       "name": "Note — Phase 1 INIT"
     },
     {
       "parameters": {
-        "content": "## PHASE 2 — GET DATA\n\nТЗ §4.5 шаг 3 · TDR §7.1\n\nGet Processed Agents → Continue Phase 2 → Skills → WF1 Query → Get Agents D+1 → Filter\n\nCredentials: RPA + WFM read-only",
+        "content": "## PHASE 2 — GetTransactionData\n\nJira GetTransactionData · ТЗ §4.5 шаги 2–3, 7\n\nGTD Input → Execute GetTransactionData → payload[]\n\nCredentials: RPA + WFM (в sub-workflow)",
         "height": 220,
         "width": 720,
         "color": 5
@@ -446,12 +523,12 @@
         1456,
         272
       ],
-      "id": "f8e861ea-01e6-4064-b58e-2e290c429cb3",
+      "id": "42b4c1ef-0548-49d3-a69c-26a01e83035d",
       "name": "Note — Phase 2 GET DATA"
     },
     {
       "parameters": {
-        "content": "## PHASE 3 — PROCESS\n\nТЗ §4.5 шаги 7–13 · loop (1 агент = 1 транзакция)\n\nКонтейнер → новости → слоты → BE2/BE3 → Add to Batch → Write Transaction\n\n~ Code-заглушки; TODO SQL WFM шаги 4–6",
+        "content": "## PHASE 3 — PROCESS\n\nТЗ §4.5 шаги 8–13 · loop по payload\n\nWFM C1–C3 → контейнер → новости → shift fact/plan → слоты → BE2/BE3 → Add to Batch → Write Transaction\n\nC1–C8 ✓ SQL + логика",
         "height": 180,
         "width": 648,
         "color": 6
@@ -462,7 +539,7 @@
         2640,
         1232
       ],
-      "id": "74c95ab1-dd87-4f33-b13f-0cc5f2b0a15a",
+      "id": "8a36a98c-2919-44d3-a8dd-e8b4d26bab3c",
       "name": "Note — Phase 3 PROCESS"
     },
     {
@@ -478,7 +555,7 @@
         2992,
         272
       ],
-      "id": "1db6feaf-3b7d-4201-9bbc-b1c0bd673534",
+      "id": "8bee3072-a2b5-46a1-bce8-acb161da96d9",
       "name": "Note — Phase 5 FINISH"
     },
     {
@@ -494,8 +571,313 @@
         2400,
         272
       ],
-      "id": "4fc57bd5-dd98-4a7f-a922-7d9e4a863b86",
+      "id": "2b5593a7-7ab0-4b5e-9793-52322f38cfb6",
       "name": "Note — Phase 4 UPLOAD"
+    },
+    {
+      "parameters": {
+        "jsCode": "// C8 init: сброс пакета WFMS перед Process loop\nconst staticData = $getWorkflowStaticData('global');\nstaticData.wfmsBatch = { lines: [], agents: 0 };\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1584,
+        864
+      ],
+      "id": "e7c00e3e-6fe7-4b9f-85d1-09f9399df546",
+      "name": "Init WFMS Batch",
+      "notes": "C8: сброс staticData.wfmsBatch перед loop."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- PROC-05 / C5–C6: текущее расписание агента на D+1 (timeline для слотов и сверки)\n-- Credential: WFM DB read-only\n-- Params: $1 = wfm_user_id, $2 = shift_date (DATE), $3 = is_night_shift (boolean)\n-- ADR-007: UTC → MSK +3h; absence = false\n--\n-- WF-1 на D+1: «факт» = содержимое user_schedule_activity (что сейчас в сетке после бота).\n-- PDF №2 (user_status_log_history) — телефония/статусы прошедших смен; см. proc_05_alt_status_log.sql\n--\n-- Выход: activity_name, start_msk, end_msk, duration_min\n\nSELECT\n  wa.name AS activity_name,\n  to_char(usa.start + INTERVAL '3 hours', 'YYYY-MM-DD\"T\"HH24:MI:SS') AS start_msk,\n  to_char(usa.\"end\" + INTERVAL '3 hours', 'YYYY-MM-DD\"T\"HH24:MI:SS') AS end_msk,\n  (EXTRACT(EPOCH FROM (usa.\"end\" - usa.start)) / 60)::integer AS duration_min,\n  usa.not_erasable AS not_erasable\nFROM public.user_schedule_activity usa\nINNER JOIN public.work_activity wa\n  ON wa.id = usa.work_activity_id\nWHERE usa.user_id = $1::uuid\n  AND wa.absence = FALSE\n  AND (\n    ($3::boolean = FALSE AND (usa.start + INTERVAL '3 hours')::date = $2::date)\n    OR (\n      $3::boolean = TRUE\n      AND (usa.start + INTERVAL '3 hours')::date >= ($2::date - INTERVAL '1 day')\n      AND (usa.start + INTERVAL '3 hours')::date <= $2::date\n    )\n  )\nORDER BY usa.start;",
+        "options": {
+          "queryReplacement": "={{ [$json.wfm_user_id, $json.shift_date, $json.is_night_shift] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        4272,
+        720
+      ],
+      "id": "9d69ff3f-8eb0-4c3b-aa9b-b3d774ee68f7",
+      "name": "Get Shift Fact",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "postgres": {
+          "id": "UiPJoGU0APYbfsjf",
+          "name": "Test_DataBaseWFM"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "notes": "C5/C6 / proc_05_get_shift_fact.sql. usa на D+1; PDF №2 → proc_05_alt_status_log.sql"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $('Calculate News Duration').first().json;\nconst rows = $input.all().map((i) => i.json).filter((r) => r.activity_name && r.start_msk);\nreturn [{ json: { ...payload, shift_fact: rows } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4496,
+        640
+      ],
+      "id": "52b402be-1b3e-412b-9a69-72f340b4c08e",
+      "name": "Merge Shift Fact"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- PROC-04 / C5: план смены D+1 (PDF №1 — user_schedule_activity)\n-- Credential: WFM DB read-only\n-- Params: $1 = wfm_user_id, $2 = shift_date, $3 = schedule_variant_id (ignored on test), $4 = is_night_shift\n--\n-- test WFM: schedule_variant_activity.work_activity_id НЕТ — шаблон в proc_04_alt_template.sql\n-- WF-1: C5 сверяет shift_fact + container budget; shift_plan — диагностика (shift_plan_count).\n--\n-- Выход: activity_name, start_msk, end_msk, duration_min, plan_source, is_fixed\n\nSELECT\n  wa.name AS activity_name,\n  to_char(usa.start + INTERVAL '3 hours', 'YYYY-MM-DD\"T\"HH24:MI:SS') AS start_msk,\n  to_char(usa.\"end\" + INTERVAL '3 hours', 'YYYY-MM-DD\"T\"HH24:MI:SS') AS end_msk,\n  (EXTRACT(EPOCH FROM (usa.\"end\" - usa.start)) / 60)::integer AS duration_min,\n  'usa'::text AS plan_source,\n  FALSE AS is_fixed\nFROM public.user_schedule_activity usa\nINNER JOIN public.work_activity wa\n  ON wa.id = usa.work_activity_id\nWHERE usa.user_id = $1::uuid\n  AND wa.absence = FALSE\n  AND (\n    ($4::boolean = FALSE AND (usa.start + INTERVAL '3 hours')::date = $2::date)\n    OR (\n      $4::boolean = TRUE\n      AND (usa.start + INTERVAL '3 hours')::date >= ($2::date - INTERVAL '1 day')\n      AND (usa.start + INTERVAL '3 hours')::date <= $2::date\n    )\n  )\nORDER BY usa.start;",
+        "options": {
+          "queryReplacement": "={{ [$json.wfm_user_id, $json.shift_date, $json.schedule_variant_id || '', $json.is_night_shift] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        4720,
+        640
+      ],
+      "id": "dbecbfd2-eb81-4894-bbc1-08cb7c6288dc",
+      "name": "Get Shift Plan",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "postgres": {
+          "id": "UiPJoGU0APYbfsjf",
+          "name": "Test_DataBaseWFM"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "notes": "C5 / proc_04 (PDF №1 usa). Template: proc_04_alt_template.sql"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $('Merge Shift Fact').first().json;\nconst rows = $input.all().map((i) => i.json).filter((r) => r.activity_name);\nreturn [{ json: { ...payload, shift_plan: rows } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4944,
+        592
+      ],
+      "id": "426f0f9b-6650-4811-bd6c-b67db4db95ea",
+      "name": "Merge Shift Plan"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $getWorkflowStaticData('global').currentAgentPayload ?? {};\nconst nodeName = $prevNode?.name || 'WFM DB';\nreturn [{\n  json: {\n    ...payload,\n    error_code: 'BE1',\n    processing_comment: `${$workflow.name} / ${nodeName}: WFM DB failure after 3 retries`,\n    wfms_lines: [],\n    activities_to_restore: [],\n    activities_restored: 0,\n  },\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4944,
+        1008
+      ],
+      "id": "711147ed-81d3-416e-9ea9-e85984c144ae",
+      "name": "Handle Process BE1",
+      "notes": "A.1–A.4 WFM fail after 3 retries → BE1, next agent."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fbf72644-b6d9-408e-84ff-7db31f41202c",
+              "leftValue": "={{ $json.error_code }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3152,
+        720
+      ],
+      "id": "11667952-287a-4f1c-83dc-8c6c565cf698",
+      "name": "Skip Agent Error",
+      "notes": "SKIP_TZ / error_code после skills → Write Transaction."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a5631f25-824a-4a3b-b81f-7da259eefe13",
+              "name": "error_type",
+              "value": "System Error",
+              "type": "string"
+            },
+            {
+              "id": "61e60307-95e6-43b1-b865-d99d48a8de29",
+              "name": "error_code",
+              "value": "SE1",
+              "type": "string"
+            },
+            {
+              "id": "a00149af-8443-4af0-b5f2-b78165b8c705",
+              "name": "error_message",
+              "value": "={{ $workflow.name + ' / Write Transaction: RPA DB failure after 3 retries' }}",
+              "type": "string"
+            },
+            {
+              "id": "3efca694-1753-4e3c-830d-8a44a49eaed2",
+              "name": "success",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5e76462d-0d1e-4ba8-984f-937f020da965",
+      "name": "Set Process SE1 Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6912,
+        720
+      ],
+      "notes": "Process loop: RPA DB UPDATE fail → SE1."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "faC37dOG2AsymF05",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/faC37dOG2AsymF05",
+          "cachedResultName": "RPA — [BreaksRecovery] 5. ErrorHandler"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "e3739f79-fbf4-48c4-ac06-763ecd17b654",
+      "name": "Execute Process ErrorHandler",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        7136,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.error_message || 'Process Write Transaction failed' }}"
+      },
+      "id": "1bf3cbbd-e333-4332-bc2c-bcfab81475f1",
+      "name": "Stop Process On SE1",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        7360,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "maxItems": 50
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        864
+      ],
+      "id": "84693792-d742-4b8a-8346-d04ea61af42e",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nstaticData.currentAgentPayload = $input.first().json;\nreturn $input.all();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2032,
+        864
+      ],
+      "id": "fbe92adb-10cf-4adc-af8d-ccda777ca539",
+      "name": "Stash Agent Payload"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6592,
+        1040
+      ],
+      "id": "0358b212-8d3b-4871-b5f1-e9b4153cc799",
+      "name": "Loop Continue"
+    },
+    {
+      "id": "notify-be23-warn-001",
+      "name": "Notify Process BE2/BE3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5760,
+        420
+      ],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Execute LoadMappings').first().json.Mattermost1CChannelBaseURL }}/{{ $('Execute LoadMappings').first().json.MMCBotAlertChannel }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ channel: ($json.mappings?.runtime?.mattermost?.channels?.ops || 'RPA_BN_BreaksRecovery'), message: '⚠️ WARN [' + $workflow.name + '] Агент пропущен (' + ($json.error_code || '?') + ')\\n' + '• login: ' + (() => { const l = $json.agent_login || ''; return l.length <= 2 ? (l || '—') : l[0] + '*'.repeat(Math.max(l.length - 2, 1)) + l[l.length - 1]; })() + '\\n• container: ' + ($json.container_name || '—') + '\\n• shift_date: ' + ($json.shift_date || '—') + '\\n• причина: ' + ($json.processing_comment || '—')}) }}",
+        "options": {}
+      },
+      "notes": "BE2/BE3 WARN → RPA_BN_BreaksRecovery. Параллельная ветка — не блокирует Write Transaction. login маскируется. continueOnFail = true."
+    },
+    {
+      "id": "test-agent-selector-001",
+      "name": "Test Agent Selector",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        864
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// ============================================================\n// TEST AGENT SELECTOR — только для ручного тестирования\n// ============================================================\n// Заполни TEST_LOGINS логинами агентов, которых хочешь прогнать.\n// Оставь пустым [] — пройдут все агенты (нормальная работа).\n//\n// Рекомендуемый набор для E2E DoD:\n//   - 1 агент с успешным контейнером (happy path → success)\n//   - 1 агент с нераспознанным контейнером (→ skipped_BE2)\n//   - 1 агент без свободных слотов (→ skipped_BE3)\n//   - (опц.) 1 агент с non-Moscow skill (→ skipped_TZ)\n// ============================================================\n\nconst TEST_LOGINS = [\n  // 'agent_login_1',   // happy path\n  // 'agent_login_2',   // BE2\n  // 'agent_login_3',   // BE3\n];\n\nconst all = $input.all();\n\nif (TEST_LOGINS.length === 0) {\n  // Фильтр выключен — пропускаем всё\n  return all;\n}\n\nconst filtered = all.filter(item =>\n  TEST_LOGINS.includes(item.json.agent_login)\n);\n\nif (filtered.length === 0) {\n  throw new Error(\n    `[Test Agent Selector] Ни один из TEST_LOGINS не найден в payload. ` +\n    `Доступные логины: ${all.map(i => i.json.agent_login).join(', ')}`\n  );\n}\n\nreturn filtered;"
+      },
+      "notes": "Тестовый фильтр агентов. TEST_LOGINS=[] → все агенты (prod). Заполни логинами для E2E: happy path, BE2, BE3, SKIP_TZ."
     }
   ],
   "pinData": {},
@@ -537,73 +919,29 @@
       "main": [
         [
           {
-            "node": "Get Processed Agents",
+            "node": "GTD Input",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Processed Agents": {
+    "GTD Input": {
       "main": [
         [
           {
-            "node": "Continue Phase 2",
+            "node": "Execute GetTransactionData",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Continue Phase 2": {
+    "Execute GetTransactionData": {
       "main": [
         [
           {
-            "node": "Extract Support Skills",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Support Skills": {
-      "main": [
-        [
-          {
-            "node": "Build WF1 Query",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build WF1 Query": {
-      "main": [
-        [
-          {
-            "node": "Get Agents D+1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Agents D+1": {
-      "main": [
-        [
-          {
-            "node": "Filter New Agents",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filter New Agents": {
-      "main": [
-        [
-          {
-            "node": "Process Each Agent",
+            "node": "Test Agent Selector",
             "type": "main",
             "index": 0
           }
@@ -621,7 +959,7 @@
         ],
         [
           {
-            "node": "Determine Container Rules",
+            "node": "Stash Agent Payload",
             "type": "main",
             "index": 0
           }
@@ -643,7 +981,7 @@
       "main": [
         [
           {
-            "node": "Find Missing Activities",
+            "node": "Get Shift Fact",
             "type": "main",
             "index": 0
           }
@@ -679,6 +1017,11 @@
             "node": "Write Transaction",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Notify Process BE2/BE3",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -705,7 +1048,14 @@
       "main": [
         [
           {
-            "node": "Process Each Agent",
+            "node": "Loop Continue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Process SE1 Error",
             "type": "main",
             "index": 0
           }
@@ -722,21 +1072,273 @@
           }
         ]
       ]
+    },
+    "Get Container Scheme": {
+      "main": [
+        [
+          {
+            "node": "Merge WFM Container",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Process BE1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge WFM Container": {
+      "main": [
+        [
+          {
+            "node": "Get Agent Skills",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Agent Skills": {
+      "main": [
+        [
+          {
+            "node": "Merge Agent Skills",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Process BE1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Agent Skills": {
+      "main": [
+        [
+          {
+            "node": "Skip Agent Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get History 7d": {
+      "main": [
+        [
+          {
+            "node": "Merge History 7d",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Process BE1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge History 7d": {
+      "main": [
+        [
+          {
+            "node": "Determine Container Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init WFMS Batch": {
+      "main": [
+        [
+          {
+            "node": "Process Each Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Shift Fact": {
+      "main": [
+        [
+          {
+            "node": "Merge Shift Fact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Process BE1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Shift Fact": {
+      "main": [
+        [
+          {
+            "node": "Get Shift Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Shift Plan": {
+      "main": [
+        [
+          {
+            "node": "Merge Shift Plan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Process BE1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Shift Plan": {
+      "main": [
+        [
+          {
+            "node": "Find Missing Activities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Process BE1": {
+      "main": [
+        [
+          {
+            "node": "Write Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip Agent Error": {
+      "main": [
+        [
+          {
+            "node": "Write Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get History 7d",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Process SE1 Error": {
+      "main": [
+        [
+          {
+            "node": "Execute Process ErrorHandler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Process ErrorHandler": {
+      "main": [
+        [
+          {
+            "node": "Stop Process On SE1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Init WFMS Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stash Agent Payload": {
+      "main": [
+        [
+          {
+            "node": "Get Container Scheme",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Continue": {
+      "main": [
+        [
+          {
+            "node": "Process Each Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Process BE2/BE3": {
+      "main": [
+        []
+      ]
+    },
+    "Test Agent Selector": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1",
-    "timeSavedMode": "fixed",
-    "callerPolicy": "workflowsFromSameOwner",
-    "executionTimeout": -1,
-    "availableInMCP": false,
-    "errorWorkflow": "ge4g0yigf0Ykn65R"
+    "executionOrder": "v1"
   },
-  "versionId": "307193a8-ea01-411c-8901-dd537690cd9a",
+  "versionId": "81639e6f-c8bd-48b7-b609-05cc605765e6",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "c405c9c7bf2ec4f35dcb9179c9810707580e82751735da064523f04a0f1dd025"
   },
-  "id": "KoLiAgTAm72DEjMO",
+  "id": "rOQ6W79lXmssxTdI",
   "tags": []
 }

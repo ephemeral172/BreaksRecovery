@@ -45,3 +45,20 @@ FROM skill
 GROUP BY time_zone
 ORDER BY cnt DESC
 LIMIT 10;
+
+-- 5) schedule_scheme / schedule_variant — колонки и FK (proc_01)
+SELECT table_name, column_name, data_type
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND (
+    table_name IN (
+      'schedule_scheme',
+      'schedule_scheme_validity_period',
+      'schedule_scheme_variant',
+      'schedule_variant',
+      'user_schedule'
+    )
+    OR column_name LIKE '%schedule_scheme%'
+    OR column_name LIKE '%schedule_variant%'
+  )
+ORDER BY table_name, ordinal_position;

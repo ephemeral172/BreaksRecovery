@@ -2,7 +2,17 @@
 
 > **Легенда:** ✓ — сделано · ✓ *пояснение* — сделано с уточнением · ~ — частично · — — не сделано
 
-**Обновлено:** 16.06.2026 (ревью 24.06: нейминг, from list, Phase 4 пусто, без Restore/CronSchedule)
+**Обновлено:** 02.07.2026 (RPA-1834: тройной E2E ✓ success+BE2+BE3 в одном прогоне)
+
+---
+
+## Jira — статус задач (RPA_2026Q3S1_12.07)
+
+| Задача | Scope | Статус | План / артефакт |
+|---|---|---|---|
+| **GetTransactionData** | ТЗ §4.5 шаги 2–3, 7 | ✓ **Done** 02.07.2026 | `openspec/plans/get-transaction-data-process.md` |
+| **RPA-1834** Process (Получение контекста смены) | ТЗ §4.5 шаги 8–13 | ✓ **Done** 02.07.2026 | E2E тройной прогон ✓ success+BE2+BE3 |
+| Upload / EndProcess | шаги 15–18 | ❌ Planned | Phase D (не Jira этого спринта) |
 
 ---
 
@@ -10,13 +20,13 @@
 
 | Область | % | Комментарий |
 |---|---:|---|
-| **Проект целиком** (WF-1 + WF-2) | **~42** | Фундамент готов; бизнес-логика и WF-2 — впереди |
-| **Робот 1 — восстановление** (ТЗ §4.5) | **~50** | INIT + GET DATA закрыты; шаги 4–6, 8–12, 15–18 — нет |
+| **Проект целиком** (WF-1 + WF-2) | **~58** | GTD ✓; Process DoD — в работе |
+| **Робот 1 — восстановление** (ТЗ §4.5) | **~72** | шаги 1–13 код ✓; upload ❌ |
 | **Робот 2 — балансировка** | **~5** | Черновик воркфлоу |
 | Фаза 0 — каркас (БД, конфиг, InitTables, ADR) | **~98** | Осталось: email_fallback.json, Stash prod |
-| Phase 2 GET DATA (test E2E) | **100** | 4918 агентов D+1, Filter 4918→4918 |
-| Phase 3 PROCESS — логика 8–11 | **~5** | Code-заглушки |
-| Phase 4 UPLOAD WFMS | **~10** | HTTP-заглушки |
+| Phase 2 GET DATA (GetTransactionData) | **100** | Jira ✓; E2E 1262 agents; fix Assemble Payload `$input.all()` |
+| Phase 3 PROCESS — логика 8–13 | **100** | unit 15/15; E2E multi-agent ✓ (success+BE2+BE3) |
+| Phase 4 UPLOAD WFMS | **0** | Phase D, ADR-009 `success` |
 | Phase 5 FINISH (MM, WF-2) | **~40** | Trigger WF-2 ✓; MM ~ |
 
 ### ТЗ §4.5 Робот 1 — по шагам
@@ -25,21 +35,39 @@
 |---|---|---:|
 | 1–2 | Cron, конфиг, mappings/*.json (git) | 100 |
 | 3 | Агенты D+1, исключить обработанных | 100 |
-| 4–6 | SQL WFM: контейнер, навыки, история 7 дн. | 0 |
+| 4–6 | SQL WFM: контейнер, навыки, история 7 дн. | 100 |
 | 7 | Loop 1 агент = 1 транзакция | 100 |
-| 8–11 | Контейнер, новости, слоты | ~5 |
-| 12 | Пакет загрузки | ~5 |
-| 13 | Write Transaction | 100 |
-| 15–18 | WFMS upload + upload_status | ~10 |
+| 8–11 | Контейнер, новости, слоты | 100 |
+| 12 | Пакет загрузки (staticData batch) | 100 |
+| 13 | Write Transaction (UPDATE proc_07) | 100 * |
+| 15–18 | WFMS upload + upload_status | 0 |
 | 18–20 | MM + триггер WF-2 | ~40 |
 
-**Следующий фокус:** WF1-02…04 (SQL шаги 4–6) → Code шаги 8–11 → WFMS upload.
+\* Шаг 13 — `proc_07_update_transaction.sql`. E2E 02.07.2026: multi-agent (2 агента) — `zvusmanova` → `success`, `zvorudzhova.ext` → `skipped_BE2`; loop Run 3 of 3 Done Branch ✓
+
+**Спринт GTD:** ✓ **закрыт 02.07.2026** (Jira GetTransactionData Done).  
+**Спринт Process:** ✓ **закрыт 02.07.2026** — RPA-1834; E2E multi-agent ✓  
+**Следующий:** Phase D (WFMS upload + E2E deficit scenarios).
 
 ---
 
 ## Сводка — Фаза 0
 
-> **Фаза 0:** ~95% · **Фаза 1 GET DATA:** 100% (test) · **Весь проект:** ~42%
+> **Фаза 0:** ~98% · **Фаза 1 GET DATA:** 100% (Jira ✓, 1262 agents) · **Фаза 3 Process:** ~98% · **Весь проект:** ~58%
+
+### Jira GetTransactionData — закрыта 02.07.2026
+
+| DoD | Статус | Доказательство |
+|---|---|---|
+| Payload шаг 6 → Process | ✓ | Execute GetTransactionData, tx 7775, mappings |
+| agents + recovery_transactions | ✓ | agent_id 1396, ON CONFLICT |
+| Config + mappings из git | ✓ | LoadMappings |
+| Get Agents D+1 (ночник) | ✓ | zvusmanova, is_night_shift true |
+| gtd_01 ADR-009 (не Jira шаг 2) | ✓ | согласовано с TL |
+| BE1/SE1, SQL параметризован | ✓ | GetTransactionData.json |
+| Идempotency / skip success / дневные 5/2·2/2 | ⚠️ | не формализовано в скринах PR |
+
+### Phase 2 GetTransactionData — E2E (02.07.2026)
 
 | # | Задача | Результат | TDR | ТЗ |
 |---|---|---|---|---|
@@ -92,7 +120,70 @@
 |---|---|---|---|
 | Execute InitTables | ✓ 10 табл. `n8n_breaks_recovery` (до TDR v3) | §6.3, ADR-006 | §2.6 |
 
-### Phase 2 GET DATA (18.06.2026, WFM test)
+### Phase 2 GetTransactionData (16.06.2026, Jira)
+
+| Нода / шаг | Результат | TDR | ТЗ |
+|---|---|---|---|
+| GTD Input → Execute GetTransactionData | ✓ sub-workflow `BreaksRecovery_GetTransactionData` | §6.4, §7.1, §7.3 | §4.5 шаги 2–3, 7 |
+| gtd_01…04 SQL | ✓ ADR-009 фильтр финальных статусов (01.07 rev) | §7.3 | шаги 2–3, 4–5 |
+| Assemble Payload | ✓ `$input.all()` (fix 02.07: 1262 items) | §6.4 | шаг 6 |
+| Test Agent Selector | ✓ `TEST_LOGINS` для E2E | — | — |
+| BE1 / SE1 | ✓ ErrorHandler + Stop | ADR-005 | — |
+| E2E smoke (30.06.2026) | ✓ `zvusmanova`, night shift, tx 1396, `in_progress` | — | ночник D+1 |
+| **E2E full payload (02.07.2026)** | ✓ **1262** agents, `shift_date` 2026-07-03 | — | после fix Assemble Payload |
+
+### Phase 3 Process — C1–C8 [Completed — RPA-1834]
+
+| Нода / шаг | Результат | TDR | ТЗ |
+|---|---|---|---|
+| Get Container Scheme | ✓ `proc_01` (PDF №3+№6, test: `schedule_container`, `ssc.day`) | §7.1 | §4.5 шаги 4–6, 8 |
+| Get Agent Skills | ✓ `proc_02` (Jira A.3: skill_id, priority, name, time_zone) | §7.1 | шаг 9 |
+| Merge Agent Skills | ✓ SKIP_TZ при non-Moscow TZ | — | A.3 v1 |
+| Get History 7d | ✓ `proc_03` (PDF №7/№10) | §7.1 | шаг 10 (история) |
+| Determine Container Rules | ✓ BE2 + `standard_9hrs` fallback | §6.5 | шаг 8 |
+| Calculate News Duration | ✓; ⚠️ паттерн `Night Written Pro…` не в mapping | §6.5 | шаг 9 |
+| Get Shift Fact / Plan | ✓ `proc_05` / `proc_04` (usa, PDF №1) | §7.1 | шаг 10 |
+| Find Missing Activities | ✓ budget vs fact | — | шаг 10 |
+| Calculate Slots | ✓ BE3, `wfms_lines` | — | шаг 11 |
+| Init WFMS Batch + Add to Batch | ✓ staticData, TDR §7.2 | §7.2 | шаг 12 |
+| Write Transaction | ✓ `proc_07` (BE1→failed, SKIP_TZ→skipped_TZ, BE2/BE3→skipped_*; happy → `in_progress`) | §6.3, ADR-009 | шаг 13 |
+| **BE1 Process** | ✓ `Handle Process BE1` + retry×3 на 5 WFM SQL; `.item.json` на error-ветке | ADR-005 | A.1–A.4 |
+| Notify Process BE2/BE3 | ✓ параллельная ветка, маскировка login | ADR-005 | BE2/BE3 WARN |
+| **E2E n8n (01.07.2026)** | ✓ `zvusmanova`, tx **7775**, BE2/BE3 false, `activities_restored: 0` | — | — |
+| **E2E multi-agent (02.07.2026)** | ✓ **2 агента** в одном прогоне | — | см. ниже |
+
+**E2E multi-agent 02.07.2026** (`Test Agent Selector` + `Limit`):
+
+| Агент | tx | `processing_status` | `error_code` | Сценарий |
+|---|---:|---|---|---|
+| `zvorudzhova.ext` | 21689 | `skipped_BE2` | BE2 | контейнер `тестовая` (нераспознан) |
+| `zvusmanova` | 21690 | `success` | — | `Written Pro 22:00 9hrs 10 мин`, `standard_9hrs` |
+| `aabazulina` | 20435 | `skipped_BE3` | BE3 | `STR Chat 7:00 12hrs 30 мин`, `standard_12hrs` |
+
+**Тройной E2E 02.07.2026** — все три исхода в одном прогоне ✓ (Write Transaction × 3):
+
+| # | login | tx | status |
+|---|---|---:|---|
+| 1 | `aabazulina` | 20435 | `skipped_BE3` |
+| 2 | `zvorudzhova.ext` | 21689 | `skipped_BE2` |
+| 3 | `zvusmanova` | 21690 | `success` |
+
+**Jira DoD E2E Process:** happy path ✓, BE2 ✓, BE3 ✓, multi-agent loop ✓. Остаток: Phase D (deficit/upload), BE1/SKIP_TZ E2E (опц.).
+
+### Phase 3 Process — C1–C3 (16.06.2026)
+
+| Нода / шаг | Результат | TDR | ТЗ |
+|---|---|---|---|
+| Get Container Scheme | ✓ `proc_01_get_container_scheme.sql` | §7.1 | §4.5 шаги 4–6, 8 |
+| Get Agent Skills | ✓ `proc_02` (Jira A.3: skill_id, priority, name, time_zone) | §7.1 | шаг 9 |
+| Merge Agent Skills | ✓ SKIP_TZ при non-Moscow TZ | — | A.3 v1 |
+| Get History 7d | ✓ `proc_03_get_history_7d.sql` | §7.1 | шаг 10 (история) |
+| Determine Container Rules | ✓ BE2 + mappings/container.json | §6.5 | шаг 8 |
+| Write Transaction | ✓ `proc_07_update_transaction.sql` (UPDATE) | §6.3, §7.3 | шаг 13 |
+| Calculate News / Missing / Slots | ~ заглушки | — | шаги 9–11 |
+| E2E на n8n | — после импорта Main + проверка proc_01 на WFM | — | — |
+
+### Phase 2 GET DATA (18.06.2026, WFM test) — legacy WF1-01
 
 | Нода / шаг | Результат | TDR | ТЗ |
 |---|---|---|---|
@@ -109,10 +200,10 @@
 
 | Нода / шаг | Результат | TDR | ТЗ |
 |---|---|---|---|
-| Process loop (шаги 8–13) | ~ заглушки Code | — | §4.5 шаги 8–13 |
-| Write Transaction | ✓ SQL agents + agent_id (ADR-006) | §6.3, §7.3 | §4.5 шаг 13 |
-| Auth/Upload/Publish WFMS | ~ заглушки | §7.2 | §4.5 шаги 15–17 |
-| Write Upload Status | ~ placeholder | §6.3 | §4.5 шаг 18 |
+| Process loop (шаги 8–13) | ✓ C1–C8 E2E | — | §4.5 шаги 8–13 |
+| Write Transaction | ✓ proc_07 UPDATE | §6.3, §7.3 | §4.5 шаг 13 |
+| Auth/Upload/Publish WFMS | ❌ Phase D | §7.2 | §4.5 шаги 15–17 |
+| Write Upload Status / `success` | ❌ Phase D | §6.3, ADR-009 | §4.5 шаг 18 |
 | Send MM Notification | ~ Continue On Error | §7.4 | §4.9 |
 | Trigger WF-2 | ✓ | ADR-001 | §4.5 шаг 20 |
 
@@ -124,7 +215,7 @@
 
 | # | Задача | Результат |
 |---|---|---|
-| S0-01 | `BreaksRecovery_Main` (Reframework) | ~ ✓ INIT+GET DATA E2E; логика 8–11 — заглушки |
+| S0-01 | `BreaksRecovery_Main` (Reframework) | ✓ INIT + GTD + Process E2E (01.07) |
 | S0-01b | `BreaksRecovery_Balance` (WF-2) | ~ черновик |
 | S0-01c | `ErrorHandler` | ✓ JSON; Main errorWorkflow ✓ |
 | S0-02 | Credential WFM DB (read-only) | ✓ test |
@@ -140,7 +231,7 @@
 | S0-06f | `cfg_email_fallback` данные | — |
 | S0-06g | `GetConfig` | ✓ прогнан |
 | S0-07 | Cron 05:00 МСК | ✓ |
-| S0-11 | Main E2E прогон | ✓ |
+| S0-11 | Main E2E прогон | ✓ multi-agent 02.07 |
 | S0-08 | mappings в Stash (`configuration/test`) | ✓ LoadMappings E2E |
 | S0-09 | mTLS non-prod | — не требуется |
 | S0-10 | mTLS prod | — |
@@ -201,17 +292,17 @@
 | # | Задача | Результат |
 |---|---|---|
 | WF1-01 | SQL: агенты на смене D+1 | ✓ test + Main |
-| WF1-02 | SQL: расписание + контейнер + схема | — |
-| WF1-03 | SQL: навыки агента | — |
-| WF1-04 | SQL: история 7 дней (новости) | — |
-| WF1-05 | Логика: тип контейнера | ~ заглушка |
-| WF1-06 | Логика: минуты новостей | ~ заглушка |
-| WF1-07 | Логика: недостающие активности | ~ заглушка |
-| WF1-08 | Логика: слоты | ~ заглушка |
-| WF1-09 | Пакет загрузки | ~ заглушка |
-| WF1-10 | Загрузка в WFMS | ~ заглушка |
-| WF1-11 | Публикация + FTE | ~ заглушка |
-| WF1-12 | Write Transaction (реальный INSERT) | ✓ ADR-006 agents + agent_id |
+| WF1-02 | SQL: расписание + контейнер + схема | ✓ proc_01 |
+| WF1-03 | SQL: навыки агента | ✓ proc_02 |
+| WF1-04 | SQL: история 7 дней (новости) | ✓ proc_03 |
+| WF1-05 | Логика: тип контейнера | ✓ Determine Container Rules |
+| WF1-06 | Логика: минуты новостей | ✓ Calculate News Duration |
+| WF1-07 | Логика: недостающие активности | ✓ Find Missing + proc_04/05 |
+| WF1-08 | Логика: слоты | ✓ Calculate Slots + BE3 |
+| WF1-09 | Пакет загрузки | ✓ Init WFMS Batch + Add to Batch |
+| WF1-10 | Загрузка в WFMS | ❌ Phase D |
+| WF1-11 | Публикация + FTE | ❌ Phase D |
+| WF1-12 | Write Transaction (UPDATE после GTD) | ✓ proc_07 |
 | WF1-12b | Фильтр агентов по cfg_fte_groups | ✓ Get Support Skills + Build WF1 Query |
 | WF1-13 | Mattermost уведомления | ~ Continue On Error |
 | WF1-14 | Триггер WF-2 | ✓ |
@@ -256,7 +347,7 @@
 ### Правила при следующей разработке (WF1-02…04, Phase 4)
 
 - [ ] WFM-запросы с `agent_login` — **только** `queryReplacement` + `$1` (не `{{ $json.agent_login }}` в теле SQL)
-- [ ] Пакет загрузки WFMS (шаг 12) — не `console.log` / не писать полный пакет в `processing_comment`
+- [x] Пакет загрузки WFMS (шаг 12) — `staticData.wfmsBatch`, не в `processing_comment`
 - [ ] Success/Warn MM в Main — маскировка login как в ErrorHandler (или общий helper)
 - [ ] Прогон ErrorHandler E2E на test (ручной вход + Error Trigger)
 - [ ] Подтвердить сервисную УЗ WFMS и scope «Поддержка» до включения реального Upload

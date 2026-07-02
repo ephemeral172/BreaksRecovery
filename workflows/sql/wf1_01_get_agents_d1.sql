@@ -1,3 +1,4 @@
+-- DEPRECATED: заменён на gtd_02_agents_d_plus_1.sql (Jira GetTransactionData шаг 3)
 -- WF1-01 / TDR §7.1 оп.1: агенты на смене D+1 (включая ночные)
 -- Credential: WFM DB read-only
 -- ТЗ §4.5 шаг 3; ADR-007: UTC -> MSK +3h
